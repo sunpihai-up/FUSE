@@ -31,7 +31,7 @@ def prepare_depth_data(target, prediction, clip_distance, reg_factor=3.70378):
     target *= clip_distance
     prediction *= clip_distance
 
-    min_depth = torch.exp(-1 * reg_factor) * clip_distance
+    min_depth = torch.exp(-1 * torch.tensor(reg_factor)) * torch.tensor(clip_distance)
     max_depth = clip_distance
 
     # Handle invalid values in prediction

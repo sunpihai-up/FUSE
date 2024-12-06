@@ -191,14 +191,15 @@ def main():
         "silog": 100,
     }
 
-    # Log module names and trainable parameter counts
-    for name, param in model.named_parameters():
-        if param.requires_grad:
-            logger.info(f"Module: {name}, Trainable Parameters: {param.numel()}")
+    if rank == 0:
+        # Log module names and trainable parameter counts
+        for name, param in model.named_parameters():
+            if param.requires_grad:
+                logger.info(f"Module: {name}, Trainable Parameters: {param.numel()}")
 
-    # Optional: Total trainable parameters
-    total_trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
-    logger.info(f"Total Trainable Parameters: {total_trainable_params}")
+        # Optional: Total trainable parameters
+        total_trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+        logger.info(f"Total Trainable Parameters: {total_trainable_params}")
 
     for epoch in range(args.epochs):
         if rank == 0:
@@ -382,7 +383,7 @@ def main():
                     torch.save(
                         checkpoint,
                         os.path.join(
-                            args.save_path, f"{k}-{previous_best[k]}-{epoch}.pth"
+                            args.save_path, f"{k}-{cur_results[k]}-{epoch}.pth"
                         ),
                     )
 

@@ -2,8 +2,8 @@
 now=$(date +"%Y%m%d_%H%M%S")
 
 epoch=20
-bs=2
-gpus=1
+bs=4
+gpus=2
 lr=0.000005
 encoder=vitl
 dataset=dense
@@ -11,7 +11,7 @@ img_size=518
 min_depth=0
 max_depth=1000
 depth_anything_pretrained=/data/coding/upload-data/checkpoints/depth_anything_v2_metric_vkitti_vitl.pth
-finetune_mode=foundation_all_frozen
+finetune_mode=foundation_all_frozen # choices=["foundation_all_frozen", "foundation_encoders_frozen", "nothing_frozen"], 
 # pretrained_from=/home/sph/code/Depth-Anything-V2/metric_depth/checkpoints/depth_anything_v2_metric_vkitti_vitl.pth
 save_path=/data/coding/exp/${dataset}_${finetune_mode}_normalized_log_${now}
 
