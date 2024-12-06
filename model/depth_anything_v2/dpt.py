@@ -125,8 +125,9 @@ class DPTHead(nn.Module):
             ),
             nn.ReLU(True),
             nn.Conv2d(head_features_2, 1, kernel_size=1, stride=1, padding=0),
-            nn.ReLU(True),
-            nn.Identity(),
+            nn.Sigmoid()
+            # nn.ReLU(True),
+            # nn.Identity(),
         )
 
     def forward(self, out_features, patch_h, patch_w):
@@ -207,7 +208,7 @@ class DepthAnythingV2(nn.Module):
         )
 
         depth = self.depth_head(features, patch_h, patch_w)
-        depth = F.relu(depth)
+        # depth = F.relu(depth)
 
         return depth.squeeze(1)
 

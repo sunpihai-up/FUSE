@@ -119,7 +119,7 @@ class DinoVisionTransformer(nn.Module):
         self.interpolate_antialias = interpolate_antialias
         self.interpolate_offset = interpolate_offset
 
-        print(f'img_size: {img_size}, patch_size: {patch_size}, in_chans: {in_chans}, embed_dim: {embed_dim}')
+        # print(f'img_size: {img_size}, patch_size: {patch_size}, in_chans: {in_chans}, embed_dim: {embed_dim}')
         self.patch_embed = embed_layer(
             img_size=img_size,
             patch_size=patch_size,

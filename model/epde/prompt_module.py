@@ -28,7 +28,7 @@ class Fovea(nn.Module):
 
         return output
     
-class Prompt_block(nn.Module, ):
+class Prompt_block(nn.Module):
     def __init__(self, inplanes=None, hide_channel=None, smooth=False):
         super(Prompt_block, self).__init__()
         self.conv0_0 = nn.Conv2d(in_channels=inplanes, out_channels=hide_channel, kernel_size=1, stride=1, padding=0)
