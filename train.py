@@ -191,10 +191,15 @@ def main():
         "silog": 100,
     }
 
-    # Get the number of trainable parameters
-    num_trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
-    print(f"Number of trainable parameters: {num_trainable_params}")
-    
+    # Log module names and trainable parameter counts
+    for name, param in model.named_parameters():
+        if param.requires_grad:
+            logger.info(f"Module: {name}, Trainable Parameters: {param.numel()}")
+
+    # Optional: Total trainable parameters
+    total_trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    logger.info(f"Total Trainable Parameters: {total_trainable_params}")
+
     for epoch in range(args.epochs):
         if rank == 0:
             logger.info(
