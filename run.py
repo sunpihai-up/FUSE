@@ -85,6 +85,7 @@ if __name__ == '__main__':
 
         clip_distance = dataset2params[args.dataset]['clip_distance']
         reg_factor = dataset2params[args.dataset]['reg_factor']
+        # print(clip_distance, reg_factor, depth.min(), depth.max())
         depth = convert_nl2abs_depth(depth, clip_distance, reg_factor)
 
         if args.save_numpy:

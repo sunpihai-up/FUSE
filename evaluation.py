@@ -29,7 +29,10 @@ def FLAGS():
     parser.add_argument("--clip_distance", type=float, default=80.0)
     parser.add_argument("--output_folder", type=str, default=None)
     parser.add_argument("--inv", action="store_true")
-
+    parser.add_argument("--metric", action="store_true")
+    parser.add_argument("--nan_mask", action="store_true")
+    parser.add_argument("--json_path", default=None)
+    
     flags = parser.parse_args()
 
     return flags
@@ -110,28 +113,20 @@ def prepare_depth(depth, reg_factor, d_max):
 
 def inv_depth_to_depth(prediction, reg_factor=3.70378, eps=1e-6):
     # convert to normalize depth (target is coming in log inverse depth)
-    prediction = np.exp(
-        reg_factor
-        * (prediction - np.ones((prediction.shape[0], prediction.shape[1]), dtype=np.float32))
-    )
+    prediction = np.exp(reg_factor * (prediction - 1.0))
 
     # Perform inverse depth (so now is normalized depth)
     prediction = 1 / prediction
     prediction = prediction / np.amax(prediction)
 
     # Convert back to log depth (but now it is log  depth)
-    prediction = (
-        np.ones((prediction.shape[0], prediction.shape[1]), dtype=np.float32)
-        + np.log(prediction) / reg_factor
-    )
+    prediction = 1.0 + np.log(prediction) / reg_factor
     return prediction
 
 def prepare_depth_data(target, prediction, clip_distance, reg_factor=3.70378):
     # normalize prediction (0 - 1)
-    prediction = np.exp(
-        reg_factor
-        * (prediction - np.ones((prediction.shape[0], prediction.shape[1]), dtype=np.float32))
-    )
+    # print(prediction.min(), prediction.max())
+    prediction = np.exp(reg_factor * (prediction - 1.0))
 
     # clip target and normalize
     target = np.clip(target, 0, clip_distance)
@@ -348,6 +343,20 @@ if __name__ == "__main__":
         event_frame_files = sorted(glob.glob(join(flags.event_masks, "*png")))
         event_frame_files = event_frame_files[flags.prediction_offset :]
 
+    if flags.dataset == 'mvsec':
+        import json
+        import os
+        target_files = []
+        prediction_files = []
+        
+        with open(flags.json_path, 'r') as file:
+            json_file = json.load(file)
+            for key, value in json_file.items():
+                target_files.append(os.path.join(flags.target_dataset, key + ".npy"))
+                prediction_files.append(
+                    os.path.join(flags.predictions_dataset, value["image_id"] + ".npy")
+                )
+
     # Information about the dataset length
     print("len of prediction files", len(prediction_files))
     print("len of target files", len(target_files))
@@ -382,6 +391,19 @@ if __name__ == "__main__":
         # Crop depth height according to argument
         predicted_depth = predicted_depth[: flags.crop_ymax]
 
+        if flags.nan_mask:
+            non_nan_mask = ~np.isnan(target_depth)
+            target_depth = target_depth[non_nan_mask]
+            predicted_depth = predicted_depth[non_nan_mask]
+
+        assert target_depth.ndim <= 2
+        assert predicted_depth.ndim <= 2
+
+        # Flat numpy arrary
+        if target_depth.ndim == 2:
+            target_depth = target_depth.ravel()
+            predicted_depth = predicted_depth.ravel()
+
         # Check if prediction is coming in inverse log depth
         if flags.inv:
             # predicted_depth = inv_depth_to_depth(predicted_depth, reg_factor=reg_factor)
@@ -389,10 +411,11 @@ if __name__ == "__main__":
             predicted_depth = 1 / predicted_depth
             predicted_depth = prepare_depth(predicted_depth, reg_factor, flags.clip_distance)
 
-        # Convert to the correct scale
-        target_depth, predicted_depth = prepare_depth_data(
-            target_depth, predicted_depth, flags.clip_distance, reg_factor=reg_factor
-        )
+        # Convert normalized depth to the metric scale
+        if not flags.metric:
+            target_depth, predicted_depth = prepare_depth_data(
+                target_depth, predicted_depth, flags.clip_distance, reg_factor=reg_factor
+            )
 
         # print ("min pred", np.min(predicted_depth[~np.isnan(predicted_depth)]))
         # print ("max pred", np.max(predicted_depth[~np.isnan(predicted_depth)]))
@@ -415,10 +438,11 @@ if __name__ == "__main__":
             output_folder=flags.output_folder,
         )
 
-        # for depth_threshold in [10, 20, 30]:
-        #     depth_threshold_mask = (np.nan_to_num(target_depth) < depth_threshold)
-        #     add_to_metrics(-1, metrics, target_depth, predicted_depth, valid_mask & depth_threshold_mask,
-        #                     prefix=f"_{depth_threshold}_", debug=debug)
+        if flags.dataset == 'mvsec':
+            for depth_threshold in [10, 20, 30]:
+                depth_threshold_mask = (np.nan_to_num(target_depth) < depth_threshold)
+                add_to_metrics(-1, metrics, target_depth, predicted_depth, depth_threshold_mask,
+                                prefix=f"_{depth_threshold}_", debug=debug)
 
         if use_event_masks:
             ev_frame_file = event_frame_files[idx]
