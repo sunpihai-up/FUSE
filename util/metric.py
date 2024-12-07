@@ -1,10 +1,27 @@
 import torch
+import numpy as np
 
 dataset2params = {
     "dense": {"clip_distance": 1000.0, "reg_factor": 6.2044},
     "mvsec": {"clip_distance": 80.0, "reg_factor": 3.70378},
     "eventscape": {"clip_distance": 1000.0, "reg_factor": 5.7},
 }
+
+def convert_nl2abs_depth(depth, clip_distance, reg_factor):
+    """Converts normalized logarithmic depth values to absolute depth values.
+
+    Args:
+        depth (numpy.ndarray): Input depth map in normalized logarithmic scale.
+        clip_distance (float): Maximum depth value (used for scaling and clipping).
+        reg_factor (float):  Regularization factor used in the logarithmic transformation.
+
+    Returns:
+        numpy.ndarray: Absolute depth map
+    """
+    depth = np.exp(reg_factor * (depth - 1.0))
+    depth *= clip_distance
+    depth = np.clip(depth, np.exp(-1 * reg_factor) * clip_distance, clip_distance)
+    return depth
 
 def prepare_depth_data(target, prediction, clip_distance, reg_factor=3.70378):
     """
@@ -45,7 +62,7 @@ def prepare_depth_data(target, prediction, clip_distance, reg_factor=3.70378):
 
     return target, prediction, valid_mask
 
-def eval_depth(pred, target, dataset='dense'):
+def eval_depth(pred, target, dataset='dense', eps=1e-6):
     assert pred.shape == target.shape
     
     reg_factor = dataset2params[dataset]["reg_factor"]
@@ -56,8 +73,8 @@ def eval_depth(pred, target, dataset='dense'):
         target, pred, clip_distance=max_depth, reg_factor=reg_factor
     )
     
-    pred = pred[valid_mask]
-    target = target[valid_mask]
+    pred = pred[valid_mask] + eps
+    target = target[valid_mask] + eps
     
     thresh = torch.max((target / pred), (pred / target))
 

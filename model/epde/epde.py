@@ -1,6 +1,7 @@
 from functools import partial
 import cv2
 
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -10,7 +11,7 @@ from typing import Sequence, Tuple, Union
 from model.depth_anything_v2.dpt import DepthAnythingV2
 from model.layers.patch_embed import PatchEmbed
 from model.epde.prompt_module import Prompt_block
-from model.depth_anything_v2.util.transform import Resize, NormalizeImage, PrepareForNet
+from dataset.transform import Resize, NormalizeImage, PrepareForNet
 from .utils import token2feature, feature2token, init_weights_vit_timm
 
 class EPDEVisionTransformer(nn.Module):
@@ -185,21 +186,20 @@ class EPDEVisionTransformer(nn.Module):
         return depth.squeeze(1)
 
     @torch.no_grad()
-    def infer_image(self, input, input_size=518):
-        raw_image = input[:, :3, :, :]
-        event = input[:, 3:, :, :]
-        image, (h, w) = self.image2tensor(raw_image, input_size)
-
-        input = torch.cat([image, event], dim=1)
+    def infer(self, image, event, input_size=518):
+        image, event, (h, w) = self.input2tensor(image, event, input_size)
+        
+        input = torch.cat([image, event], dim=0)
+        input = input.unsqueeze(0)
+        
         depth = self.forward(input)
-
         depth = F.interpolate(
             depth[:, None], (h, w), mode="bilinear", align_corners=True
         )[0, 0]
 
         return depth.cpu().numpy()
-
-    def image2tensor(self, raw_image, input_size=518):
+    
+    def input2tensor(self, image, event, input_size=518):
         transform = Compose(
             [
                 Resize(
@@ -215,22 +215,22 @@ class EPDEVisionTransformer(nn.Module):
                 PrepareForNet(),
             ]
         )
-
-        h, w = raw_image.shape[:2]
-
-        image = cv2.cvtColor(raw_image, cv2.COLOR_BGR2RGB) / 255.0
-
-        image = transform({"image": image})["image"]
-        image = torch.from_numpy(image).unsqueeze(0)
-
+        
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) / 255.0
+        h, w = image.shape[:2]
+        sample = transform({"image": image, "event_voxel": event})
+        image = torch.from_numpy(sample["image"])
+        event = torch.from_numpy(sample["event_voxel"])
+        
         DEVICE = (
             "cuda"
             if torch.cuda.is_available()
             else "mps" if torch.backends.mps.is_available() else "cpu"
         )
         image = image.to(DEVICE)
-
-        return image, (h, w)
+        event = event.to(DEVICE)
+        
+        return image, event, (h, w)
 
 def epde_small(patch_size=16, num_register_tokens=0, **kwargs):
     model = EPDEVisionTransformer(
