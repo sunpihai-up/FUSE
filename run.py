@@ -52,6 +52,10 @@ if __name__ == '__main__':
             lines = f.readlines()
             rgb_filenames = [line.split()[0] for line in lines]
             event_filenames = [line.split()[2] for line in lines]
+        if 'val' in args.split_path:
+            # Only Use pre 1000 samples
+            rgb_filenames = rgb_filenames[:1000]
+            event_filenames = event_filenames[:1000]
     elif args.img_dir != None and args.event_dir != None:
         rgb_filenames = glob.glob(os.path.join(args.img_dir, '**/*'), recursive=True)
         event_filenames = glob.glob(os.path.join(args.event_dir, '**/*'), recursive=True)

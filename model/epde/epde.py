@@ -138,7 +138,8 @@ class EPDEVisionTransformer(nn.Module):
         for i, blk in enumerate(self.foundation.pretrained.blocks):
             if i >= 1 and self.prompt_type == 'epde_deep':
                 # Add Prompt information from 1st layer
-                image_feat = token2feature(self.prompt_norms[i](image))
+                # TODO: Why ViPT use i - 1
+                image_feat = token2feature(self.prompt_norms[i - 1](image))
                 event_prompted_feat = token2feature(self.prompt_norms[i](event_prompted))
 
                 prompted_feat = self.prompt_blocks[i](torch.cat([image_feat, event_prompted_feat], dim=1))
