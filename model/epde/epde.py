@@ -10,7 +10,7 @@ from torchvision.transforms import Compose
 from typing import Sequence, Tuple, Union
 from model.depth_anything_v2.dpt import DepthAnythingV2
 from model.layers.patch_embed import PatchEmbed
-from model.epde.prompt_module import Prompt_block
+from model.epde.prompt_module import Prompt_block, Prompt_block_rf
 from dataset.transform import Resize, NormalizeImage, PrepareForNet
 from .utils import token2feature, feature2token, init_weights_vit_timm
 
@@ -24,6 +24,7 @@ class EPDEVisionTransformer(nn.Module):
         embed_dim=768,
         depth=12,
         embed_layer=PatchEmbed,
+        prompt_block=Prompt_block,
         encoder="vitl",
         dataset='dense',
         norm_layer=None,
@@ -41,6 +42,7 @@ class EPDEVisionTransformer(nn.Module):
         self.depth = depth
         
         self.embed_layer = embed_layer
+        self.prompt_block = prompt_block
         self.norm_layer = norm_layer or partial(nn.LayerNorm, eps=1e-6)
         self.prompt_type = prompt_type
         self.depth_anything_pretrained = depth_anything_pretrained
@@ -63,7 +65,10 @@ class EPDEVisionTransformer(nn.Module):
             prompt_blocks = []
             block_nums = depth if self.prompt_type == 'epde_deep' else 1
             for i in range(block_nums):
-                prompt_blocks.append(Prompt_block(inplanes=embed_dim, hide_channel=8, smooth=True))
+                if self.prompt_block is Prompt_block:
+                    prompt_blocks.append(Prompt_block(inplanes=embed_dim, hide_channel=8, smooth=True))
+                elif self.prompt_block is Prompt_block_rf:
+                    prompt_blocks.append(Prompt_block_rf(inplanes=embed_dim))
             self.prompt_blocks = nn.Sequential(*prompt_blocks)
 
             prompt_norms = []
@@ -139,7 +144,7 @@ class EPDEVisionTransformer(nn.Module):
             if i >= 1 and self.prompt_type == 'epde_deep':
                 # Add Prompt information from 1st layer
                 # TODO: Why ViPT use i - 1
-                image_feat = token2feature(self.prompt_norms[i - 1](image))
+                image_feat = token2feature(self.prompt_norms[i](image))
                 event_prompted_feat = token2feature(self.prompt_norms[i](event_prompted))
 
                 prompted_feat = self.prompt_blocks[i](torch.cat([image_feat, event_prompted_feat], dim=1))
@@ -283,7 +288,6 @@ def EPDE(
     model_name,
     dataset='dense',
     depth_anything_pretrained=None,
-    max_depth=80.0,
     embed_layer=PatchEmbed,
     norm_layer=None,
     prompt_type=None,

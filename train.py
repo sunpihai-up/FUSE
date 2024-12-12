@@ -37,8 +37,6 @@ parser.add_argument(
     choices=["dense", "mvsec", "eventscape"],
 )
 parser.add_argument("--img-size", default=518, type=int)
-parser.add_argument("--min-depth", default=0.001, type=float)
-parser.add_argument("--max-depth", default=20, type=float)
 parser.add_argument("--epochs", default=40, type=int)
 parser.add_argument("--bs", default=2, type=int)
 parser.add_argument("--lr", default=0.000005, type=float)
