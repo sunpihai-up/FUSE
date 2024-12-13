@@ -218,10 +218,19 @@ class NormalizeImage(object):
     def __init__(self, mean, std):
         self.__mean = mean
         self.__std = std
+    
+    def normalize_voxelgrid(self, event_tensor):
+        mask = np.nonzero(event_tensor)
+        if mask[0].size > 0:
+            mean, stddev = event_tensor[mask].mean(), event_tensor[mask].std()
+            if stddev > 0:
+                event_tensor[mask] = (event_tensor[mask] - mean) / stddev
+        return event_tensor
 
     def __call__(self, sample):
         sample["image"] = (sample["image"] - self.__mean) / self.__std
-
+        if "event_voxel" in sample:
+            sample["event_voxel"] = self.normalize_voxelgrid(sample["event_voxel"])
         return sample
 
 

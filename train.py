@@ -16,6 +16,7 @@ import torch.nn.functional as F
 from torch.utils.tensorboard import SummaryWriter
 
 from dataset.dense import Dense
+from dataset.mvsec import MVSEC
 
 from model.epde.epde import EPDE
 from util.dist_helper import setup_distributed
@@ -78,6 +79,8 @@ def main():
     size = (args.img_size, args.img_size)
     if args.dataset == "dense":
         trainset = Dense("dataset/splits/dense/train.txt", "train", size=size)
+    elif args.dataset == "mvsec":
+        trainset = Dense("dataset/splits/mvsec/train.txt", "train", size=size)
     else:
         raise NotImplementedError
 
@@ -95,6 +98,8 @@ def main():
 
     if args.dataset == "dense":
         valset = Dense("dataset/splits/dense/val.txt", "val", size=size)
+    elif args.dataset == "mvsec":
+        valset = MVSEC("dataset/splits/mvsec/val.txt", "val", size=size)
     else:
         raise NotImplementedError
 

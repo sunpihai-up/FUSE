@@ -6,24 +6,24 @@ from torchvision.transforms import Compose
 
 from dataset.transform import Resize, NormalizeImage, PrepareForNet, Crop
 
-MEAN_STD = {
-    'eventscape' : [ 94.386783, 52.621100 ],
-    'day1'       : [46.02644024, 66.58477104],
-    'day2'       : [44.88074027, 75.6648636 ],
-    'night1'     : [23.50456365, 51.03250885],
-    'simple'     : [0, 255],
-}
+DEPTH_MAX = 1000
+ALPHA = 5.7
 
-class MVSEC(Dataset):
-    def __init__(self, filelist_path, mode, scene="day2", size=(518, 518)):
+RGB_MEAN  = [ 93.693515, 94.399027, 96.141395 ]
+RGB_STD   = [ 53.938046, 52.463300, 54.016670]
+GRAY_MEAN = [ 94.386783 ]
+GRAY_STD  = [ 52.621100 ]
+
+class EventScape(Dataset):
+    def __init__(self, filelist_path, mode, size=(518, 518)):
         self.mode = mode
         self.size = size
 
         with open(filelist_path, "r") as f:
             self.filelist = f.read().splitlines()
 
-        mean = [MEAN_STD[scene][0], MEAN_STD[scene][0], MEAN_STD[scene][0]]
-        std = [MEAN_STD[scene][1], MEAN_STD[scene][1], MEAN_STD[scene][1]]
+        mean = [GRAY_MEAN, GRAY_MEAN, GRAY_MEAN]
+        std = [RGB_STD, RGB_STD, RGB_STD]
         
         net_w, net_h = size
         self.transform = Compose(
@@ -42,7 +42,13 @@ class MVSEC(Dataset):
             ]
             + ([Crop(size[0])] if self.mode == "train" else [])
         )
-    
+
+    def rgb2gray(rgb):
+        return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140]).astype(np.float32)
+
+    def gray2rgb(gray):
+        return np.stack((gray,) * 3, axis=-1)
+
     def prepare_depth(self, depth, reg_factor, d_max):
         # Normalize depth
         depth = np.clip(depth, 0.0, d_max)
@@ -52,19 +58,21 @@ class MVSEC(Dataset):
         return depth
 
     def __getitem__(self, item):
-        reg_factor, d_max = 3.70378, 80
-        
+        reg_factor, d_max = 5.7, 1000
+
         img_path = self.filelist[item].split(" ")[0]
         depth_path = self.filelist[item].split(" ")[1]
         event_voxel_path = self.filelist[item].split(" ")[2]
 
         image = cv2.imread(img_path)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) / 255.0
-        depth = np.load(depth_path)
-        event_voxel = np.load(event_voxel_path)
+        image = self.gray2rgb(self.rgb2gray(image))
 
+        depth = np.load(depth_path)
         # Convert absolute scale depth to normalized log depth
         depth = self.prepare_depth(depth, reg_factor, d_max)
+
+        event_voxel = np.load(event_voxel_path)
 
         sample = self.transform({"image": image, "depth": depth, "event_voxel": event_voxel})
 

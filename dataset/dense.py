@@ -33,6 +33,12 @@ class Dense(Dataset):
             + ([Crop(size[0])] if self.mode == "train" else [])
         )
 
+    def rgb2gray(rgb):
+        return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140]).astype(np.float32)
+
+    def gray2rgb(gray):
+        return np.stack((gray,) * 3, axis=-1)
+
     def prepare_depth(self, depth, reg_factor, d_max):
         # Normalize depth
         depth = np.clip(depth, 0.0, d_max)
@@ -43,19 +49,21 @@ class Dense(Dataset):
 
     def __getitem__(self, item):
         reg_factor, d_max = 6.2044, 1000
-        
+
         img_path = self.filelist[item].split(" ")[0]
         depth_path = self.filelist[item].split(" ")[1]
         event_voxel_path = self.filelist[item].split(" ")[2]
 
         image = cv2.imread(img_path)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) / 255.0
+        image = self.gray2rgb(self.rgb2gray(image))
+        
         depth = np.load(depth_path)
-        event_voxel = np.load(event_voxel_path)
-
         # Convert absolute scale depth to normalized log depth
         depth = self.prepare_depth(depth, reg_factor, d_max)
 
+        event_voxel = np.load(event_voxel_path)
+        
         sample = self.transform({"image": image, "depth": depth, "event_voxel": event_voxel})
 
         image = torch.from_numpy(sample["image"])
@@ -65,10 +73,8 @@ class Dense(Dataset):
 
         del sample['image']
         del sample['event_voxel']
-        # sample["image"] = torch.from_numpy(sample["image"])
-        # sample["event_voxel"] = torch.from_numpy(sample["event_voxel"])
 
-        sample["valid_mask"] = sample["depth"] >= 0
+        sample["valid_mask"] = np.isfinite(sample["depth"]) & (sample["depth"] >= 0)
         sample["image_path"] = img_path
 
         return sample
