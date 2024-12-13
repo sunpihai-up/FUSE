@@ -1,11 +1,13 @@
+import os
+import json
+import random
+import argparse
 from tqdm import tqdm
 
-import json
 import numpy as np
 from PIL import Image
 
 import h5py
-import os
 
 def map_depth_to_image(image_ts, depth_ts, output_dir):
     """
@@ -20,15 +22,13 @@ def map_depth_to_image(image_ts, depth_ts, output_dir):
         Saves two JSON files:
         - depth_to_image.json: Mapping from depth indices to nearest image indices.
     """
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-
+    print("Mapping depth to image timestamps...")
     # Create mappings
     depth_to_image = {}
 
     image_idx = 0
     # Compute nearest previous image for each depth
-    for depth_idx, depth_time in enumerate(depth_ts):
+    for depth_idx, depth_time in tqdm(enumerate(depth_ts), total=len(depth_ts)):
         # nearest_image_idx = None
         # for idx, ts in enumerate(image_ts):
         #     if ts > depth_time:
@@ -68,9 +68,7 @@ def map_depth_to_events(depth_ts, events, output_dir):
     Output:
         A JSON file saved to output_dir containing the correspondence between depth maps and events.
     """
-    
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+    print("Mapping depth to event timestamps...")
 
     # Initialize result dictionary
     depth_to_events_mapping = {}
@@ -79,7 +77,7 @@ def map_depth_to_events(depth_ts, events, output_dir):
     current_event_index = 0
 
     # Iterate through each depth timestamp
-    for i, depth_time in enumerate(depth_ts):
+    for i, depth_time in tqdm(enumerate(depth_ts), total=len(depth_ts)):
         # Move the start index forward to skip past events older than 50ms before the depth timestamp
         while current_event_index < len(events) and events[current_event_index, 2] < depth_time - 0.05:
             current_event_index += 1
@@ -100,7 +98,7 @@ def map_depth_to_events(depth_ts, events, output_dir):
             }
 
     # Save the mapping to a JSON file
-    output_file = os.path.join(output_dir, "depth_to_events_mapping.json")
+    output_file = os.path.join(output_dir, "depth_to_events.json")
     with open(output_file, "w") as f:
         json.dump(depth_to_events_mapping, f, indent=4)
 
@@ -133,12 +131,12 @@ def events_to_voxel_grid(events, num_bins, width, height):
     #print("events 1", events[:,0])
     events[:, 0] = (num_bins - 1) * (events[:, 0] - first_stamp) / deltaT
     ts = events[:, 0]
-    xs = events[:, 1].astype(np.int)
-    ys = events[:, 2].astype(np.int)
+    xs = events[:, 1].astype(int)
+    ys = events[:, 2].astype(int)
     pols = events[:, 3]
     pols[pols == 0] = -1  # polarity should be +1 / -1
 
-    tis = ts.astype(np.int)
+    tis = ts.astype(int)
     dts = ts - tis
     vals_left = pols * (1.0 - dts)
     vals_right = pols * dts
@@ -156,23 +154,28 @@ def events_to_voxel_grid(events, num_bins, width, height):
     return voxel_grid
 
 def save_depths2dir(depths, selected_depths, output_dir):
-    for dpt_id in selected_depths:
+    print("Saving depths to directory:", output_dir)
+    for dpt_id in tqdm(selected_depths, desc="Saving depths"):
         dpt = depths[dpt_id]
         np.save(output_dir + '/%05d.npy' % dpt_id, dpt)
+    print(f"Saved depths to {output_dir}")
 
-def save_images2dir(images, selected_depths, depth2image, output_dir):    
-    for dpt_id in selected_depths:
+def save_images2dir(images, selected_depths, depth2image, output_dir):
+    print("Saving images to directory:", output_dir)
+    for dpt_id in tqdm(selected_depths, desc="Saving images"):
         img_id = depth2image[dpt_id]["nearest_img_idx"]
 
         img = images[img_id]
         img = Image.fromarray(img)
         img.save(output_dir + '/%05d.png' % dpt_id)
+    print(f"Saved images to {output_dir}")
 
 
 def save_voxels2dir(
     events, selected_depths, depth2event, output_dir, num_bins=5, width=346, height=260
 ):
-    for dpt_id in selected_depths:
+    print("Saving voxels to directory:", output_dir)
+    for dpt_id in tqdm(selected_depths, desc="Saving voxels"):
         st_id = depth2event[dpt_id]["start_event_index"]
         en_id = depth2event[dpt_id]["end_event_index"]
 
@@ -181,5 +184,145 @@ def save_voxels2dir(
 
         voxels = events_to_voxel_grid(event_slice, num_bins, width, height)
         np.save(output_dir + '/%05d.npy' % dpt_id, voxels)
+    print(f"Saved voxels to {output_dir}")
+
+def gen_split(scene, data_dir, output_dir="./dataset/splits/mvsec/"):
+    depths_dir = os.path.join(data_dir, "depths")
+    images_dir = os.path.join(data_dir, "images")
+    events_dir = os.path.join(data_dir, "voxels")
+    
+    depths = os.listdir(depths_dir).sort()
+    images = os.listdir(images_dir).sort()
+    events = os.listdir(events_dir).sort()
+    
+    assert len(depths) == len(images) and len(depths) == len(events)
+    
+    depths = [os.path.join(depths_dir, file_name) for file_name in depths]
+    images = [os.path.join(images_dir, file_name) for file_name in images]
+    events = [os.path.join(events_dir, file_name) for file_name in events]
+    
+    lines = []
+    for i in range(depths):
+        line = images[i] + ' ' + depths[i] + ' ' + events[i] + '\n'
+        lines.append(line)
+    
+    if scene == "outdoor_day1": # Train DataSet
+        with open(output_dir + "train.txt", 'r') as f:
+            f.writelines(lines)
+    else:
+        # Test & Val DataSet
+        # TODO: 
+        with open(output_dir + "test.txt", 'r') as f:
+            f.writelines(lines)
         
-if 
+        lines = random.sample(lines, 500)
+        with open(output_dir + "val.txt", 'r') as f:
+            f.writelines(lines)
+    print(f"Saved split file to {output_dir}")
+    
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="Process script parameters.")
+    parser.add_argument("data_root", type=str, help="Path to the root directory of input data.")
+    parser.add_argument("output_root", type=str, help="Path to the root directory for output data.")
+    parser.add_argument("--numbins", type=int, default=5, help="Number of bins for voxel grid. Default is 5.")
+    parser.add_argument("--width", type=int, default=300, help="Width of the voxel grid. Default is 300.")
+    parser.add_argument("--height", type=int, default=200, help="Height of the voxel grid. Default is 200.")
+    return parser.parse_args()
+
+def main(data_hdf5_path, gt_hdf5_path, output_dir, numbins, width, height):
+    os.makedirs(output_dir, exist_ok=True)
+
+    assert os.path.isfile(data_hdf5_path), print(f"Data file {data_hdf5_path} does not exist")
+    assert os.path.isfile(gt_hdf5_path), print(f"GT file {gt_hdf5_path} does not exist")
+
+    data = h5py.File(data_hdf5_path)
+    gt = h5py.File(gt_hdf5_path)
+
+    print(
+        "Extracting timestamps info (The sequence of events is so long and may take a long time)..."
+    )
+    image_ts = np.array(data["davis"]["left"]["image_raw_ts"])
+    assert np.all(image_ts[:-1] <= image_ts[1:]), print(
+        "Image timestamps are not in ascending order"
+    )
+
+    depth_image_raw_ts = np.array(gt["davis"]["left"]["depth_image_raw_ts"])
+    assert np.all(depth_image_raw_ts[:-1] <= depth_image_raw_ts[1:]), print(
+        "Depth timestamps are not in ascending order"
+    )
+
+    events = np.array(data["davis"]["left"]["events"])  # x, y, t, p
+    event_timestamps = events[:, 2]
+    assert np.all(event_timestamps[:-1] <= event_timestamps[1:]), print(
+        "Event timestamps are not in ascending order"
+    )
+    print("Timestamps extracted.")
+
+    depth2image = map_depth_to_image(image_ts, depth_image_raw_ts, output_dir)
+    depth2event = map_depth_to_events(depth_image_raw_ts, events, output_dir)
+
+    selected_depths = []
+
+    for depth_id, item in depth2image.items():
+        diff = item["diff"]
+        if diff * 1000 > 10: # 10ms
+            print(f"Depth {depth_id}: No recent image, discard the GT")
+            continue
+
+        if depth_id not in depth2event:
+            print(f"Depth {depth_id}: There are not enough events, discard the GT")
+            continue
+
+        selected_depths.append(depth_id)
+    print(f"Length of selected samples: {len(selected_depths)}")
+
+    depths_dir = os.path.join(output_dir, "depths")
+    images_dir = os.path.join(output_dir, "images")
+    events_dir = os.path.join(output_dir, "voxels")
+
+    os.makedirs(depths_dir, exist_ok=True)
+    os.makedirs(images_dir, exist_ok=True)
+    os.makedirs(events_dir, exist_ok=True)
+
+    images = data['davis']['left']['image_raw']
+    depths = gt['davis']['left']['depth_image_raw']
+
+    save_depths2dir(depths, selected_depths, depths_dir)
+    save_images2dir(images, selected_depths, depth2image, images_dir)
+    save_voxels2dir(
+        events, selected_depths, depth2event, events_dir, numbins, width, height
+    )
+    
+    gen_split(scene, output_dir)
+
+if __name__ == "__main__":
+    process_list = [
+        ("outdoor_day1_data.hdf5", "outdoor_day1_gt.hdf5"),
+        # ("outdoor_day2_data.hdf5", "outdoor_day2_gt.hdf5"),
+        # ("outdoor_night1_data.hdf5", "outdoor_night1_gt.hdf5"),
+        # ("outdoor_night2_data.hdf5", "outdoor_night3_gt.hdf5"),
+        # ("outdoor_night3_data.hdf5", "outdoor_night3_gt.hdf5"),
+    ]
+
+    args = parse_arguments()
+
+    for pair in process_list:
+        # outdoor_day1, outdoor_day2 ...
+        scene = pair[0].split('_')[0] + '_' + pair[0].split('_')[1]
+
+        data_hdf5_path = os.path.join(args.data_root, pair[0])
+        gt_hdf5_path = os.path.join(args.data_root, pair[1])
+        output_dir = os.path.join(args.output_root, scene)
+
+        print(f"##############  Processing {scene} ##############")
+        main(
+            data_hdf5_path,
+            gt_hdf5_path,
+            output_dir,
+            args.numbins,
+            args.width,
+            args.height,
+        )
+        print(f"##############  Finished Processing {scene} ##############")
+
+# python process_mvsec.py F:\\MVSEC\\mvsec-hdf5 F:\\MVSEC\\mvsec-hdf5\\test --numbins 3 --width 346 --height 260
