@@ -46,15 +46,17 @@ parser.add_argument("--pretrained-from", type=str)
 parser.add_argument("--save-path", type=str, required=True)
 parser.add_argument("--local-rank", default=0, type=int)
 parser.add_argument("--port", default=None, type=int)
+parser.add_argument("--event_voxel_chans", default=5, type=int)
+parser.add_argument(
+    "--prompt_type",
+    choices=["epde_deep", "epde_shaw", "None"],
+    type=str,
+)
 parser.add_argument(
     "--finetune-mode",
-    choices=["foundation_all_frozen", "foundation_encoders_frozen", "nothing_frozen"],
-    default="foundation_all_frozen",
+    choices=["prompt", "decoder", "bias", "bias_and_decoder", "overall"],
+    default="prompt",
     type=str,
-    help="Specify which parameters to freeze during fine-tuning. Options are: "
-    "'foundation_all_frozen' (freeze all foundation params), "
-    "'foundation_encoders_frozen' (freeze only encoder params in foundation), "
-    "'nothing_frozen' (train all params).",
 )
 
 
@@ -145,13 +147,21 @@ def main():
     criterion = SiLogLoss().cuda(local_rank)
 
     # Handling frozen parameters
-    if args.finetune_mode == "foundation_all_frozen":
+    if args.finetune_mode == "prompt":
         for name, param in model.named_parameters():
             if 'foundation' in name:
                 param.requires_grad = False
-    elif args.finetune_mode == "foundation_encoders_frozen":
+    elif args.finetune_mode == "decoder":
         for name, param in model.named_parameters():
             if 'foundation.pretrained' in name:
+                param.requires_grad = False
+    elif args.finetune_mode == "bias":
+        for name, param in model.named_parameters():
+            if 'bias' not in name and 'foundation' in name:
+                param.requires_grad = False
+    elif args.finetune_mode == "bias_and_decoder":
+        for name, param in model.named_parameters():
+            if 'bias' not in name and 'foundation.pretrained' in name:
                 param.requires_grad = False
     print(f'The freezing mode of weights is: {args.finetune_mode}')
 

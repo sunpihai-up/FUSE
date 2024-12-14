@@ -186,50 +186,60 @@ def save_voxels2dir(
         np.save(output_dir + '/%05d.npy' % dpt_id, voxels)
     print(f"Saved voxels to {output_dir}")
 
+
+def save_events2dir(events, selected_depths, depth2event, output_dir):
+    print("Saving events to directory:", output_dir)
+    for dpt_id in tqdm(selected_depths, desc="Saving events"):
+        st_id = depth2event[dpt_id]["start_event_index"]
+        en_id = depth2event[dpt_id]["end_event_index"]
+
+        event_slice = events[st_id : en_id + 1]
+        event_slice = event_slice[:, [2, 0, 1, 3]] # (x, y, t, p) --> (t, x, y, p)
+
+        np.save(output_dir + '/%05d.npy' % dpt_id, event_slice)
+    print(f"Saved events to {output_dir}")
+
+
 def gen_split(scene, data_dir, output_dir="./dataset/splits/mvsec/"):
     depths_dir = os.path.join(data_dir, "depths")
     images_dir = os.path.join(data_dir, "images")
-    events_dir = os.path.join(data_dir, "voxels")
+    voxels_dir = os.path.join(data_dir, "voxels")
     
-    depths = os.listdir(depths_dir).sort()
-    images = os.listdir(images_dir).sort()
-    events = os.listdir(events_dir).sort()
+    depths = os.listdir(depths_dir)
+    images = os.listdir(images_dir)
+    voxels = os.listdir(voxels_dir)
     
-    assert len(depths) == len(images) and len(depths) == len(events)
+    depths.sort()
+    images.sort()
+    voxels.sort()
+    
+    assert len(depths) == len(images) and len(depths) == len(voxels)
     
     depths = [os.path.join(depths_dir, file_name) for file_name in depths]
     images = [os.path.join(images_dir, file_name) for file_name in images]
-    events = [os.path.join(events_dir, file_name) for file_name in events]
+    voxels = [os.path.join(voxels_dir, file_name) for file_name in voxels]
     
     lines = []
-    for i in range(depths):
-        line = images[i] + ' ' + depths[i] + ' ' + events[i] + '\n'
+    for i in range(len(depths)):
+        line = images[i] + ' ' + depths[i] + ' ' + voxels[i] + '\n'
         lines.append(line)
     
-    if scene == "outdoor_day1": # Train DataSet
-        with open(output_dir + "train.txt", 'r') as f:
+    os.makedirs(output_dir, exist_ok=True)
+    if scene == "outdoor_day2": # Train DataSet
+        with open(output_dir + "train.txt", 'w') as f:
             f.writelines(lines)
     else:
         # Test & Val DataSet
         # TODO: 
-        with open(output_dir + "test.txt", 'r') as f:
+        with open(output_dir + "test.txt", 'a') as f:
             f.writelines(lines)
         
-        lines = random.sample(lines, 500)
-        with open(output_dir + "val.txt", 'r') as f:
+        lines = random.sample(lines, 100)
+        with open(output_dir + "val.txt", 'a') as f:
             f.writelines(lines)
     print(f"Saved split file to {output_dir}")
-    
-def parse_arguments():
-    parser = argparse.ArgumentParser(description="Process script parameters.")
-    parser.add_argument("data_root", type=str, help="Path to the root directory of input data.")
-    parser.add_argument("output_root", type=str, help="Path to the root directory for output data.")
-    parser.add_argument("--numbins", type=int, default=5, help="Number of bins for voxel grid. Default is 5.")
-    parser.add_argument("--width", type=int, default=300, help="Width of the voxel grid. Default is 300.")
-    parser.add_argument("--height", type=int, default=200, help="Height of the voxel grid. Default is 200.")
-    return parser.parse_args()
 
-def main(data_hdf5_path, gt_hdf5_path, output_dir, numbins, width, height):
+def main(data_hdf5_path, gt_hdf5_path, scene, output_dir, numbins, width, height):
     os.makedirs(output_dir, exist_ok=True)
 
     assert os.path.isfile(data_hdf5_path), print(f"Data file {data_hdf5_path} does not exist")
@@ -278,31 +288,44 @@ def main(data_hdf5_path, gt_hdf5_path, output_dir, numbins, width, height):
 
     depths_dir = os.path.join(output_dir, "depths")
     images_dir = os.path.join(output_dir, "images")
-    events_dir = os.path.join(output_dir, "voxels")
-
+    events_dir = os.path.join(output_dir, "events")
+    voxels_dir = os.path.join(output_dir, "voxels")
+    
     os.makedirs(depths_dir, exist_ok=True)
     os.makedirs(images_dir, exist_ok=True)
     os.makedirs(events_dir, exist_ok=True)
-
+    os.makedirs(voxels_dir, exist_ok=True)
+    
     images = data['davis']['left']['image_raw']
     depths = gt['davis']['left']['depth_image_raw']
 
     save_depths2dir(depths, selected_depths, depths_dir)
     save_images2dir(images, selected_depths, depth2image, images_dir)
+    save_events2dir(events, selected_depths, depth2event, events_dir)
     save_voxels2dir(
-        events, selected_depths, depth2event, events_dir, numbins, width, height
+        events, selected_depths, depth2event, voxels_dir, numbins, width, height
     )
     
     gen_split(scene, output_dir)
 
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="Process script parameters.")
+    parser.add_argument("data_root", type=str, help="Path to the root directory of input data.")
+    parser.add_argument("output_root", type=str, help="Path to the root directory for output data.")
+    parser.add_argument("--numbins", type=int, default=5, help="Number of bins for voxel grid. Default is 5.")
+    # parser.add_argument("--width", type=int, default=346, help="Width of the voxel grid.")
+    # parser.add_argument("--height", type=int, default=260, help="Height of the voxel grid.")
+    return parser.parse_args()
+
 if __name__ == "__main__":
     process_list = [
         ("outdoor_day1_data.hdf5", "outdoor_day1_gt.hdf5"),
-        # ("outdoor_day2_data.hdf5", "outdoor_day2_gt.hdf5"),
-        # ("outdoor_night1_data.hdf5", "outdoor_night1_gt.hdf5"),
-        # ("outdoor_night2_data.hdf5", "outdoor_night3_gt.hdf5"),
-        # ("outdoor_night3_data.hdf5", "outdoor_night3_gt.hdf5"),
+        ("outdoor_day2_data.hdf5", "outdoor_day2_gt.hdf5"),
+        ("outdoor_night1_data.hdf5", "outdoor_night1_gt.hdf5"),
+        ("outdoor_night2_data.hdf5", "outdoor_night2_gt.hdf5"),
+        ("outdoor_night3_data.hdf5", "outdoor_night3_gt.hdf5"),
     ]
+    width, height = 346, 260
 
     args = parse_arguments()
 
@@ -318,11 +341,18 @@ if __name__ == "__main__":
         main(
             data_hdf5_path,
             gt_hdf5_path,
+            scene,
             output_dir,
             args.numbins,
-            args.width,
-            args.height,
+            width,
+            height,
         )
         print(f"##############  Finished Processing {scene} ##############")
 
 # python process_mvsec.py F:\\MVSEC\\mvsec-hdf5 F:\\MVSEC\\mvsec-hdf5\\test --numbins 3 --width 346 --height 260
+"""
+python scripts/process_mvsec_hdf5.py \
+    /data/coding/upload-data/data/mvsec_hdf5 \
+    /data/coding/upload-data/data/mvsec \
+    --numbins 3 --width 346 --height 260
+"""

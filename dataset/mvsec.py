@@ -8,6 +8,7 @@ from dataset.transform import Resize, NormalizeImage, PrepareForNet, Crop
 
 MEAN_STD = {
     'eventscape' : [ 94.386783, 52.621100 ],
+    'mvsec'      : [38.892975, 38.741392],
     'day1'       : [46.02644024, 66.58477104],
     'day2'       : [44.88074027, 75.6648636 ],
     'night1'     : [23.50456365, 51.03250885],
@@ -22,9 +23,9 @@ class MVSEC(Dataset):
         with open(filelist_path, "r") as f:
             self.filelist = f.read().splitlines()
 
-        mean = [MEAN_STD[scene][0], MEAN_STD[scene][0], MEAN_STD[scene][0]]
-        std = [MEAN_STD[scene][1], MEAN_STD[scene][1], MEAN_STD[scene][1]]
-        
+        mean = [MEAN_STD["mvsec"][0], MEAN_STD["mvsec"][0], MEAN_STD["mvsec"][0]]
+        std = [MEAN_STD["mvsec"][1], MEAN_STD["mvsec"][1], MEAN_STD["mvsec"][1]]
+
         net_w, net_h = size
         self.transform = Compose(
             [
@@ -42,7 +43,7 @@ class MVSEC(Dataset):
             ]
             + ([Crop(size[0])] if self.mode == "train" else [])
         )
-    
+
     def prepare_depth(self, depth, reg_factor, d_max):
         # Normalize depth
         depth = np.clip(depth, 0.0, d_max)
@@ -53,7 +54,7 @@ class MVSEC(Dataset):
 
     def __getitem__(self, item):
         reg_factor, d_max = 3.70378, 80
-        
+
         img_path = self.filelist[item].split(" ")[0]
         depth_path = self.filelist[item].split(" ")[1]
         event_voxel_path = self.filelist[item].split(" ")[2]

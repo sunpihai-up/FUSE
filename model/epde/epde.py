@@ -10,7 +10,7 @@ from torchvision.transforms import Compose
 from typing import Sequence, Tuple, Union
 from model.depth_anything_v2.dpt import DepthAnythingV2
 from model.layers.patch_embed import PatchEmbed
-from model.epde.prompt_module import Prompt_block, Prompt_block_rf
+from model.epde.prompt_module import Prompt_block
 from dataset.transform import Resize, NormalizeImage, PrepareForNet
 from .utils import token2feature, feature2token, init_weights_vit_timm
 
@@ -19,7 +19,6 @@ class EPDEVisionTransformer(nn.Module):
         self,
         img_size=224,
         patch_size=16,
-        # in_chans=3,
         event_voxel_chans=5,
         embed_dim=768,
         depth=12,
@@ -36,7 +35,6 @@ class EPDEVisionTransformer(nn.Module):
         self.encoder = encoder
         self.img_size = img_size
         self.patch_size = patch_size
-        # self.in_chans = in_chans
         self.event_voxel_chans = event_voxel_chans
         self.embed_dim = embed_dim
         self.depth = depth
@@ -65,10 +63,7 @@ class EPDEVisionTransformer(nn.Module):
             prompt_blocks = []
             block_nums = depth if self.prompt_type == 'epde_deep' else 1
             for i in range(block_nums):
-                if self.prompt_block is Prompt_block:
-                    prompt_blocks.append(Prompt_block(inplanes=embed_dim, hide_channel=8, smooth=True))
-                elif self.prompt_block is Prompt_block_rf:
-                    prompt_blocks.append(Prompt_block_rf(inplanes=embed_dim))
+                prompt_blocks.append(Prompt_block(inplanes=embed_dim, hide_channel=8, smooth=True))
             self.prompt_blocks = nn.Sequential(*prompt_blocks)
 
             prompt_norms = []
@@ -288,6 +283,7 @@ def EPDE(
     model_name,
     dataset='dense',
     depth_anything_pretrained=None,
+    event_voxel_chans=5,
     embed_layer=PatchEmbed,
     norm_layer=None,
     prompt_type=None,
@@ -302,8 +298,7 @@ def EPDE(
     return model_zoo[model_name](
         img_size=518,
         patch_size=14,
-        # in_chans=3,
-        event_voxel_chans=5,
+        event_voxel_chans=event_voxel_chans,
         dataset=dataset,
         depth_anything_pretrained=depth_anything_pretrained,
         embed_layer=embed_layer,
