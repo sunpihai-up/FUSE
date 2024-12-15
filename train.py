@@ -49,7 +49,7 @@ parser.add_argument("--port", default=None, type=int)
 parser.add_argument("--event_voxel_chans", default=5, type=int)
 parser.add_argument(
     "--prompt_type",
-    choices=["epde_deep", "epde_shaw", "None"],
+    choices=["epde_deep", "epde_shaw", "add", "none"],
     type=str,
 )
 parser.add_argument(
@@ -266,7 +266,8 @@ def main():
             loss = criterion(
                 pred,
                 depth,
-                valid_mask,
+                (valid_mask == 1) & (depth >= 0) & (depth <= 1)
+                # valid_mask,
             )
 
             loss.backward()
@@ -329,7 +330,7 @@ def main():
             if valid_mask.sum() < 10:
                 continue
 
-            cur_results = eval_depth(pred[valid_mask], depth[valid_mask])
+            cur_results = eval_depth(pred[valid_mask], depth[valid_mask], dataset=args.dataset)
 
             for k in results.keys():
                 results[k] += cur_results[k]
@@ -363,7 +364,7 @@ def main():
             for name, metric in results.items():
                 writer.add_scalar(f"eval/{name}", (metric / nsamples).item(), epoch)
 
-        if rank == 0 and (epoch + 1) % 20 == 0 and epoch > 50:
+        if rank == 0 and (epoch + 1) % 20 == 0:
             checkpoint = {
                 "model": model.state_dict(),
                 "optimizer": optimizer.state_dict(),

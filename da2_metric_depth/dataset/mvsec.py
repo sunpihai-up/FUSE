@@ -17,7 +17,7 @@ MEAN_STD = {
 }
 
 class MVSEC(Dataset):
-    def __init__(self, filelist_path, mode, size=(518, 518)):
+    def __init__(self, filelist_path, mode, scene="day2", size=(518, 518)):
         self.mode = mode
         self.size = size
 
@@ -70,13 +70,15 @@ class MVSEC(Dataset):
 
         sample = self.transform({"image": image, "depth": depth, "event_voxel": event_voxel})
 
-        image = torch.from_numpy(sample["image"])
-        event_voxel = torch.from_numpy(sample["event_voxel"])
+        sample['image'] = torch.from_numpy(sample['image'])
         sample["depth"] = torch.from_numpy(sample["depth"])
-        sample["input"] = torch.cat([image, event_voxel], dim=0)
+        # image = torch.from_numpy(sample["image"])
+        # event_voxel = torch.from_numpy(sample["event_voxel"])
+        # sample["depth"] = torch.from_numpy(sample["depth"])
+        # sample["input"] = torch.cat([image, event_voxel], dim=0)
 
-        del sample['image']
-        del sample['event_voxel']
+        # del sample['image']
+        # del sample['event_voxel']
 
         sample["valid_mask"] = np.isfinite(sample["depth"]) & (sample["depth"] >= 0)
         sample["image_path"] = img_path

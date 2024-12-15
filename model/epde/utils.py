@@ -9,10 +9,11 @@ def init_weights_vit_timm(module: nn.Module, name: str = ""):
             nn.init.zeros_(module.bias)
 
 
-def token2feature(tokens):
+def token2feature(tokens, patch_grid_size):
     """add token transfer to feature"""
     B, L, D = tokens.shape
-    H = W = int(L**0.5)
+    # H = W = int(L**0.5)
+    W, H = patch_grid_size[0], patch_grid_size[1]
     x = tokens.permute(0, 2, 1).view(B, D, W, H).contiguous()
     return x
 

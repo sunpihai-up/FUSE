@@ -88,10 +88,10 @@ class EPDEVisionTransformer(nn.Module):
                 )
             self.prompt_blocks = nn.Sequential(*prompt_blocks)
 
-            prompt_norms = []
-            for i in range(block_nums):
-                prompt_norms.append(self.norm_layer(embed_dim))
-            self.prompt_norms = nn.Sequential(*prompt_norms)
+            # prompt_norms = []
+            # for i in range(block_nums):
+            #     prompt_norms.append(self.norm_layer(embed_dim))
+            # self.prompt_norms = nn.Sequential(*prompt_norms)
 
         self.init_weights()
 
@@ -124,6 +124,7 @@ class EPDEVisionTransformer(nn.Module):
         image = x[:, :3, :, :]
         event = x[:, 3:, :, :]
         B, nc, w, h = image.shape
+        patch_grid_size = (w // self.patch_size, h // self.patch_size)
 
         # Compute event and image embedding
         image_token = self.foundation.pretrained.patch_embed(image)
@@ -131,16 +132,17 @@ class EPDEVisionTransformer(nn.Module):
 
         # Injecting modal supplementary information
         if self.prompt_type in ["epde_shaw", "epde_deep"]:
-            image_feat = token2feature(self.prompt_norms[0](image_token))
-            prompt_feat = token2feature(self.prompt_norms[0](prompt_token))
-
+            # image_token = self.prompt_norms[0](image_token)
+            # prompt_token = self.prompt_norms[0](prompt_token)
+            image_feat = token2feature(image_token, patch_grid_size)
+            prompt_feat = token2feature(prompt_token, patch_grid_size)
             prompt_feat = self.prompt_blocks[0](
                 torch.cat([image_feat, prompt_feat], dim=1)
             )
             prompt_token = feature2token(prompt_feat)
 
             image_token = image_token + prompt_token
-        else:
+        elif self.prompt_type == "add":
             image_token = image_token + prompt_token
 
         # Adding cls_token
@@ -181,14 +183,16 @@ class EPDEVisionTransformer(nn.Module):
                 # Add Prompt information from 1st layer
                 # TODO: Why ViPT use i - 1
                 # use [:, 1:] to exclude the cls_token
-                image_feat = token2feature(self.prompt_norms[i](image_token[:, 1:]))
-                prompt_feat = token2feature(self.prompt_norms[i](prompt_token[:, 1:]))
+                # image_token = self.prompt_norms[i](image_token)
+                # prompt_token = self.prompt_norms[i](prompt_token)
+                image_feat = token2feature(image_token[:, 1:], patch_grid_size)
+                prompt_feat = token2feature(prompt_token[:, 1:], patch_grid_size)
 
                 prompt_feat = self.prompt_blocks[i](
                     torch.cat([image_feat, prompt_feat], dim=1)
                 )
+                prompt_token = prompt_token.clone()
                 prompt_token[:, 1:] = feature2token(prompt_feat)
-
                 image_token = image_token + prompt_token
 
             image_token = blk(image_token)
@@ -228,8 +232,6 @@ class EPDEVisionTransformer(nn.Module):
         )
 
         depth = self.foundation.depth_head(features, patch_h, patch_w)
-        depth = F.relu(depth)
-
         return depth.squeeze(1)
 
     @torch.no_grad()
