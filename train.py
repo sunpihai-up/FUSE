@@ -82,7 +82,7 @@ def main():
     if args.dataset == "dense":
         trainset = Dense("dataset/splits/dense/train.txt", "train", size=size)
     elif args.dataset == "mvsec":
-        trainset = Dense("dataset/splits/mvsec/train.txt", "train", size=size)
+        trainset = MVSEC("dataset/splits/mvsec/train.txt", "train", size=size)
     else:
         raise NotImplementedError
 
@@ -121,6 +121,8 @@ def main():
     model = EPDE(
         model_name=args.encoder,
         dataset=args.dataset,
+        event_voxel_chans=args.event_voxel_chans,
+        prompt_type=args.prompt_type,
         depth_anything_pretrained=args.depth_anything_pretrained,
     )
 
