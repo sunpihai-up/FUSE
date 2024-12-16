@@ -62,9 +62,9 @@ def prepare_depth_data(target, prediction, clip_distance, reg_factor=3.70378):
 
     return target, prediction, valid_mask
 
-def eval_depth(pred, target, dataset='dense', eps=1e-6):
+def eval_depth(pred, target, dataset, eps=1e-6):
     assert pred.shape == target.shape
-    
+
     reg_factor = dataset2params[dataset]["reg_factor"]
     max_depth = dataset2params[dataset]["clip_distance"]
     
@@ -75,7 +75,7 @@ def eval_depth(pred, target, dataset='dense', eps=1e-6):
     
     pred = pred[valid_mask] + eps
     target = target[valid_mask] + eps
-    
+
     thresh = torch.max((target / pred), (pred / target))
 
     d1 = torch.sum(thresh < 1.25).float() / len(thresh)
@@ -96,3 +96,4 @@ def eval_depth(pred, target, dataset='dense', eps=1e-6):
 
     return {'d1': d1.item(), 'd2': d2.item(), 'd3': d3.item(), 'abs_rel': abs_rel.item(), 'sq_rel': sq_rel.item(), 
             'rmse': rmse.item(), 'rmse_log': rmse_log.item(), 'log10':log10.item(), 'silog':silog.item()}
+    

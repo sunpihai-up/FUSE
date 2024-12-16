@@ -7,11 +7,11 @@ gpus=2
 lr=0.000005
 encoder=vitl
 dataset=mvsec # vkitti
-img_size=518
-min_depth=0.01
-max_depth=80
+img_size=350
+min_depth=0
+max_depth=1
 pretrained_from=/data/coding/upload-data/checkpoints/depth_anything_v2_metric_vkitti_vitl.pth
-save_path=/data/coding/code/da2-prompt-tuning/exp/${dataset}_${now}
+save_path=/data/coding/code/da2/exp-nl/${dataset}_${now}
 
 mkdir -p $save_path
 

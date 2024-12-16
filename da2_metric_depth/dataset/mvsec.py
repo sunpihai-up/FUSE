@@ -58,17 +58,17 @@ class MVSEC(Dataset):
 
         img_path = self.filelist[item].split(" ")[0]
         depth_path = self.filelist[item].split(" ")[1]
-        event_voxel_path = self.filelist[item].split(" ")[2]
+        # event_voxel_path = self.filelist[item].split(" ")[2]
 
         image = cv2.imread(img_path)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) / 255.0
         depth = np.load(depth_path)
-        event_voxel = np.load(event_voxel_path)
+        # event_voxel = np.load(event_voxel_path)
 
         # Convert absolute scale depth to normalized log depth
         depth = self.prepare_depth(depth, reg_factor, d_max)
 
-        sample = self.transform({"image": image, "depth": depth, "event_voxel": event_voxel})
+        sample = self.transform({"image": image, "depth": depth})
 
         sample['image'] = torch.from_numpy(sample['image'])
         sample["depth"] = torch.from_numpy(sample["depth"])

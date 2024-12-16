@@ -266,8 +266,7 @@ def main():
             loss = criterion(
                 pred,
                 depth,
-                (valid_mask == 1) & (depth >= 0) & (depth <= 1)
-                # valid_mask,
+                valid_mask,
             )
 
             loss.backward()
@@ -392,7 +391,6 @@ def main():
                             os.remove(os.path.join(args.save_path, file))
                     checkpoint = {
                         "model": model.state_dict(),
-                        "optimizer": optimizer.state_dict(),
                         "epoch": epoch,
                         "previous_best": previous_best,
                     }
