@@ -65,8 +65,8 @@ class EventScape(Dataset):
         event_voxel_path = self.filelist[item].split(" ")[2]
 
         image = cv2.imread(img_path)
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) / 255.0
         image = self.gray2rgb(self.rgb2gray(image))
+        image = image / 255.0
 
         depth = np.load(depth_path)
         # Convert absolute scale depth to normalized log depth

@@ -6,6 +6,33 @@ import shutil
 from tqdm import tqdm
 
 
+def delete_redundant_files(data_root):
+    towns = os.listdir(data_root)
+
+    for town in towns:
+        town_path = os.path.join(data_root, town)
+        sequences = os.listdir(town_path)
+        for seq in sequences:
+            seq_path = os.path.join(town_path, seq)
+            
+            depth_frames = os.path.join(seq_path, 'depth', 'frames')
+            event_frames = os.path.join(seq_path, 'events', 'frames')
+            semantic = os.path.join(seq_path, 'semantic')
+            vehicles = os.path.join(seq_path, 'vehicle_data')
+
+            if os.path.isdir(depth_frames):
+                shutil.rmtree(depth_frames)
+                
+            if os.path.isdir(event_frames):
+                shutil.rmtree(event_frames)
+            
+            if os.path.isdir(semantic):
+                shutil.rmtree(semantic)
+            
+            if os.path.isdir(vehicles):
+                shutil.rmtree(vehicles)
+                
+
 def events_to_voxel_grid(events, num_bins, width, height):
     """
     Build a voxel grid with bilinear interpolation in the time domain from a set of events.
@@ -34,7 +61,7 @@ def events_to_voxel_grid(events, num_bins, width, height):
     ts = events[:, 0]
     xs = events[:, 1].astype(int)
     ys = events[:, 2].astype(int)
-    pols = events[:, 3]
+    pols = events[:, 3].astype(np.int32)
     pols[pols == 0] = -1  # polarity should be +1 / -1
 
     tis = ts.astype(int)
@@ -111,8 +138,8 @@ def parse_arguments():
 
 if __name__ == "__main__":
     zip_name = {
-        # "train": "Town01-03_train.zip",
-        # "test": "Town05_test.zip",
+        "train": "Town01-03_train.zip",
+        "test": "Town05_test.zip",
         "val": "Town05_val.zip",
     }
     width, height = 512, 256
@@ -128,9 +155,10 @@ if __name__ == "__main__":
         zip_path = os.path.join(args.data_root, name)
         output_path = os.path.join(args.output_root, name.split(".")[0])
 
-        # print(f"Unzip {zip_path}...")
-        # with zipfile.ZipFile(zip_path, "r") as zip_ref:
-        #     zip_ref.extractall(output_path)
+        print(f"Unzip {zip_path}...")
+        if "Town05_test.zip" not in zip_path:
+            with zipfile.ZipFile(zip_path, "r") as zip_ref:
+                zip_ref.extractall(output_path)
 
         towns = os.listdir(output_path)
         for town in towns:
@@ -144,7 +172,7 @@ if __name__ == "__main__":
                 voxels_dir = os.path.join(seq_path, "events", "voxels")
 
                 # Convert all events in events_dir to voxels and save them to voxels_dir
-                # process_events_dir(events_dir, voxels_dir, args.numbins, width, height)
+                process_events_dir(events_dir, voxels_dir, args.numbins, width, height)
 
                 # Add file paths to list
                 images = os.listdir(images_dir)
@@ -173,11 +201,13 @@ if __name__ == "__main__":
         split_path = split_dir + mode + ".txt"
         with open(split_path, "w") as f:
             f.writelines(lines)
-
+        
+        # delete_redundant_files(output_path)
         print(f"##############  Finished Processing {name} ##############")
 
 """
 python scripts/process_eventscape.py \
     /data/coding/upload-data/data/EventScape \
-    /data/coding/upload-data/data/EventScape_processed
+    /data/coding/upload-data/data/EventScape_processed \
+    --numbins 5
 """

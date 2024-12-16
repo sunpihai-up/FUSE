@@ -17,9 +17,10 @@ MEAN_STD = {
 }
 
 class MVSEC(Dataset):
-    def __init__(self, filelist_path, mode, scene="day2", size=(518, 518)):
+    def __init__(self, filelist_path, mode, normalized_d=True, scene="day2", size=(518, 518)):
         self.mode = mode
         self.size = size
+        self.normalized_d = normalized_d
 
         with open(filelist_path, "r") as f:
             self.filelist = f.read().splitlines()
@@ -40,6 +41,7 @@ class MVSEC(Dataset):
                     image_interpolation_method=cv2.INTER_CUBIC,
                 ),
                 NormalizeImage(mean=mean, std=std),
+                # NormalizeImage(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
                 PrepareForNet(),
             ]
             + ([Crop(size[0])] if self.mode == "train" else [])
@@ -66,7 +68,8 @@ class MVSEC(Dataset):
         # event_voxel = np.load(event_voxel_path)
 
         # Convert absolute scale depth to normalized log depth
-        depth = self.prepare_depth(depth, reg_factor, d_max)
+        if self.normalized_d:
+            depth = self.prepare_depth(depth, reg_factor, d_max)
 
         sample = self.transform({"image": image, "depth": depth})
 
@@ -80,7 +83,10 @@ class MVSEC(Dataset):
         # del sample['image']
         # del sample['event_voxel']
 
-        sample["valid_mask"] = np.isfinite(sample["depth"]) & (sample["depth"] >= 0)
+        if self.normalized_d:
+            sample["valid_mask"] = np.isfinite(sample["depth"]) & (sample["depth"] >= 0)
+        else:
+            sample['valid_mask'] = np.isfinite(sample["depth"]) & (sample['depth'] <= 80)
         sample["image_path"] = img_path
 
         return sample
