@@ -6,7 +6,7 @@ import glob
 from os.path import join
 import tqdm
 import cv2
-
+import json
 from pprint import pprint
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
@@ -331,7 +331,10 @@ if __name__ == "__main__":
     flags = FLAGS()
 
     reg_factor = dataset2params[flags.dataset]["reg_factor"]
-
+    min_depth = np.exp(-1 * reg_factor) * flags.clip_distance
+    max_depth = flags.clip_distance
+    print(f"min_depth: {min_depth}, max_depth: {max_depth}")
+    
     # predicted labels
     prediction_files = sorted(glob.glob(join(flags.predictions_dataset, "*.npy")))
     prediction_files = prediction_files[flags.prediction_offset :]
@@ -342,20 +345,6 @@ if __name__ == "__main__":
     if flags.event_masks != "":
         event_frame_files = sorted(glob.glob(join(flags.event_masks, "*png")))
         event_frame_files = event_frame_files[flags.prediction_offset :]
-
-    if flags.dataset == 'mvsec':
-        import json
-        import os
-        target_files = []
-        prediction_files = []
-        
-        with open(flags.json_path, 'r') as file:
-            json_file = json.load(file)
-            for key, value in json_file.items():
-                target_files.append(os.path.join(flags.target_dataset, key + ".npy"))
-                prediction_files.append(
-                    os.path.join(flags.predictions_dataset, value["image_id"] + ".npy")
-                )
 
     # Information about the dataset length
     print("len of prediction files", len(prediction_files))
@@ -381,13 +370,11 @@ if __name__ == "__main__":
 
         # Read absolute scale ground truth
         target_depth = np.load(t_file)
-
         # Crop depth height according to argument
         target_depth = target_depth[: flags.crop_ymax]
 
         # Read predicted depth data
         predicted_depth = np.load(p_file)
-
         # Crop depth height according to argument
         predicted_depth = predicted_depth[: flags.crop_ymax]
 
@@ -409,7 +396,7 @@ if __name__ == "__main__":
             # predicted_depth = inv_depth_to_depth(predicted_depth, reg_factor=reg_factor)
             predicted_depth[predicted_depth == 0.0] = 1e-6
             predicted_depth = 1 / predicted_depth
-            predicted_depth = prepare_depth(predicted_depth, reg_factor, flags.clip_distance)
+            # predicted_depth = prepare_depth(predicted_depth, reg_factor, flags.clip_distance)
 
         # Convert normalized depth to the metric scale
         if not flags.metric:
@@ -426,6 +413,11 @@ if __name__ == "__main__":
 
         depth_mask = np.ones_like(target_depth) > 0
         debug = flags.debug and idx == flags.idx
+        
+        # Clip
+        target_depth = np.clip(target_depth, min_depth, max_depth)
+        predicted_depth = np.clip(predicted_depth, min_depth, max_depth)
+        
         metrics = add_to_metrics(
             idx,
             metrics,
@@ -476,5 +468,7 @@ if __name__ == "__main__":
                     debug=debug,
                 )
 
-    pprint({k: v / num_it for k, v in metrics.items()})
-    {print("%s : %f" % (k, v / num_it)) for k, v in metrics.items()}
+    # pprint({k: v / num_it for k, v in metrics.items()})
+    new_metrics = {k: v / num_it for k, v in metrics.items()}
+    print(json.dumps(new_metrics, indent=4))
+    # {print("%s : %f" % (k, v / num_it)) for k, v in metrics.items()}

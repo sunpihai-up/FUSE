@@ -39,7 +39,18 @@ if __name__ == '__main__':
     }
     
     depth_anything = DepthAnythingV2(**{**model_configs[args.encoder], 'max_depth': args.max_depth})
-    depth_anything.load_state_dict(torch.load(args.load_from, map_location='cpu'))
+    
+    checkpoint = torch.load(args.load_from, map_location='cpu')
+    if 'model' in checkpoint.keys():
+        checkpoint = checkpoint['model']
+        checkpoint = {
+            (key[7:] if key.startswith("module.") else key): value
+            for key, value in checkpoint.items()
+        }
+    depth_anything.load_state_dict(checkpoint)
+    print(f"Model weights load from {args.load_from} successfully!")
+    
+    # depth_anything.load_state_dict(torch.load(args.load_from, map_location='cpu'))
     depth_anything = depth_anything.to(DEVICE).eval()
     
     if os.path.isfile(args.img_path):
@@ -47,12 +58,14 @@ if __name__ == '__main__':
             with open(args.img_path, 'r') as f:
                 # filenames = f.read().splitlines()
                 lines = f.readlines()
+                print(len(lines))
                 filenames = [line.split(' ')[0] for line in lines]
                 # depths = [line.split(' ')[0] for line in lines]
         else:
             filenames = [args.img_path]
     else:
         filenames = glob.glob(os.path.join(args.img_path, '**/*'), recursive=True)
+    print(f"Length of filenames: {len(filenames)}")
     
     os.makedirs(args.outdir, exist_ok=True)
     npy_dir = os.path.join(args.outdir, 'npy')

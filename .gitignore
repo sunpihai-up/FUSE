@@ -4,3 +4,4 @@ __pycache__/
 .history
 *.pth
 results
+*.gz

@@ -209,7 +209,8 @@ class DepthAnythingV2(nn.Module):
         )
 
         depth = self.depth_head(features, patch_h, patch_w) * self.max_depth
-
+        # depth = self.depth_head(features, patch_h, patch_w)
+        # depth = F.relu(depth)
         return depth.squeeze(1)
 
     @torch.no_grad()
