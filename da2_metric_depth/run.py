@@ -55,6 +55,10 @@ if __name__ == '__main__':
         filenames = glob.glob(os.path.join(args.img_path, '**/*'), recursive=True)
     
     os.makedirs(args.outdir, exist_ok=True)
+    npy_dir = os.path.join(args.outdir, 'npy')
+    vis_dir = os.path.join(args.outdir, 'vis')
+    os.makedirs(npy_dir, exist_ok=True)
+    os.makedirs(vis_dir, exist_ok=True)
     
     cmap = matplotlib.colormaps.get_cmap('Spectral')
     
@@ -71,7 +75,7 @@ if __name__ == '__main__':
             depth = convert_nl2abs_depth(depth, clip_distance, reg_factor)
 
         if args.save_numpy:
-            output_path = os.path.join(args.outdir, os.path.splitext(os.path.basename(filename))[0] + '_raw_depth_meter.npy')
+            output_path = os.path.join(npy_dir, os.path.splitext(os.path.basename(filename))[0] + '.npy')
             np.save(output_path, depth)
         
         depth = (depth - depth.min()) / (depth.max() - depth.min()) * 255.0
@@ -82,7 +86,7 @@ if __name__ == '__main__':
         else:
             depth = (cmap(depth)[:, :, :3] * 255)[:, :, ::-1].astype(np.uint8)
         
-        output_path = os.path.join(args.outdir, os.path.splitext(os.path.basename(filename))[0] + '.png')
+        output_path = os.path.join(vis_dir, os.path.splitext(os.path.basename(filename))[0] + '.png')
         if args.pred_only:
             cv2.imwrite(output_path, depth)
         else:
