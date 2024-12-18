@@ -8,16 +8,21 @@ import torch
 
 from depth_anything_v2.dpt import DepthAnythingV2
 from util.metric import convert_nl2abs_depth, dataset2params
+import torch.nn.functional as F
 
+from dataset.hypersim import Hypersim
+from dataset.kitti import KITTI
+from dataset.vkitti2 import VKITTI2
+from dataset.mvsec import MVSEC
+from torch.utils.data import DataLoader
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Depth Anything V2 Metric Depth Estimation')
-    
-    parser.add_argument('--img-path', type=str)
     parser.add_argument('--input-size', type=int, default=518)
     parser.add_argument('--outdir', type=str, default='./vis_depth')
     
-    parser.add_argument("--dataset", default="mvsec", choices=["eventscape", "mvsec"])
+    parser.add_argument("--dataset", choices=["eventscape", "mvsec"])
+    parser.add_argument("--scene", choices=["day1", "night1", "train"])
     parser.add_argument('--encoder', type=str, default='vitl', choices=['vits', 'vitb', 'vitl', 'vitg'])
     parser.add_argument('--load-from', type=str, default='checkpoints/depth_anything_v2_metric_hypersim_vitl.pth')
     parser.add_argument('--max-depth', type=float, default=20)
@@ -28,6 +33,24 @@ if __name__ == '__main__':
     parser.add_argument("--normalized_depth", action='store_true', help="Enable normalized depth.")
 
     args = parser.parse_args()
+    
+    size = (args.input_size, args.input_size)
+    if args.dataset == "mvsec" and args.scene == "day1":
+        valset = MVSEC("dataset/splits/mvsec/outdoor_day1.txt", "val", normalized_d=args.normalized_depth, size=size)
+    elif args.dataset == "mvsec" and args.scene == "night1":
+        valset = MVSEC("dataset/splits/mvsec/outdoor_night1.txt", "val", normalized_d=args.normalized_depth, size=size)
+    elif args.dataset == "mvsec" and args.scene == "train":
+        valset = MVSEC("dataset/splits/mvsec/train.txt", "val", normalized_d=args.normalized_depth, size=size)
+    else:
+        raise NotImplementedError
+
+    valloader = DataLoader(
+        valset,
+        batch_size=1,
+        pin_memory=True,
+        num_workers=4,
+        drop_last=True,
+    )
     
     DEVICE = 'cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu'
     
@@ -49,23 +72,7 @@ if __name__ == '__main__':
         }
     depth_anything.load_state_dict(checkpoint)
     print(f"Model weights load from {args.load_from} successfully!")
-    
-    # depth_anything.load_state_dict(torch.load(args.load_from, map_location='cpu'))
     depth_anything = depth_anything.to(DEVICE).eval()
-    
-    if os.path.isfile(args.img_path):
-        if args.img_path.endswith('txt'):
-            with open(args.img_path, 'r') as f:
-                # filenames = f.read().splitlines()
-                lines = f.readlines()
-                print(len(lines))
-                filenames = [line.split(' ')[0] for line in lines]
-                # depths = [line.split(' ')[0] for line in lines]
-        else:
-            filenames = [args.img_path]
-    else:
-        filenames = glob.glob(os.path.join(args.img_path, '**/*'), recursive=True)
-    print(f"Length of filenames: {len(filenames)}")
     
     os.makedirs(args.outdir, exist_ok=True)
     npy_dir = os.path.join(args.outdir, 'npy')
@@ -75,12 +82,21 @@ if __name__ == '__main__':
     
     cmap = matplotlib.colormaps.get_cmap('Spectral')
     
-    for k, filename in enumerate(filenames):
-        print(f'Progress {k+1}/{len(filenames)}: {filename}')
+    for k, sample in enumerate(valloader):
+        filename = sample["image_path"][0]
+        print(f'Progress {k+1}/{len(valloader)}: {filename}')
         
         raw_image = cv2.imread(filename)
+        h, w = raw_image.shape[0], raw_image.shape[1]
         
-        depth = depth_anything.infer_image(raw_image, args.input_size)
+        with torch.no_grad():
+            img = sample["image"].cuda()
+            depth = depth_anything(img)
+            depth = F.interpolate(
+                depth[:, None], (h, w), mode="bilinear", align_corners=True
+            )[0, 0]
+        
+        depth = depth.cpu().numpy()
         
         if args.normalized_depth:
             clip_distance = dataset2params[args.dataset]['clip_distance']

@@ -21,7 +21,7 @@ from dataset.mvsec import MVSEC
 from model.epde.epde import EPDE
 from util.dist_helper import setup_distributed
 from util.loss import SiLogLoss
-from util.metric import eval_depth
+from util.metric import eval_depth, eval_depth_ori
 from util.utils import init_log
 
 
@@ -29,14 +29,14 @@ parser = argparse.ArgumentParser(
     description="Depth Anything V2 for Metric Depth Estimation"
 )
 
-parser.add_argument(
-    "--encoder", default="vitl", choices=["vits", "vitb", "vitl", "vitg"]
-)
+parser.add_argument("--encoder", default="vitl", choices=["vits", "vitb", "vitl"])
 parser.add_argument(
     "--dataset",
-    default="dense",
-    choices=["dense", "mvsec", "eventscape"],
+    default="mvsec",
+    choices=["mvsec", "eventscape"],
 )
+parser.add_argument("--min-depth", default=0.001, type=float)
+parser.add_argument("--max-depth", default=20, type=float)
 parser.add_argument("--img-size", default=518, type=int)
 parser.add_argument("--epochs", default=40, type=int)
 parser.add_argument("--bs", default=2, type=int)
@@ -47,6 +47,9 @@ parser.add_argument("--save-path", type=str, required=True)
 parser.add_argument("--local-rank", default=0, type=int)
 parser.add_argument("--port", default=None, type=int)
 parser.add_argument("--event_voxel_chans", default=5, type=int)
+parser.add_argument(
+    "--normalized_depth", action="store_true", help="Enable normalized depth."
+)
 parser.add_argument(
     "--prompt_type",
     choices=["epde_deep", "epde_shaw", "add", "none"],
@@ -82,7 +85,12 @@ def main():
     if args.dataset == "dense":
         trainset = Dense("dataset/splits/dense/train.txt", "train", size=size)
     elif args.dataset == "mvsec":
-        trainset = MVSEC("dataset/splits/mvsec/train.txt", "train", size=size)
+        trainset = MVSEC(
+            "dataset/splits/mvsec/train.txt",
+            "train",
+            normalized_d=args.normalized_depth,
+            size=size,
+        )
     else:
         raise NotImplementedError
 
@@ -101,7 +109,12 @@ def main():
     if args.dataset == "dense":
         valset = Dense("dataset/splits/dense/val.txt", "val", size=size)
     elif args.dataset == "mvsec":
-        valset = MVSEC("dataset/splits/mvsec/val.txt", "val", size=size)
+        valset = MVSEC(
+            "./dataset/splits/mvsec/outdoor_night1_val.txt",
+            "val",
+            normalized_d=args.normalized_depth,
+            size=size,
+        )
     else:
         raise NotImplementedError
 
@@ -121,6 +134,7 @@ def main():
     model = EPDE(
         model_name=args.encoder,
         dataset=args.dataset,
+        max_depth=args.max_depth,
         event_voxel_chans=args.event_voxel_chans,
         prompt_type=args.prompt_type,
         depth_anything_pretrained=args.depth_anything_pretrained,
@@ -151,21 +165,21 @@ def main():
     # Handling frozen parameters
     if args.finetune_mode == "prompt":
         for name, param in model.named_parameters():
-            if 'foundation' in name:
+            if "foundation" in name:
                 param.requires_grad = False
     elif args.finetune_mode == "decoder":
         for name, param in model.named_parameters():
-            if 'foundation.pretrained' in name:
+            if "foundation.pretrained" in name:
                 param.requires_grad = False
     elif args.finetune_mode == "bias":
         for name, param in model.named_parameters():
-            if 'bias' not in name and 'foundation' in name:
+            if "bias" not in name and "foundation" in name:
                 param.requires_grad = False
     elif args.finetune_mode == "bias_and_decoder":
         for name, param in model.named_parameters():
-            if 'bias' not in name and 'foundation.pretrained' in name:
+            if "bias" not in name and "foundation.pretrained" in name:
                 param.requires_grad = False
-    print(f'The freezing mode of weights is: {args.finetune_mode}')
+    print(f"The freezing mode of weights is: {args.finetune_mode}")
 
     # Configure optimizer to include only trainable parameters
     optimizer = AdamW(
@@ -213,7 +227,9 @@ def main():
                 logger.info(f"Module: {name}, Trainable Parameters: {param.numel()}")
 
         # Optional: Total trainable parameters
-        total_trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+        total_trainable_params = sum(
+            p.numel() for p in model.parameters() if p.requires_grad
+        )
         logger.info(f"Total Trainable Parameters: {total_trainable_params}")
 
     for epoch in range(args.epochs):
@@ -266,7 +282,9 @@ def main():
             loss = criterion(
                 pred,
                 depth,
-                valid_mask,
+                (valid_mask == 1)
+                & (depth >= args.min_depth)
+                & (depth <= args.max_depth),
             )
 
             loss.backward()
@@ -329,7 +347,12 @@ def main():
             if valid_mask.sum() < 10:
                 continue
 
-            cur_results = eval_depth(pred[valid_mask], depth[valid_mask], dataset=args.dataset)
+            if args.normalized_depth:
+                cur_results = eval_depth(
+                    pred[valid_mask], depth[valid_mask], dataset=args.dataset
+                )
+            else:
+                cur_results = eval_depth_ori(pred[valid_mask], depth[valid_mask])
 
             for k in results.keys():
                 results[k] += cur_results[k]

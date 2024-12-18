@@ -17,7 +17,7 @@ MEAN_STD = {
 }
 
 class MVSEC(Dataset):
-    def __init__(self, filelist_path, mode, normalized_d=True, scene="day2", size=(518, 518)):
+    def __init__(self, filelist_path, mode, normalized_d=True, size=(518, 518)):
         self.mode = mode
         self.size = size
         self.normalized_d = normalized_d

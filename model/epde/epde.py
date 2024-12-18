@@ -26,7 +26,8 @@ class EPDEVisionTransformer(nn.Module):
         embed_layer=PatchEmbed,
         prompt_block=Prompt_block,
         encoder="vitl",
-        dataset="dense",
+        dataset="mvsec",
+        max_depth=1,
         norm_layer=None,
         prompt_type=None,
         depth_anything_pretrained=None,
@@ -39,7 +40,8 @@ class EPDEVisionTransformer(nn.Module):
         self.event_voxel_chans = event_voxel_chans
         self.embed_dim = embed_dim
         self.depth = depth
-
+        self.max_depth = max_depth
+        
         self.embed_layer = embed_layer
         self.prompt_block = prompt_block
         self.norm_layer = norm_layer or partial(nn.LayerNorm, eps=1e-6)
@@ -88,10 +90,10 @@ class EPDEVisionTransformer(nn.Module):
                 )
             self.prompt_blocks = nn.Sequential(*prompt_blocks)
 
-            # prompt_norms = []
-            # for i in range(block_nums):
-            #     prompt_norms.append(self.norm_layer(embed_dim))
-            # self.prompt_norms = nn.Sequential(*prompt_norms)
+            prompt_norms = []
+            for i in range(block_nums):
+                prompt_norms.append(self.norm_layer(embed_dim))
+            self.prompt_norms = nn.Sequential(*prompt_norms)
 
         self.init_weights()
 
@@ -132,8 +134,8 @@ class EPDEVisionTransformer(nn.Module):
 
         # Injecting modal supplementary information
         if self.prompt_type in ["epde_shaw", "epde_deep"]:
-            # image_token = self.prompt_norms[0](image_token)
-            # prompt_token = self.prompt_norms[0](prompt_token)
+            image_token = self.prompt_norms[0](image_token)
+            prompt_token = self.prompt_norms[0](prompt_token)
             image_feat = token2feature(image_token, patch_grid_size)
             prompt_feat = token2feature(prompt_token, patch_grid_size)
             prompt_feat = self.prompt_blocks[0](
@@ -183,8 +185,8 @@ class EPDEVisionTransformer(nn.Module):
                 # Add Prompt information from 1st layer
                 # TODO: Why ViPT use i - 1
                 # use [:, 1:] to exclude the cls_token
-                # image_token = self.prompt_norms[i](image_token)
-                # prompt_token = self.prompt_norms[i](prompt_token)
+                image_token = self.prompt_norms[i](image_token)
+                prompt_token = self.prompt_norms[i](prompt_token)
                 image_feat = token2feature(image_token[:, 1:], patch_grid_size)
                 prompt_feat = token2feature(prompt_token[:, 1:], patch_grid_size)
 
@@ -231,7 +233,7 @@ class EPDEVisionTransformer(nn.Module):
             return_class_token=True,
         )
 
-        depth = self.foundation.depth_head(features, patch_h, patch_w)
+        depth = self.foundation.depth_head(features, patch_h, patch_w) * self.max_depth
         return depth.squeeze(1)
 
     @torch.no_grad()
@@ -333,6 +335,7 @@ def EPDE(
     model_name,
     prompt_type,
     dataset="dense",
+    max_depth=1,
     depth_anything_pretrained=None,
     event_voxel_chans=5,
     embed_layer=PatchEmbed,
@@ -350,6 +353,7 @@ def EPDE(
         patch_size=14,
         event_voxel_chans=event_voxel_chans,
         dataset=dataset,
+        max_depth=max_depth,
         depth_anything_pretrained=depth_anything_pretrained,
         embed_layer=embed_layer,
         norm_layer=norm_layer,

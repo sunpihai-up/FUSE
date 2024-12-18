@@ -2,19 +2,20 @@
 now=$(date +"%Y%m%d_%H%M%S")
 
 epoch=50
-bs=4
+bs=8
 gpus=2
 lr=0.000005
 encoder=vitl
 dataset=mvsec
 img_size=350
-# img_size=350
-event_voxel_chans=5
+min_depth=0
+max_depth=80
+event_voxel_chans=3
 prompt_type=epde_deep # choices=["epde_deep", "epde_shaw", "add", "none"],
-depth_anything_pretrained=/data/coding/upload-data/checkpoints/depth_anything_v2_metric_vkitti_vitl.pth
-finetune_mode=prompt # choices=["prompt", "decoder", "bias", "bias_and_decoder", "overall"], 
+depth_anything_pretrained=/data_nvme/sph/da2_checkpoints/depth_anything_v2_vitl.pth
+finetune_mode=overall # choices=["prompt", "decoder", "bias", "bias_and_decoder", "overall"], 
 # pretrained_from=/home/sph/code/Depth-Anything-V2/metric_depth/checkpoints/depth_anything_v2_metric_vkitti_vitl.pth
-save_path=/data/coding/code/da2-prompt-tuning/exp/${dataset}_${finetune_mode}_normalized_log_${now}
+save_path=/home/sph/event/da2-prompt-tuning/exp/${dataset}_${finetune_mode}_metric_${now}
 
 mkdir -p $save_path
 
@@ -39,7 +40,7 @@ python3 -m torch.distributed.launch \
     --master_addr=localhost \
     --master_port=20596 \
     train.py --epoch $epoch --encoder $encoder --bs $bs --lr $lr --save-path $save_path --dataset $dataset \
-    --img-size $img_size \
+    --img-size $img_size --min-depth $min_depth --max-depth $max_depth \
     --prompt_type $prompt_type \
     --event_voxel_chans $event_voxel_chans \
     --depth-anything-pretrained $depth_anything_pretrained \

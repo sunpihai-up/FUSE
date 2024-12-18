@@ -231,11 +231,11 @@ def gen_split(scene, data_dir, output_dir="./dataset/splits/mvsec/"):
     else:
         # Test & Val DataSet
         # TODO: 
-        with open(output_dir + "test.txt", 'a') as f:
+        with open(output_dir + scene + "_test.txt", 'a') as f:
             f.writelines(lines)
         
         lines = random.sample(lines, 100)
-        with open(output_dir + "val.txt", 'a') as f:
+        with open(output_dir + scene + "_val.txt", 'a') as f:
             f.writelines(lines)
     print(f"Saved split file to {output_dir}")
 
@@ -322,8 +322,8 @@ if __name__ == "__main__":
         ("outdoor_day1_data.hdf5", "outdoor_day1_gt.hdf5"),
         ("outdoor_day2_data.hdf5", "outdoor_day2_gt.hdf5"),
         ("outdoor_night1_data.hdf5", "outdoor_night1_gt.hdf5"),
-        ("outdoor_night2_data.hdf5", "outdoor_night2_gt.hdf5"),
-        ("outdoor_night3_data.hdf5", "outdoor_night3_gt.hdf5"),
+        # ("outdoor_night2_data.hdf5", "outdoor_night2_gt.hdf5"),
+        # ("outdoor_night3_data.hdf5", "outdoor_night3_gt.hdf5"),
     ]
     width, height = 346, 260
 
@@ -352,7 +352,7 @@ if __name__ == "__main__":
 # python process_mvsec.py F:\\MVSEC\\mvsec-hdf5 F:\\MVSEC\\mvsec-hdf5\\test --numbins 3 --width 346 --height 260
 """
 python scripts/process_mvsec_hdf5.py \
-    /data/coding/upload-data/data/mvsec_hdf5 \
-    /data/coding/upload-data/data/mvsec \
-    --numbins 3 --width 346 --height 260
+    /data_nvme/sph/mvsec \
+    /data_nvme/sph/mvsec_processed \
+    --numbins 3
 """

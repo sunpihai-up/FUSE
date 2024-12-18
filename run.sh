@@ -1,10 +1,18 @@
+encoder=vitl
+dataset=mvsec # vkitti
+scene=night1
+img_size=350
+max_depth=80
+load_from=/home/sph/event/da2-prompt-tuning/exp/mvsec_decoder_metric_20241218_154941/19.pth
+outdir=/home/sph/event/da2-prompt-tuning/results/${dataset}_metric_disp_vitl_decoder_${scene}_20
+event_voxel_chans=3
+
 python run.py \
-    --split_path /data/coding/code/da2-prompt-tuning/dataset/splits/dense/val.txt \
-    --dataset dense \
-    --load-from /data/coding/code/da2-prompt-tuning/exp/dense_foundation_encoders_frozen_normalized_log_20241207_080900/abs_rel-0.12848541140556335-17.pth \
-    --encoder vitl \
-    --outdir /data/coding/code/da2-prompt-tuning/results/dense_encoder_nl_18_val \
+    --encoder $encoder \
+    --dataset $dataset --scene $scene \
+    --input-size $img_size \
+    --max-depth $max_depth --load-from $load_from \
+    --outdir $outdir \
+    --event-voxel-chans $event_voxel_chans \
     --save-numpy
-    # --img-dir
-    # --event-dir 
-    # --input-size 518 \
+    # --normailzed_depth \
