@@ -1,0 +1,324 @@
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/distributed/launch.py:183: FutureWarning: The module torch.distributed.launch is deprecated
+and will be removed in future. Use torchrun.
+Note that --use-env is set by default in torchrun.
+If your script expects `--local-rank` argument to be set, please
+change it to read from `os.environ['LOCAL_RANK']` instead. See 
+https://pytorch.org/docs/stable/distributed.html#launch-utility for 
+further instructions
+
+  warnings.warn(
+[2024-12-20 15:24:14,282] torch.distributed.run: [WARNING] 
+[2024-12-20 15:24:14,282] torch.distributed.run: [WARNING] *****************************************
+[2024-12-20 15:24:14,282] torch.distributed.run: [WARNING] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+[2024-12-20 15:24:14,282] torch.distributed.run: [WARNING] *****************************************
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[2024-12-20 15:24:16,734][    INFO] {'bs': 8,
+ 'dataset': 'mvsec',
+ 'depth_anything_pretrained': '/data_nvme/sph/da2_checkpoints/depth_anything_v2_metric_vkitti_vitl.pth',
+ 'encoder': 'vitl',
+ 'epochs': 50,
+ 'event_voxel_chans': 3,
+ 'finetune_mode': 'prompt',
+ 'img_size': 350,
+ 'local_rank': 0,
+ 'lr': 5e-06,
+ 'max_depth': 80.0,
+ 'min_depth': 0.0,
+ 'ngpus': 2,
+ 'normalized_depth': False,
+ 'port': 20596,
+ 'pretrained_from': None,
+ 'prompt_type': 'epde_deep',
+ 'save_path': '/home/sph/event/da2-prompt-tuning/exp/mvsec_prompt_metric_20241220_152413'}
+
+Loaded pretrained weights from /data_nvme/sph/da2_checkpoints/depth_anything_v2_metric_vkitti_vitl.pth
+Loaded pretrained weights from /data_nvme/sph/da2_checkpoints/depth_anything_v2_metric_vkitti_vitl.pth
+The freezing mode of weights is: prompt
+The freezing mode of weights is: prompt
+[2024-12-20 15:24:22,510][    INFO] Module: module.patch_embed_prompt.proj.weight, Trainable Parameters: 602112
+[2024-12-20 15:24:22,510][    INFO] Module: module.patch_embed_prompt.proj.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.0.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.0.conv0_0.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.0.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.0.conv0_1.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.0.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.0.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.0.fovea.smooth, Trainable Parameters: 1
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.1.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.1.conv0_0.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.1.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.1.conv0_1.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.1.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.1.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.1.fovea.smooth, Trainable Parameters: 1
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.2.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.2.conv0_0.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.2.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.2.conv0_1.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.2.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.2.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.2.fovea.smooth, Trainable Parameters: 1
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.3.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.3.conv0_0.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.3.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.3.conv0_1.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.3.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.3.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.3.fovea.smooth, Trainable Parameters: 1
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.4.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.4.conv0_0.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.4.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.4.conv0_1.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.4.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.4.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.4.fovea.smooth, Trainable Parameters: 1
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.5.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.5.conv0_0.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.5.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.5.conv0_1.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.5.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.5.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.5.fovea.smooth, Trainable Parameters: 1
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.6.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.6.conv0_0.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.6.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.6.conv0_1.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.6.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,511][    INFO] Module: module.prompt_blocks.6.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.6.fovea.smooth, Trainable Parameters: 1
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.7.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.7.conv0_0.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.7.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.7.conv0_1.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.7.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.7.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.7.fovea.smooth, Trainable Parameters: 1
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.8.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.8.conv0_0.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.8.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.8.conv0_1.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.8.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.8.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.8.fovea.smooth, Trainable Parameters: 1
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.9.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.9.conv0_0.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.9.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.9.conv0_1.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.9.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.9.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.9.fovea.smooth, Trainable Parameters: 1
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.10.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.10.conv0_0.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.10.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.10.conv0_1.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.10.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.10.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.10.fovea.smooth, Trainable Parameters: 1
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.11.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.11.conv0_0.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.11.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.11.conv0_1.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.11.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.11.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.11.fovea.smooth, Trainable Parameters: 1
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.12.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.12.conv0_0.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.12.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.12.conv0_1.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.12.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.12.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.12.fovea.smooth, Trainable Parameters: 1
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.13.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.13.conv0_0.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.13.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.13.conv0_1.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.13.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,512][    INFO] Module: module.prompt_blocks.13.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.13.fovea.smooth, Trainable Parameters: 1
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.14.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.14.conv0_0.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.14.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.14.conv0_1.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.14.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.14.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.14.fovea.smooth, Trainable Parameters: 1
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.15.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.15.conv0_0.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.15.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.15.conv0_1.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.15.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.15.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.15.fovea.smooth, Trainable Parameters: 1
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.16.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.16.conv0_0.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.16.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.16.conv0_1.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.16.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.16.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.16.fovea.smooth, Trainable Parameters: 1
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.17.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.17.conv0_0.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.17.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.17.conv0_1.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.17.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.17.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.17.fovea.smooth, Trainable Parameters: 1
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.18.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.18.conv0_0.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.18.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.18.conv0_1.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.18.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.18.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.18.fovea.smooth, Trainable Parameters: 1
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.19.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.19.conv0_0.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.19.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.19.conv0_1.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.19.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.19.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.19.fovea.smooth, Trainable Parameters: 1
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.20.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.20.conv0_0.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.20.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.20.conv0_1.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.20.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,513][    INFO] Module: module.prompt_blocks.20.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_blocks.20.fovea.smooth, Trainable Parameters: 1
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_blocks.21.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_blocks.21.conv0_0.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_blocks.21.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_blocks.21.conv0_1.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_blocks.21.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_blocks.21.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_blocks.21.fovea.smooth, Trainable Parameters: 1
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_blocks.22.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_blocks.22.conv0_0.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_blocks.22.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_blocks.22.conv0_1.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_blocks.22.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_blocks.22.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_blocks.22.fovea.smooth, Trainable Parameters: 1
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_blocks.23.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_blocks.23.conv0_0.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_blocks.23.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_blocks.23.conv0_1.bias, Trainable Parameters: 8
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_blocks.23.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_blocks.23.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_blocks.23.fovea.smooth, Trainable Parameters: 1
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_norms.0.weight, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_norms.0.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_norms.1.weight, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_norms.1.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_norms.2.weight, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_norms.2.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_norms.3.weight, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_norms.3.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_norms.4.weight, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_norms.4.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_norms.5.weight, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_norms.5.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_norms.6.weight, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_norms.6.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_norms.7.weight, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_norms.7.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_norms.8.weight, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_norms.8.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_norms.9.weight, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_norms.9.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_norms.10.weight, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_norms.10.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_norms.11.weight, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_norms.11.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_norms.12.weight, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_norms.12.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,514][    INFO] Module: module.prompt_norms.13.weight, Trainable Parameters: 1024
+[2024-12-20 15:24:22,515][    INFO] Module: module.prompt_norms.13.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,515][    INFO] Module: module.prompt_norms.14.weight, Trainable Parameters: 1024
+[2024-12-20 15:24:22,515][    INFO] Module: module.prompt_norms.14.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,515][    INFO] Module: module.prompt_norms.15.weight, Trainable Parameters: 1024
+[2024-12-20 15:24:22,515][    INFO] Module: module.prompt_norms.15.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,515][    INFO] Module: module.prompt_norms.16.weight, Trainable Parameters: 1024
+[2024-12-20 15:24:22,515][    INFO] Module: module.prompt_norms.16.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,515][    INFO] Module: module.prompt_norms.17.weight, Trainable Parameters: 1024
+[2024-12-20 15:24:22,515][    INFO] Module: module.prompt_norms.17.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,515][    INFO] Module: module.prompt_norms.18.weight, Trainable Parameters: 1024
+[2024-12-20 15:24:22,515][    INFO] Module: module.prompt_norms.18.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,515][    INFO] Module: module.prompt_norms.19.weight, Trainable Parameters: 1024
+[2024-12-20 15:24:22,515][    INFO] Module: module.prompt_norms.19.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,515][    INFO] Module: module.prompt_norms.20.weight, Trainable Parameters: 1024
+[2024-12-20 15:24:22,515][    INFO] Module: module.prompt_norms.20.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,515][    INFO] Module: module.prompt_norms.21.weight, Trainable Parameters: 1024
+[2024-12-20 15:24:22,515][    INFO] Module: module.prompt_norms.21.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,515][    INFO] Module: module.prompt_norms.22.weight, Trainable Parameters: 1024
+[2024-12-20 15:24:22,515][    INFO] Module: module.prompt_norms.22.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,515][    INFO] Module: module.prompt_norms.23.weight, Trainable Parameters: 1024
+[2024-12-20 15:24:22,515][    INFO] Module: module.prompt_norms.23.bias, Trainable Parameters: 1024
+[2024-12-20 15:24:22,516][    INFO] Total Trainable Parameters: 1267096
+[2024-12-20 15:24:22,516][    INFO] ===========> Epoch: 0/50, d1: 0.000, d2: 0.000, d3: 0.000
+[2024-12-20 15:24:22,516][    INFO] ===========> Epoch: 0/50, abs_rel: 100.000, sq_rel: 100.000, rmse: 100.000, rmse_log: 100.000, log10: 100.000, silog: 100.000
+[2024-12-20 15:24:27,254][    INFO] Iter: 0/667, LR: 0.0000050, Loss: 1.309
+[2024-12-20 15:26:09,437][    INFO] Iter: 100/667, LR: 0.0000050, Loss: 1.170
+[2024-12-20 15:27:51,897][    INFO] Iter: 200/667, LR: 0.0000050, Loss: 1.195
+[2024-12-20 15:29:34,313][    INFO] Iter: 300/667, LR: 0.0000050, Loss: 1.132
+[2024-12-20 15:31:16,777][    INFO] Iter: 400/667, LR: 0.0000049, Loss: 1.158
+[2024-12-20 15:32:59,197][    INFO] Iter: 500/667, LR: 0.0000049, Loss: 1.116
+[2024-12-20 15:34:41,510][    INFO] Iter: 600/667, LR: 0.0000049, Loss: 1.097
+/home/sph/event/da2-prompt-tuning/train.py:355: UserWarning: indexing with dtype torch.uint8 is now deprecated, please use a dtype torch.bool instead. (Triggered internally at ../aten/src/ATen/native/IndexingUtils.h:27.)
+  cur_results = eval_depth_ori(pred[valid_mask], depth[valid_mask])
+/home/sph/event/da2-prompt-tuning/train.py:355: UserWarning: indexing with dtype torch.uint8 is now deprecated, please use a dtype torch.bool instead. (Triggered internally at ../aten/src/ATen/native/IndexingUtils.h:27.)
+  cur_results = eval_depth_ori(pred[valid_mask], depth[valid_mask])
+Traceback (most recent call last):
+  File "/home/sph/event/da2-prompt-tuning/train.py", line 444, in <module>
+    main()
+  File "/home/sph/event/da2-prompt-tuning/train.py", line 355, in main
+    cur_results = eval_depth_ori(pred[valid_mask], depth[valid_mask])
+TypeError: eval_depth_ori() missing 1 required positional argument: 'dataset'
+Traceback (most recent call last):
+  File "/home/sph/event/da2-prompt-tuning/train.py", line 444, in <module>
+    main()
+  File "/home/sph/event/da2-prompt-tuning/train.py", line 355, in main
+    cur_results = eval_depth_ori(pred[valid_mask], depth[valid_mask])
+TypeError: eval_depth_ori() missing 1 required positional argument: 'dataset'
+[2024-12-20 15:35:55,012] torch.distributed.elastic.multiprocessing.api: [ERROR] failed (exitcode: 1) local_rank: 0 (pid: 1028143) of binary: /home/sph/anaconda3/envs/anything/bin/python3
+Traceback (most recent call last):
+  File "/home/sph/anaconda3/envs/anything/lib/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/sph/anaconda3/envs/anything/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/distributed/launch.py", line 198, in <module>
+    main()
+  File "/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/distributed/launch.py", line 194, in main
+    launch(args)
+  File "/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/distributed/launch.py", line 179, in launch
+    run(args)
+  File "/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/distributed/run.py", line 803, in run
+    elastic_launch(
+  File "/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/distributed/launcher/api.py", line 135, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/distributed/launcher/api.py", line 268, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+train.py FAILED
+------------------------------------------------------------
+Failures:
+[1]:
+  time      : 2024-12-20_15:35:55
+  host      : cannon
+  rank      : 1 (local_rank: 1)
+  exitcode  : 1 (pid: 1028144)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2024-12-20_15:35:55
+  host      : cannon
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 1028143)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

@@ -17,11 +17,12 @@ from torch.utils.tensorboard import SummaryWriter
 
 from dataset.dense import Dense
 from dataset.mvsec import MVSEC
+from dataset.eventscape import EventScape
 
 from model.epde.epde_rf import EPDE
 from util.dist_helper import setup_distributed
-from util.loss import SiLogLoss
-from util.metric import eval_depth
+from util.loss import SiLogLoss, MixedLoss
+from util.metric import eval_depth, eval_depth_ori
 from util.utils import init_log
 
 
@@ -34,8 +35,8 @@ parser.add_argument(
 )
 parser.add_argument(
     "--dataset",
-    default="dense",
-    choices=["dense", "mvsec", "eventscape"],
+    default="mvsec",
+    choices=["mvsec", "eventscape"],
 )
 parser.add_argument("--img-size", default=518, type=int)
 parser.add_argument("--epochs", default=40, type=int)
@@ -49,7 +50,7 @@ parser.add_argument("--port", default=None, type=int)
 parser.add_argument("--event_voxel_chans", default=5, type=int)
 parser.add_argument(
     "--prompt_type",
-    choices=["epde_deep", "epde_shaw", "None"],
+    choices=["epde_deep", "epde_shaw", "add", "none"],
     type=str,
 )
 parser.add_argument(
@@ -82,7 +83,19 @@ def main():
     if args.dataset == "dense":
         trainset = Dense("dataset/splits/dense/train.txt", "train", size=size)
     elif args.dataset == "mvsec":
-        trainset = MVSEC("dataset/splits/mvsec/train.txt", "train", size=size)
+        trainset = MVSEC(
+            "dataset/splits/mvsec/train.txt",
+            "train",
+            normalized_d=args.normalized_depth,
+            size=size,
+        )
+    elif args.dataset == "eventscape":
+        trainset = EventScape(
+            "dataset/splits/eventscape/train.txt",
+            "train",
+            normalized_d=args.normalized_depth,
+            size=size,
+        )
     else:
         raise NotImplementedError
 
@@ -101,7 +114,19 @@ def main():
     if args.dataset == "dense":
         valset = Dense("dataset/splits/dense/val.txt", "val", size=size)
     elif args.dataset == "mvsec":
-        valset = MVSEC("dataset/splits/mvsec/val.txt", "val", size=size)
+        valset = MVSEC(
+            "./dataset/splits/mvsec/outdoor_night1_val.txt",
+            "val",
+            normalized_d=args.normalized_depth,
+            size=size,
+        )
+    elif args.dataset == "eventscape":
+        valset = EventScape(
+            "./dataset/splits/mvsec/val.txt",
+            "val",
+            normalized_d=args.normalized_depth,
+            size=size,
+        )
     else:
         raise NotImplementedError
 
@@ -146,7 +171,8 @@ def main():
         find_unused_parameters=True,
     )
 
-    criterion = SiLogLoss().cuda(local_rank)
+    # criterion = SiLogLoss().cuda(local_rank)
+    criterion = MixedLoss().cuda(local_rank)
 
     # Handling frozen parameters
     if args.finetune_mode == "prompt":
@@ -329,7 +355,14 @@ def main():
             if valid_mask.sum() < 10:
                 continue
 
-            cur_results = eval_depth(pred[valid_mask], depth[valid_mask])
+            if args.normalized_depth:
+                cur_results = eval_depth(
+                    pred[valid_mask], depth[valid_mask], dataset=args.dataset
+                )
+            else:
+                cur_results = eval_depth_ori(
+                    pred[valid_mask], depth[valid_mask], dataset=args.dataset
+                )
 
             for k in results.keys():
                 results[k] += cur_results[k]
@@ -363,7 +396,7 @@ def main():
             for name, metric in results.items():
                 writer.add_scalar(f"eval/{name}", (metric / nsamples).item(), epoch)
 
-        if rank == 0 and (epoch + 1) % 20 == 0 and epoch > 50:
+        if rank == 0 and (epoch + 1) % 20 == 0:
             checkpoint = {
                 "model": model.state_dict(),
                 "optimizer": optimizer.state_dict(),
@@ -391,7 +424,6 @@ def main():
                             os.remove(os.path.join(args.save_path, file))
                     checkpoint = {
                         "model": model.state_dict(),
-                        "optimizer": optimizer.state_dict(),
                         "epoch": epoch,
                         "previous_best": previous_best,
                     }

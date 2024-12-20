@@ -256,11 +256,15 @@ def main(data_hdf5_path, gt_hdf5_path, scene, output_dir, numbins, width, height
         "Image timestamps are not in ascending order"
     )
 
-    depth_image_raw_ts = np.array(gt["davis"]["left"]["depth_image_raw_ts"])
-    assert np.all(depth_image_raw_ts[:-1] <= depth_image_raw_ts[1:]), print(
+    # depth_image_raw_ts = np.array(gt["davis"]["left"]["depth_image_raw_ts"])
+    # assert np.all(depth_image_raw_ts[:-1] <= depth_image_raw_ts[1:]), print(
+    #     "Depth timestamps are not in ascending order"
+    # )
+    depth_image_rect_ts = np.array(gt["davis"]["left"]["depth_image_rect_ts"])
+    assert np.all(depth_image_rect_ts[:-1] <= depth_image_rect_ts[1:]), print(
         "Depth timestamps are not in ascending order"
     )
-
+    
     events = np.array(data["davis"]["left"]["events"])  # x, y, t, p
     event_timestamps = events[:, 2]
     assert np.all(event_timestamps[:-1] <= event_timestamps[1:]), print(
@@ -268,9 +272,11 @@ def main(data_hdf5_path, gt_hdf5_path, scene, output_dir, numbins, width, height
     )
     print("Timestamps extracted.")
 
-    depth2image = map_depth_to_image(image_ts, depth_image_raw_ts, output_dir)
-    depth2event = map_depth_to_events(depth_image_raw_ts, events, output_dir)
-
+    # depth2image = map_depth_to_image(image_ts, depth_image_raw_ts, output_dir)
+    # depth2event = map_depth_to_events(depth_image_raw_ts, events, output_dir)
+    depth2image = map_depth_to_image(image_ts, depth_image_rect_ts, output_dir)
+    depth2event = map_depth_to_events(depth_image_rect_ts, events, output_dir)
+    
     selected_depths = []
 
     for depth_id, item in depth2image.items():
@@ -297,7 +303,8 @@ def main(data_hdf5_path, gt_hdf5_path, scene, output_dir, numbins, width, height
     os.makedirs(voxels_dir, exist_ok=True)
     
     images = data['davis']['left']['image_raw']
-    depths = gt['davis']['left']['depth_image_raw']
+    # depths = gt['davis']['left']['depth_image_raw']
+    depths = gt['davis']['left']['depth_image_rect']
 
     save_depths2dir(depths, selected_depths, depths_dir)
     save_images2dir(images, selected_depths, depth2image, images_dir)

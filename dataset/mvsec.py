@@ -7,17 +7,11 @@ from torchvision.transforms import Compose
 from dataset.transform import Resize, NormalizeImage, PrepareForNet, Crop
 
 MEAN_STD = {
-    'eventscape' : [ 94.386783, 52.621100 ],
     # 'mvsec'      : [38.892975, 38.741392],
     "mvsec"      :[0.152521, 0.269711],
-    'day1'       : [46.02644024, 66.58477104],
-    'day2'       : [44.88074027, 75.6648636 ],
-    'night1'     : [23.50456365, 51.03250885],
-    'simple'     : [0, 255],
 }
-
 class MVSEC(Dataset):
-    def __init__(self, filelist_path, mode, normalized_d=True, size=(518, 518)):
+    def __init__(self, filelist_path, mode, normalized_d, size):
         self.mode = mode
         self.size = size
         self.normalized_d = normalized_d
@@ -66,7 +60,6 @@ class MVSEC(Dataset):
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) / 255.0
         depth = np.load(depth_path)
         event_voxel = np.load(event_voxel_path)
-
         # Convert absolute scale depth to normalized log depth
         if self.normalized_d:
             depth = self.prepare_depth(depth, reg_factor, d_max)
@@ -85,7 +78,6 @@ class MVSEC(Dataset):
             sample["valid_mask"] = np.isfinite(sample["depth"]) & (sample["depth"] >= 0)
         else:
             sample['valid_mask'] = np.isfinite(sample["depth"]) & (sample['depth'] <= 80)
-        
         sample["image_path"] = img_path
 
         return sample

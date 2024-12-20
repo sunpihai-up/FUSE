@@ -10,7 +10,7 @@ from torchvision.transforms import Compose
 from typing import Sequence, Tuple, Union
 from model.depth_anything_v2.dpt import DepthAnythingV2
 from model.layers.patch_embed import PatchEmbed
-from model.epde.prompt_module import FeatureRectifyModule, FeatureFusionModule
+from model.epde.prompt_module import FeatureRectifyModule, FeatureFusionModule, Prompt_block, Prompt_block_rf
 from dataset.transform import Resize, NormalizeImage, PrepareForNet
 from .utils import token2feature, feature2token, init_weights_vit_timm
 
@@ -25,7 +25,7 @@ class EPDEVisionTransformer(nn.Module):
         depth=12,
         embed_layer=PatchEmbed,
         encoder="vitl",
-        dataset="dense",
+        dataset="mvsec",
         norm_layer=None,
         prompt_type=None,
         depth_anything_pretrained=None,
@@ -80,7 +80,7 @@ class EPDEVisionTransformer(nn.Module):
             prompt_blocks = []
             block_nums = depth if self.prompt_type == "epde_deep" else 1
             for i in range(block_nums):
-                prompt_blocks.append(FeatureRectifyModule(dim=embed_dim))
+                prompt_blocks.append(FeatureRectifyModule(dim=embed_dim, reduction=8))
             self.prompt_blocks = nn.Sequential(*prompt_blocks)
 
             prompt_norms = []
@@ -95,6 +95,7 @@ class EPDEVisionTransformer(nn.Module):
                         FeatureFusionModule(
                             dim=embed_dim,
                             num_heads=self.foundation.pretrained.num_heads,
+                            reduction=1
                         )
                     )
                 else:
@@ -132,6 +133,7 @@ class EPDEVisionTransformer(nn.Module):
         image = x[:, :3, :, :]
         event = x[:, 3:, :, :]
         B, nc, w, h = image.shape
+        patch_grid_size = (w // self.patch_size, h // self.patch_size)
 
         # Compute event and image embedding
         image_token = self.foundation.pretrained.patch_embed(image)
@@ -139,13 +141,15 @@ class EPDEVisionTransformer(nn.Module):
 
         # Injecting modal supplementary information
         if self.prompt_type in ["epde_shaw", "epde_deep"]:
-            image_feat = token2feature(self.prompt_norms[0](image_token))
-            prompt_feat = token2feature(self.prompt_norms[0](prompt_token))
+            image_token = self.prompt_norms[0](image_token)
+            prompt_token = self.prompt_norms[0](prompt_token)
+            image_feat = token2feature(image_token, patch_grid_size)
+            prompt_feat = token2feature(prompt_token, patch_grid_size)
 
             image_feat, prompt_feat = self.prompt_blocks[0](image_feat, prompt_feat)
             prompt_token = feature2token(prompt_feat)
             image_token = feature2token(image_feat)
-        else:
+        elif self.prompt_type == "add":
             image_token = image_token + prompt_token
 
         # Adding cls_token
@@ -186,9 +190,14 @@ class EPDEVisionTransformer(nn.Module):
                 # Add Prompt information from 1st layer
                 # TODO: Why ViPT use i - 1
                 # use [:, 1:] to exclude the cls_token
-                image_feat = token2feature(self.prompt_norms[i](image_token[:, 1:]))
-                prompt_feat = token2feature(self.prompt_norms[i](prompt_token[:, 1:]))
+                image_token = self.prompt_norms[i](image_token)
+                prompt_token = self.prompt_norms[i](prompt_token)
+                image_feat = token2feature(image_token[:, 1:], patch_grid_size)
+                prompt_feat = token2feature(prompt_token[:, 1:], patch_grid_size)
+
                 image_feat, prompt_feat = self.prompt_blocks[i](image_feat, prompt_feat)
+                prompt_token = prompt_token.clone()
+                image_token = image_token.clone()
                 prompt_token[:, 1:] = feature2token(prompt_feat)
                 image_token[:, 1:] = feature2token(image_feat)
 
@@ -238,7 +247,6 @@ class EPDEVisionTransformer(nn.Module):
         )
 
         depth = self.foundation.depth_head(features, patch_h, patch_w)
-        depth = F.relu(depth)
 
         return depth.squeeze(1)
 

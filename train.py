@@ -17,10 +17,11 @@ from torch.utils.tensorboard import SummaryWriter
 
 from dataset.dense import Dense
 from dataset.mvsec import MVSEC
+from dataset.eventscape import EventScape
 
 from model.epde.epde import EPDE
 from util.dist_helper import setup_distributed
-from util.loss import SiLogLoss
+from util.loss import SiLogLoss, MixedLoss
 from util.metric import eval_depth, eval_depth_ori
 from util.utils import init_log
 
@@ -36,7 +37,7 @@ parser.add_argument(
     choices=["mvsec", "eventscape"],
 )
 parser.add_argument("--min-depth", default=0.001, type=float)
-parser.add_argument("--max-depth", default=20, type=float)
+parser.add_argument("--max-depth", default=1, type=float)
 parser.add_argument("--img-size", default=518, type=int)
 parser.add_argument("--epochs", default=40, type=int)
 parser.add_argument("--bs", default=2, type=int)
@@ -91,6 +92,13 @@ def main():
             normalized_d=args.normalized_depth,
             size=size,
         )
+    elif args.dataset == "eventscape":
+        trainset = EventScape(
+            "dataset/splits/eventscape/train.txt",
+            "train",
+            normalized_d=args.normalized_depth,
+            size=size,
+        )
     else:
         raise NotImplementedError
 
@@ -111,6 +119,13 @@ def main():
     elif args.dataset == "mvsec":
         valset = MVSEC(
             "./dataset/splits/mvsec/outdoor_night1_val.txt",
+            "val",
+            normalized_d=args.normalized_depth,
+            size=size,
+        )
+    elif args.dataset == "eventscape":
+        valset = EventScape(
+            "./dataset/splits/eventscape/val_1k.txt",
             "val",
             normalized_d=args.normalized_depth,
             size=size,
@@ -160,7 +175,8 @@ def main():
         find_unused_parameters=True,
     )
 
-    criterion = SiLogLoss().cuda(local_rank)
+    # criterion = SiLogLoss().cuda(local_rank)
+    criterion = MixedLoss().cuda(local_rank)
 
     # Handling frozen parameters
     if args.finetune_mode == "prompt":
@@ -260,7 +276,7 @@ def main():
         trainloader.sampler.set_epoch(epoch + 1)
 
         model.train()
-        total_loss = 0
+        total_si_loss = 0
 
         for i, sample in enumerate(trainloader):
             optimizer.zero_grad()
@@ -278,19 +294,19 @@ def main():
                 valid_mask = valid_mask.flip(-1)
 
             pred = model(img)
-
-            loss = criterion(
+            loss, si_loss, grad_loss = criterion(
                 pred,
                 depth,
                 (valid_mask == 1)
                 & (depth >= args.min_depth)
                 & (depth <= args.max_depth),
             )
+            # si_loss = torch.tensor(0)
 
             loss.backward()
             optimizer.step()
 
-            total_loss += loss.item()
+            total_si_loss += si_loss.item()
 
             iters = epoch * len(trainloader) + i
 
@@ -301,6 +317,8 @@ def main():
 
             if rank == 0:
                 writer.add_scalar("train/loss", loss.item(), iters)
+                writer.add_scalar("train/si_loss", si_loss.item(), iters)
+                writer.add_scalar("train/grad_loss", grad_loss.item(), iters)
 
             if rank == 0 and i % 100 == 0:
                 logger.info(
@@ -352,7 +370,9 @@ def main():
                     pred[valid_mask], depth[valid_mask], dataset=args.dataset
                 )
             else:
-                cur_results = eval_depth_ori(pred[valid_mask], depth[valid_mask])
+                cur_results = eval_depth_ori(
+                    pred[valid_mask], depth[valid_mask], dataset=args.dataset
+                )
 
             for k in results.keys():
                 results[k] += cur_results[k]

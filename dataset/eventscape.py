@@ -9,21 +9,24 @@ from dataset.transform import Resize, NormalizeImage, PrepareForNet, Crop
 DEPTH_MAX = 1000
 ALPHA = 5.7
 
-RGB_MEAN  = [ 93.693515, 94.399027, 96.141395 ]
-RGB_STD   = [ 53.938046, 52.463300, 54.016670]
-GRAY_MEAN = [ 94.386783 ]
-GRAY_STD  = [ 52.621100 ]
+# RGB_MEAN  = [ 93.693515, 94.399027, 96.141395 ]
+# RGB_STD   = [ 53.938046, 52.463300, 54.016670]
+# GRAY_MEAN = [ 94.386783 ]
+# GRAY_STD  = [ 52.621100 ]
+GRAY_MEAN = 0.370166
+GRAY_STD = 0.206369
 
 class EventScape(Dataset):
-    def __init__(self, filelist_path, mode, size=(518, 518)):
+    def __init__(self, filelist_path, mode, normalized_d, size):
         self.mode = mode
         self.size = size
+        self.normalized_d = normalized_d
 
         with open(filelist_path, "r") as f:
             self.filelist = f.read().splitlines()
 
         mean = [GRAY_MEAN, GRAY_MEAN, GRAY_MEAN]
-        std = [RGB_STD, RGB_STD, RGB_STD]
+        std = [GRAY_STD, GRAY_STD, GRAY_STD]
         
         net_w, net_h = size
         self.transform = Compose(
@@ -43,10 +46,10 @@ class EventScape(Dataset):
             + ([Crop(size[0])] if self.mode == "train" else [])
         )
 
-    def rgb2gray(rgb):
+    def rgb2gray(self, rgb):
         return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140]).astype(np.float32)
 
-    def gray2rgb(gray):
+    def gray2rgb(self, gray):
         return np.stack((gray,) * 3, axis=-1)
 
     def prepare_depth(self, depth, reg_factor, d_max):
@@ -65,14 +68,14 @@ class EventScape(Dataset):
         event_voxel_path = self.filelist[item].split(" ")[2]
 
         image = cv2.imread(img_path)
-        image = self.gray2rgb(self.rgb2gray(image))
-        image = image / 255.0
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        image = self.gray2rgb(self.rgb2gray(image)).astype(int) / 255.0
 
         depth = np.load(depth_path)
-        # Convert absolute scale depth to normalized log depth
-        depth = self.prepare_depth(depth, reg_factor, d_max)
-
         event_voxel = np.load(event_voxel_path)
+        # Convert absolute scale depth to normalized log depth
+        if self.normalized_d:
+            depth = self.prepare_depth(depth, reg_factor, d_max)
 
         sample = self.transform({"image": image, "depth": depth, "event_voxel": event_voxel})
 
@@ -84,7 +87,10 @@ class EventScape(Dataset):
         del sample['image']
         del sample['event_voxel']
 
-        sample["valid_mask"] = np.isfinite(sample["depth"]) & (sample["depth"] >= 0)
+        if self.normalized_d:
+            sample["valid_mask"] = np.isfinite(sample["depth"]) & (sample["depth"] >= 0)
+        else:
+            sample['valid_mask'] = np.isfinite(sample["depth"]) & (sample['depth'] <= 80)
         sample["image_path"] = img_path
 
         return sample

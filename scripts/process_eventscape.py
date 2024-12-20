@@ -156,9 +156,8 @@ if __name__ == "__main__":
         output_path = os.path.join(args.output_root, name.split(".")[0])
 
         print(f"Unzip {zip_path}...")
-        if "Town05_test.zip" not in zip_path:
-            with zipfile.ZipFile(zip_path, "r") as zip_ref:
-                zip_ref.extractall(output_path)
+        with zipfile.ZipFile(zip_path, "r") as zip_ref:
+            zip_ref.extractall(output_path)
 
         towns = os.listdir(output_path)
         for town in towns:
@@ -178,19 +177,18 @@ if __name__ == "__main__":
                 images = os.listdir(images_dir)
                 depths = os.listdir(depths_dir)
                 voxels = os.listdir(voxels_dir)
+                
+                images = [os.path.join(images_dir, p) for p in images if not p.endswith(".txt")]
+                depths = [os.path.join(depths_dir, p) for p in depths if not p.endswith(".txt")]
+                voxels = [os.path.join(voxels_dir, p) for p in voxels if not p.endswith(".txt")]
+                
                 images_path.extend(images)
                 depths_path.extend(depths)
                 voxels_path.extend(voxels)
 
-        images_path = sorted(
-            [os.path.join(images_dir, p) for p in images_path if not p.endswith(".txt")]
-        )
-        depths_path = sorted(
-            [os.path.join(depths_dir, p) for p in depths_path if not p.endswith(".txt")]
-        )
-        voxels_path = sorted(
-            [os.path.join(voxels_dir, p) for p in voxels_path if not p.endswith(".txt")]
-        )
+        images_path = sorted(images_path)
+        depths_path = sorted(depths_path)
+        voxels_path = sorted(voxels_path)
 
         lines = []
         for i in range(len(images_path)):
@@ -202,12 +200,12 @@ if __name__ == "__main__":
         with open(split_path, "w") as f:
             f.writelines(lines)
         
-        # delete_redundant_files(output_path)
+        delete_redundant_files(output_path)
         print(f"##############  Finished Processing {name} ##############")
 
 """
 python scripts/process_eventscape.py \
-    /data/coding/upload-data/data/EventScape \
-    /data/coding/upload-data/data/EventScape_processed \
-    --numbins 5
+    /data_nvme/sph/EventScape \
+    /data_nvme/sph/EventScape_processed \
+    --numbins 3
 """

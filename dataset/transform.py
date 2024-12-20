@@ -48,8 +48,7 @@ def apply_min_size(sample, size, image_interpolation_method=cv2.INTER_AREA):
 
 
 class Resize(object):
-    """Resize sample to given size (width, height).
-    """
+    """Resize sample to given size (width, height)."""
 
     def __init__(
         self,
@@ -172,7 +171,7 @@ class Resize(object):
             (width, height),
             interpolation=self.__image_interpolation_method,
         )
-        
+
         if "event_voxel" in sample:
             sample["event_voxel"] = sample["event_voxel"].transpose(1, 2, 0)
             sample["event_voxel"] = cv2.resize(
@@ -198,7 +197,11 @@ class Resize(object):
                 # sample["semseg_mask"] = cv2.resize(
                 #     sample["semseg_mask"], (width, height), interpolation=cv2.INTER_NEAREST
                 # )
-                sample["semseg_mask"] = F.interpolate(torch.from_numpy(sample["semseg_mask"]).float()[None, None, ...], (height, width), mode='nearest').numpy()[0, 0]
+                sample["semseg_mask"] = F.interpolate(
+                    torch.from_numpy(sample["semseg_mask"]).float()[None, None, ...],
+                    (height, width),
+                    mode="nearest",
+                ).numpy()[0, 0]
 
             if "mask" in sample:
                 sample["mask"] = cv2.resize(
@@ -212,13 +215,12 @@ class Resize(object):
 
 
 class NormalizeImage(object):
-    """Normlize image by given mean and std.
-    """
+    """Normlize image by given mean and std."""
 
     def __init__(self, mean, std):
         self.__mean = mean
         self.__std = std
-    
+
     def normalize_voxelgrid(self, event_tensor):
         mask = np.nonzero(event_tensor)
         if mask[0].size > 0:
@@ -235,8 +237,7 @@ class NormalizeImage(object):
 
 
 class PrepareForNet(object):
-    """Prepare sample for usage as network input.
-    """
+    """Prepare sample for usage as network input."""
 
     def __init__(self):
         pass
@@ -248,16 +249,16 @@ class PrepareForNet(object):
         if "mask" in sample:
             sample["mask"] = sample["mask"].astype(np.float32)
             sample["mask"] = np.ascontiguousarray(sample["mask"])
-        
+
         if "depth" in sample:
             depth = sample["depth"].astype(np.float32)
             sample["depth"] = np.ascontiguousarray(depth)
-        
+
         if "event_voxel" in sample:
             event_voxel = np.transpose(sample["event_voxel"], (2, 0, 1))
             event_voxel = event_voxel.astype(np.float32)
             sample["event_voxel"] = np.ascontiguousarray(event_voxel)
-            
+
         if "semseg_mask" in sample:
             sample["semseg_mask"] = sample["semseg_mask"].astype(np.float32)
             sample["semseg_mask"] = np.ascontiguousarray(sample["semseg_mask"])
@@ -266,8 +267,7 @@ class PrepareForNet(object):
 
 
 class Crop(object):
-    """Crop sample for batch-wise training. Image is of shape CxHxW
-    """
+    """Crop sample for batch-wise training. Image is of shape CxHxW"""
 
     def __init__(self, size):
         if isinstance(size, int):
@@ -276,27 +276,72 @@ class Crop(object):
             self.size = size
 
     def __call__(self, sample):
-        h, w = sample['image'].shape[-2:]
-        assert h >= self.size[0] and w >= self.size[1], 'Wrong size'
-        
+        h, w = sample["image"].shape[-2:]
+        assert h >= self.size[0] and w >= self.size[1], "Wrong size"
+
         h_start = np.random.randint(0, h - self.size[0] + 1)
         w_start = np.random.randint(0, w - self.size[1] + 1)
         h_end = h_start + self.size[0]
         w_end = w_start + self.size[1]
-        
-        sample['image'] = sample['image'][:, h_start: h_end, w_start: w_end]
-        
+
+        sample["image"] = sample["image"][:, h_start:h_end, w_start:w_end]
+
         if "event_voxel" in sample:
-            sample["event_voxel"] = sample["event_voxel"][:, h_start: h_end, w_start: w_end]
-            
+            sample["event_voxel"] = sample["event_voxel"][
+                :, h_start:h_end, w_start:w_end
+            ]
+
         if "depth" in sample:
-            sample["depth"] = sample["depth"][h_start: h_end, w_start: w_end]
-        
-            
+            sample["depth"] = sample["depth"][h_start:h_end, w_start:w_end]
+
         if "mask" in sample:
-            sample["mask"] = sample["mask"][h_start: h_end, w_start: w_end]
-            
+            sample["mask"] = sample["mask"][h_start:h_end, w_start:w_end]
+
         if "semseg_mask" in sample:
-            sample["semseg_mask"] = sample["semseg_mask"][h_start: h_end, w_start: w_end]
-            
+            sample["semseg_mask"] = sample["semseg_mask"][h_start:h_end, w_start:w_end]
+
+        return sample
+
+
+class Noise(object):
+    def __init__(self, size):
+        pass
+
+    def add_gaussian_noise(self, image, mean=0, sigma=25):
+        """
+        Add Gaussian noise to a grayscale image.
+        """
+        # Ensure the image is of float type for correct mathematical operations
+        noisy_image = np.copy(image).astype(float)
+        # Generate Gaussian noise
+        gauss = np.random.normal(mean, sigma, image.shape)
+        # Add noise to the image
+        noisy_image = noisy_image + gauss
+
+        # Clip image pixel values to the valid range [0, 255]
+        noisy_image = np.clip(noisy_image, 0, 255).astype(np.uint8)
+
+        return noisy_image
+
+    def add_salt_and_pepper_noise(self, image, amount=0.05, salt_vs_pepper=0.5):
+        """
+        Add salt and pepper noise to a grayscale image.
+        """
+        noisy_image = np.copy(image)
+        num_salt = np.ceil(amount * image.size * salt_vs_pepper)
+        num_pepper = np.ceil(amount * image.size * (1.0 - salt_vs_pepper))
+
+        # Add salt noise (white)
+        coords = [np.random.randint(0, i - 1, int(num_salt)) for i in image.shape]
+        noisy_image[tuple(coords)] = 255
+
+        # Add pepper noise (black)
+        coords = [np.random.randint(0, i - 1, int(num_pepper)) for i in image.shape]
+        noisy_image[tuple(coords)] = 0
+
+        return noisy_image
+
+    def __call__(self, sample):
+        sample["image"] = self.add_gaussian_noise(sample["image"])
+        sample["image"] = self.add_salt_and_pepper_noise(sample["image"])
         return sample
