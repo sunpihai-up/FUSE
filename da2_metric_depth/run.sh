@@ -1,10 +1,10 @@
 encoder=vitl
-dataset=mvsec # vkitti
-scene=night1
+dataset=eventscape # vkitti
+scene=test_1k
 img_size=350
-max_depth=80
-load_from=/home/sph/event/da2-prompt-tuning/exp/mvsec_metric_20241216_172558/rmse-6.455599308013916-0.pth
-outdir=/home/sph/event/da2-prompt-tuning/results/${dataset}_metric_vitl_${scene}_0
+max_depth=1
+load_from=/data/coding/code/da2-prompt-tuning/exp/eventscape_nl_disp_da2vitl_20241222_193824/abs_rel-0.12157373875379562-1.pth
+outdir=/data/coding/code/da2-prompt-tuning/results/${dataset}_nl_grad_vitl_${scene}_2
 
 python run.py \
     --encoder $encoder \
@@ -12,5 +12,5 @@ python run.py \
     --input-size $img_size \
     --max-depth $max_depth --load-from $load_from \
     --outdir $outdir \
-    --save-numpy
-    # --normailzed_depth \
+    --save-numpy \
+    --normalized-depth

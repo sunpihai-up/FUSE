@@ -14,6 +14,7 @@ from dataset.hypersim import Hypersim
 from dataset.kitti import KITTI
 from dataset.vkitti2 import VKITTI2
 from dataset.mvsec import MVSEC
+from dataset.eventscape import EventScape
 from torch.utils.data import DataLoader
 
 if __name__ == '__main__':
@@ -22,15 +23,15 @@ if __name__ == '__main__':
     parser.add_argument('--outdir', type=str, default='./vis_depth')
     
     parser.add_argument("--dataset", choices=["eventscape", "mvsec"])
-    parser.add_argument("--scene", choices=["day1", "night1", "train"])
     parser.add_argument('--encoder', type=str, default='vitl', choices=['vits', 'vitb', 'vitl', 'vitg'])
+    parser.add_argument("--scene", choices=["day1", "night1", "train", "test", "test_1k", "night1_2b", "day1_2b"])
     parser.add_argument('--load-from', type=str, default='checkpoints/depth_anything_v2_metric_hypersim_vitl.pth')
     parser.add_argument('--max-depth', type=float, default=20)
     
     parser.add_argument('--save-numpy', dest='save_numpy', action='store_true', help='save the model raw output')
     parser.add_argument('--pred-only', dest='pred_only', action='store_true', help='only display the prediction')
     parser.add_argument('--grayscale', dest='grayscale', action='store_true', help='do not apply colorful palette')
-    parser.add_argument("--normalized_depth", action='store_true', help="Enable normalized depth.")
+    parser.add_argument("--normalized-depth", action='store_true', help="Enable normalized depth.")
 
     args = parser.parse_args()
     
@@ -41,6 +42,24 @@ if __name__ == '__main__':
         valset = MVSEC("dataset/splits/mvsec/outdoor_night1.txt", "val", normalized_d=args.normalized_depth, size=size)
     elif args.dataset == "mvsec" and args.scene == "train":
         valset = MVSEC("dataset/splits/mvsec/train.txt", "val", normalized_d=args.normalized_depth, size=size)
+    elif args.dataset == "mvsec" and args.scene == "day1_2b":
+        valset = MVSEC("dataset/splits/mvsec/outdoor_day1_val.txt", "val", normalized_d=args.normalized_depth, size=size)
+    elif args.dataset == "mvsec" and args.scene == "night1_2b":
+        valset = MVSEC("dataset/splits/mvsec/outdoor_night1_val.txt", "val", normalized_d=args.normalized_depth, size=size)
+    elif args.dataset == "eventscape" and args.scene == "test":
+        valset = EventScape(
+            "dataset/splits/eventscape/test.txt",
+            "val",
+            normalized_d=args.normalized_depth,
+            size=size,
+        )
+    elif args.dataset == "eventscape" and args.scene == "test_1k":
+        valset = EventScape(
+            "dataset/splits/eventscape/test_1k.txt",
+            "val",
+            normalized_d=args.normalized_depth,
+            size=size,
+        )
     else:
         raise NotImplementedError
 
@@ -90,7 +109,7 @@ if __name__ == '__main__':
         h, w = raw_image.shape[0], raw_image.shape[1]
         
         with torch.no_grad():
-            img = sample["image"].cuda()
+            img = sample["image"].to(DEVICE)
             depth = depth_anything(img)
             depth = F.interpolate(
                 depth[:, None], (h, w), mode="bilinear", align_corners=True
