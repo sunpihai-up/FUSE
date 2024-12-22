@@ -20,7 +20,7 @@ if __name__ == '__main__':
     parser.add_argument('--outdir', type=str, default='./vis_depth')
 
     parser.add_argument("--dataset", choices=["mvsec", "eventscape"])
-    parser.add_argument("--scene", choices=["day1", "night1", "train", "test", "test_1k"])
+    parser.add_argument("--scene", choices=["day1", "night1", "train", "test", "test_1k", "night1_2b", "day1_2b"])
     parser.add_argument('--encoder', type=str, default='vitl', choices=['vits', 'vitb', 'vitl', 'vitg'])
     parser.add_argument('--load-from', type=str, default='checkpoints/depth_anything_v2_metric_hypersim_vitl.pth')
     parser.add_argument('--max-depth', type=float, default=20)
@@ -40,6 +40,10 @@ if __name__ == '__main__':
         valset = MVSEC("dataset/splits/mvsec/outdoor_night1.txt", "val", normalized_d=args.normalized_depth, size=size)
     elif args.dataset == "mvsec" and args.scene == "train":
         valset = MVSEC("dataset/splits/mvsec/train.txt", "val", normalized_d=args.normalized_depth, size=size)
+    elif args.dataset == "mvsec" and args.scene == "day1_2b":
+        valset = MVSEC("dataset/splits/mvsec/outdoor_day1_val.txt", "val", normalized_d=args.normalized_depth, size=size)
+    elif args.dataset == "mvsec" and args.scene == "night1_2b":
+        valset = MVSEC("dataset/splits/mvsec/outdoor_night1_val.txt", "val", normalized_d=args.normalized_depth, size=size)
     elif args.dataset == "eventscape" and args.scene == "test":
         valset = EventScape(
             "dataset/splits/eventscape/test.txt",

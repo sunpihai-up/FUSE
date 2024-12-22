@@ -1,10 +1,10 @@
 encoder=vitl
-dataset=eventscape # vkitti
-scene=test_1k
+dataset=mvsec
+scene=night1_2b
 img_size=350
 max_depth=1
-load_from=/home/sph/event/da2-prompt-tuning/exp/eventscape_overall_nl_20241221_114827/abs_rel-0.1724187731742859-2.pth
-outdir=/home/sph/event/da2-prompt-tuning/results/${dataset}_metric_vitl_overall_${scene}_3_350
+load_from=/home/sph/event/da2-prompt-tuning/exp/eventscape_overall_nl_20241222_010732/abs_rel-0.17139266431331635-4.pth
+outdir=/home/sph/event/da2-prompt-tuning/results/${dataset}_metric_vitl_overall_${scene}_5_grad_350
 event_voxel_chans=3
 
 python run.py \
