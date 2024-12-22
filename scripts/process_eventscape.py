@@ -153,6 +153,7 @@ if __name__ == "__main__":
         images_path = []
         depths_path = []
         voxels_path = []
+        # events_path = []
 
         zip_path = os.path.join(args.data_root, name)
         output_path = os.path.join(args.output_root, name.split(".")[0])
@@ -179,18 +180,24 @@ if __name__ == "__main__":
                 images = os.listdir(images_dir)
                 depths = os.listdir(depths_dir)
                 voxels = os.listdir(voxels_dir)
+                # events = os.listdir(events_dir)
                 
                 images = [os.path.join(images_dir, p) for p in images if not p.endswith(".txt")]
                 depths = [os.path.join(depths_dir, p) for p in depths if not p.endswith(".txt")]
                 voxels = [os.path.join(voxels_dir, p) for p in voxels if not p.endswith(".txt")]
+                # events = [os.path.join(voxels_dir, p) for p in events if not p.endswith(".txt")]
                 
                 images_path.extend(images)
                 depths_path.extend(depths)
                 voxels_path.extend(voxels)
+                # events_path.extend(events)
 
         images_path = sorted(images_path)
         depths_path = sorted(depths_path)
         voxels_path = sorted(voxels_path)
+        # events_path = sorted(events_path)
+        # voxels_path = [p.replace("data", "voxels") for p in events_path]
+        # voxels_path = [p.replace("npz", "npy") for p in events_path]
 
         lines = []
         for i in range(len(images_path)):
@@ -209,5 +216,10 @@ if __name__ == "__main__":
 python scripts/process_eventscape.py \
     /data_nvme/sph/EventScape \
     /data_nvme/sph/EventScape_processed \
+    --numbins 3
+    
+python scripts/process_eventscape.py \
+    /data/coding/upload-data/data/EventScape \
+    /data/coding/upload-data/data/EventScape \
     --numbins 3
 """
