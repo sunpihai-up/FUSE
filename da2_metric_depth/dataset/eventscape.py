@@ -65,27 +65,30 @@ class EventScape(Dataset):
 
         img_path = self.filelist[item].split(" ")[0]
         depth_path = self.filelist[item].split(" ")[1]
-        event_voxel_path = self.filelist[item].split(" ")[2]
+        # event_voxel_path = self.filelist[item].split(" ")[2]
 
         image = cv2.imread(img_path)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         image = self.gray2rgb(self.rgb2gray(image)).astype(int) / 255.0
 
         depth = np.load(depth_path)
-        event_voxel = np.load(event_voxel_path)
+        # event_voxel = np.load(event_voxel_path)
+        
         # Convert absolute scale depth to normalized log depth
         if self.normalized_d:
             depth = self.prepare_depth(depth, reg_factor, d_max)
 
-        sample = self.transform({"image": image, "depth": depth, "event_voxel": event_voxel})
+        sample = self.transform({"image": image, "depth": depth})
 
-        image = torch.from_numpy(sample["image"])
-        event_voxel = torch.from_numpy(sample["event_voxel"])
+        sample['image'] = torch.from_numpy(sample['image'])
         sample["depth"] = torch.from_numpy(sample["depth"])
-        sample["input"] = torch.cat([image, event_voxel], dim=0)
+        # image = torch.from_numpy(sample["image"])
+        # event_voxel = torch.from_numpy(sample["event_voxel"])
+        # sample["depth"] = torch.from_numpy(sample["depth"])
+        # sample["input"] = torch.cat([image, event_voxel], dim=0)
 
-        del sample['image']
-        del sample['event_voxel']
+        # del sample['image']
+        # del sample['event_voxel']
 
         if self.normalized_d:
             sample["valid_mask"] = np.isfinite(sample["depth"]) & (sample["depth"] >= 0)

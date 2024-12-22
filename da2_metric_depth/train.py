@@ -46,7 +46,7 @@ parser.add_argument("--save-path", type=str, required=True)
 parser.add_argument("--local-rank", default=0, type=int)
 parser.add_argument("--port", default=None, type=int)
 parser.add_argument(
-    "--normalized_depth", action="store_true", help="Enable normalized depth."
+    "--normalized-depth", action="store_true", help="Enable normalized depth."
 )
 
 
@@ -91,7 +91,9 @@ def eval_val(valloader, model, logger, args, rank):
                 pred[valid_mask], depth[valid_mask], dataset=args.dataset
             )
         else:
-            cur_results = eval_depth_ori(pred[valid_mask], depth[valid_mask])
+            cur_results = eval_depth_ori(
+                pred[valid_mask], depth[valid_mask], dataset=args.dataset
+            )
 
         for k in results.keys():
             results[k] += cur_results[k]
