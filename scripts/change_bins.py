@@ -1,5 +1,6 @@
-import numpy as np
+import argparse
 import os
+import numpy as np
 from tqdm import tqdm
 
 def events_to_voxel_grid(events, num_bins, width, height):
@@ -60,26 +61,62 @@ def events_to_voxel_grid(events, num_bins, width, height):
 
     return voxel_grid
 
-if __name__ == "__main__":
-    new_num_bins = 5
-    dir = '/data/coding/code/da2-prompt-tuning/dataset/splits/mvsec'
-    split_files = os.listdir(dir)
 
+def event_npz2npy(npz_data):
+    # Convert original data to [N, 4] (t, x, y, p)
+    x = npz_data["x"].astype(int)
+    y = npz_data["y"].astype(int)
+    p = npz_data["p"].astype(int)
+    t = npz_data["t"]
+
+    return np.vstack((t, x, y, p)).T
+
+
+def parse_arguments():
+    parser = argparse.ArgumentParser()
+    
+    parser.add_argument("--new-numbins", type=int)
+    parser.add_argument("--split-dir", type=str)
+    parser.add_argument("--dataset", type=str, choices=["mvsec", "eventscape"])
+    
+    return parser.parse_args()
+
+if __name__ == "__main__":
+    split_names = ["train.txt", "val.txt", "test.txt"]
+    args = parse_arguments()
+    
     voxel_paths = []
-    for split in split_files:
-        txt_path = os.path.join(dir, split)
-        with open(txt_path, 'r') as f:
+    event_paths = []
+    
+    for txt_name in split_names:
+        txt_path = os.path.join(args.split_dir, txt_name)
+        with open(txt_path, "r") as f:
             lines = f.readlines()
         # Get all voxel paths
         lines = [line.split(' ')[2].strip() for line in lines]
         voxel_paths.extend(lines)
-
-    event_paths = [p.replace("voxels", "events") for p in voxel_paths]
+    
+    if args.dataset == "mvsec":
+        event_paths = [p.replace("voxels", "events") for p in voxel_paths]
+    elif args.dataset == "eventscape":
+        event_paths = [p.replace("voxels", "data") for p in voxel_paths]
+        event_paths = [p.replace("npy", "npz") for p in event_paths]
     
     v = np.load(voxel_paths[0])
     b, h, w = v.shape
     
     for i in tqdm(range(len(event_paths)), total=len(event_paths)):
         event = np.load(event_paths[i])
-        voxel = events_to_voxel_grid(event, new_num_bins, w, h)
+        
+        if args.dataset == "eventscape":
+            event = event_npz2npy(event)
+            event[event[:, 3] == 0, 3] = -1
+        voxel = events_to_voxel_grid(event, args.new_numbins, w, h)
         np.save(voxel_paths[i], voxel)
+        
+'''
+python scripts/change_bins_.py \
+    --new-numbins 3 \
+    --split-dir /home/sph/event/da2-prompt-tuning/dataset/splits/eventscape \
+    --dataset eventscape
+'''
