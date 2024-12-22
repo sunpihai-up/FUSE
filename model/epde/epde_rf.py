@@ -202,8 +202,8 @@ class EPDEVisionTransformer(nn.Module):
                 image_token[:, 1:] = feature2token(image_feat)
 
             if i in blocks_to_take and self.prompt_type == "epde_deep":
-                image_feat = token2feature(image_token[:, 1:])
-                prompt_feat = token2feature(prompt_token[:, 1:])
+                image_feat = token2feature(image_token[:, 1:], patch_grid_size)
+                prompt_feat = token2feature(prompt_token[:, 1:], patch_grid_size)
                 fuse_token = feature2token(
                     self.fuse_blocks[i](prompt_feat, prompt_feat)
                 )

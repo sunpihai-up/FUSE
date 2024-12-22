@@ -275,7 +275,7 @@ def main():
         trainloader.sampler.set_epoch(epoch + 1)
 
         model.train()
-        total_loss = 0
+        total_si_loss = 0
 
         for i, sample in enumerate(trainloader):
             optimizer.zero_grad()
