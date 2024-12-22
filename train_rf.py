@@ -49,6 +49,9 @@ parser.add_argument("--local-rank", default=0, type=int)
 parser.add_argument("--port", default=None, type=int)
 parser.add_argument("--event_voxel_chans", default=5, type=int)
 parser.add_argument(
+    "--normalized_depth", action="store_true", help="Enable normalized depth."
+)
+parser.add_argument(
     "--prompt_type",
     choices=["epde_deep", "epde_shaw", "add", "none"],
     type=str,
@@ -122,7 +125,7 @@ def main():
         )
     elif args.dataset == "eventscape":
         valset = EventScape(
-            "./dataset/splits/mvsec/val.txt",
+            "./dataset/splits/eventscape/val_1k.txt",
             "val",
             normalized_d=args.normalized_depth,
             size=size,
@@ -177,21 +180,21 @@ def main():
     # Handling frozen parameters
     if args.finetune_mode == "prompt":
         for name, param in model.named_parameters():
-            if 'foundation' in name:
+            if "foundation" in name:
                 param.requires_grad = False
     elif args.finetune_mode == "decoder":
         for name, param in model.named_parameters():
-            if 'foundation.pretrained' in name:
+            if "foundation.pretrained" in name:
                 param.requires_grad = False
     elif args.finetune_mode == "bias":
         for name, param in model.named_parameters():
-            if 'bias' not in name and 'foundation' in name:
+            if "bias" not in name and "foundation" in name:
                 param.requires_grad = False
     elif args.finetune_mode == "bias_and_decoder":
         for name, param in model.named_parameters():
-            if 'bias' not in name and 'foundation.pretrained' in name:
+            if "bias" not in name and "foundation.pretrained" in name:
                 param.requires_grad = False
-    print(f'The freezing mode of weights is: {args.finetune_mode}')
+    print(f"The freezing mode of weights is: {args.finetune_mode}")
 
     # Configure optimizer to include only trainable parameters
     optimizer = AdamW(
@@ -239,7 +242,9 @@ def main():
                 logger.info(f"Module: {name}, Trainable Parameters: {param.numel()}")
 
         # Optional: Total trainable parameters
-        total_trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+        total_trainable_params = sum(
+            p.numel() for p in model.parameters() if p.requires_grad
+        )
         logger.info(f"Total Trainable Parameters: {total_trainable_params}")
 
     for epoch in range(args.epochs):
@@ -289,7 +294,7 @@ def main():
 
             pred = model(img)
 
-            loss = criterion(
+            loss, si_loss, grad_loss = criterion(
                 pred,
                 depth,
                 valid_mask,
@@ -298,7 +303,7 @@ def main():
             loss.backward()
             optimizer.step()
 
-            total_loss += loss.item()
+            total_si_loss += si_loss.item()
 
             iters = epoch * len(trainloader) + i
 
@@ -309,6 +314,8 @@ def main():
 
             if rank == 0:
                 writer.add_scalar("train/loss", loss.item(), iters)
+                writer.add_scalar("train/si_loss", si_loss.item(), iters)
+                writer.add_scalar("train/grad_loss", grad_loss.item(), iters)
 
             if rank == 0 and i % 100 == 0:
                 logger.info(

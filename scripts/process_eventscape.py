@@ -109,12 +109,14 @@ def process_events_dir(events_dir, voxels_dir, num_bins=3, width=512, height=256
         # Load original data
         npz_data = np.load(src_path)
         # Convert original data to [N, 4] (t, x, y, p)
-        x = npz_data["x"]
-        y = npz_data["y"]
-        p = npz_data["p"]
+        x = npz_data["x"].astype(int)
+        y = npz_data["y"].astype(int)
+        p = npz_data["p"].astype(int)
         t = npz_data["t"]
 
         event_arr = np.vstack((t, x, y, p)).T
+        # Ensure polarity is 1 or -1
+        event_arr[event_arr[:, 3] == 0, 3] = -1
         voxel = events_to_voxel_grid(event_arr, num_bins, width, height)
         np.save(dst_path, voxel)
 

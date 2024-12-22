@@ -1,0 +1,969 @@
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/distributed/launch.py:183: FutureWarning: The module torch.distributed.launch is deprecated
+and will be removed in future. Use torchrun.
+Note that --use-env is set by default in torchrun.
+If your script expects `--local-rank` argument to be set, please
+change it to read from `os.environ['LOCAL_RANK']` instead. See 
+https://pytorch.org/docs/stable/distributed.html#launch-utility for 
+further instructions
+
+  warnings.warn(
+[2024-12-21 11:48:29,135] torch.distributed.run: [WARNING] 
+[2024-12-21 11:48:29,135] torch.distributed.run: [WARNING] *****************************************
+[2024-12-21 11:48:29,135] torch.distributed.run: [WARNING] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+[2024-12-21 11:48:29,135] torch.distributed.run: [WARNING] *****************************************
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[2024-12-21 11:48:31,647][    INFO] {'bs': 8,
+ 'dataset': 'eventscape',
+ 'depth_anything_pretrained': '/data_nvme/sph/da2_checkpoints/depth_anything_v2_vitl.pth',
+ 'encoder': 'vitl',
+ 'epochs': 50,
+ 'event_voxel_chans': 3,
+ 'finetune_mode': 'overall',
+ 'img_size': 350,
+ 'local_rank': 0,
+ 'lr': 5e-06,
+ 'max_depth': 1.0,
+ 'min_depth': 0.0,
+ 'ngpus': 2,
+ 'normalized_depth': True,
+ 'port': 20596,
+ 'pretrained_from': None,
+ 'prompt_type': 'epde_deep',
+ 'save_path': '/home/sph/event/da2-prompt-tuning/exp/eventscape_overall_nl_20241221_114827'}
+
+INFO:dinov2:using MLP layer as FFN
+INFO:dinov2:using MLP layer as FFN
+Loaded pretrained weights from /data_nvme/sph/da2_checkpoints/depth_anything_v2_vitl.pth
+Loaded pretrained weights from /data_nvme/sph/da2_checkpoints/depth_anything_v2_vitl.pth
+Setting up Multi Scale Gradient loss...
+Done
+The freezing mode of weights is: overall
+Setting up Multi Scale Gradient loss...
+Done
+The freezing mode of weights is: overall
+[2024-12-21 11:48:37,442][    INFO] Module: module.foundation.pretrained.cls_token, Trainable Parameters: 1024
+[2024-12-21 11:48:37,442][    INFO] Module: module.foundation.pretrained.pos_embed, Trainable Parameters: 1402880
+[2024-12-21 11:48:37,442][    INFO] Module: module.foundation.pretrained.mask_token, Trainable Parameters: 1024
+[2024-12-21 11:48:37,442][    INFO] Module: module.foundation.pretrained.patch_embed.proj.weight, Trainable Parameters: 602112
+[2024-12-21 11:48:37,442][    INFO] Module: module.foundation.pretrained.patch_embed.proj.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,442][    INFO] Module: module.foundation.pretrained.blocks.0.norm1.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,442][    INFO] Module: module.foundation.pretrained.blocks.0.norm1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,442][    INFO] Module: module.foundation.pretrained.blocks.0.attn.qkv.weight, Trainable Parameters: 3145728
+[2024-12-21 11:48:37,442][    INFO] Module: module.foundation.pretrained.blocks.0.attn.qkv.bias, Trainable Parameters: 3072
+[2024-12-21 11:48:37,442][    INFO] Module: module.foundation.pretrained.blocks.0.attn.proj.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,442][    INFO] Module: module.foundation.pretrained.blocks.0.attn.proj.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,442][    INFO] Module: module.foundation.pretrained.blocks.0.ls1.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,442][    INFO] Module: module.foundation.pretrained.blocks.0.norm2.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,442][    INFO] Module: module.foundation.pretrained.blocks.0.norm2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,442][    INFO] Module: module.foundation.pretrained.blocks.0.mlp.fc1.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,442][    INFO] Module: module.foundation.pretrained.blocks.0.mlp.fc1.bias, Trainable Parameters: 4096
+[2024-12-21 11:48:37,442][    INFO] Module: module.foundation.pretrained.blocks.0.mlp.fc2.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,442][    INFO] Module: module.foundation.pretrained.blocks.0.mlp.fc2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,442][    INFO] Module: module.foundation.pretrained.blocks.0.ls2.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,442][    INFO] Module: module.foundation.pretrained.blocks.1.norm1.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,442][    INFO] Module: module.foundation.pretrained.blocks.1.norm1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,442][    INFO] Module: module.foundation.pretrained.blocks.1.attn.qkv.weight, Trainable Parameters: 3145728
+[2024-12-21 11:48:37,442][    INFO] Module: module.foundation.pretrained.blocks.1.attn.qkv.bias, Trainable Parameters: 3072
+[2024-12-21 11:48:37,442][    INFO] Module: module.foundation.pretrained.blocks.1.attn.proj.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,442][    INFO] Module: module.foundation.pretrained.blocks.1.attn.proj.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.1.ls1.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.1.norm2.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.1.norm2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.1.mlp.fc1.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.1.mlp.fc1.bias, Trainable Parameters: 4096
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.1.mlp.fc2.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.1.mlp.fc2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.1.ls2.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.2.norm1.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.2.norm1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.2.attn.qkv.weight, Trainable Parameters: 3145728
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.2.attn.qkv.bias, Trainable Parameters: 3072
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.2.attn.proj.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.2.attn.proj.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.2.ls1.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.2.norm2.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.2.norm2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.2.mlp.fc1.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.2.mlp.fc1.bias, Trainable Parameters: 4096
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.2.mlp.fc2.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.2.mlp.fc2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.2.ls2.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.3.norm1.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.3.norm1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.3.attn.qkv.weight, Trainable Parameters: 3145728
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.3.attn.qkv.bias, Trainable Parameters: 3072
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.3.attn.proj.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.3.attn.proj.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.3.ls1.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.3.norm2.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.3.norm2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.3.mlp.fc1.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.3.mlp.fc1.bias, Trainable Parameters: 4096
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.3.mlp.fc2.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.3.mlp.fc2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.3.ls2.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.4.norm1.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.4.norm1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.4.attn.qkv.weight, Trainable Parameters: 3145728
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.4.attn.qkv.bias, Trainable Parameters: 3072
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.4.attn.proj.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.4.attn.proj.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.4.ls1.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.4.norm2.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.4.norm2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,443][    INFO] Module: module.foundation.pretrained.blocks.4.mlp.fc1.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.4.mlp.fc1.bias, Trainable Parameters: 4096
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.4.mlp.fc2.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.4.mlp.fc2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.4.ls2.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.5.norm1.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.5.norm1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.5.attn.qkv.weight, Trainable Parameters: 3145728
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.5.attn.qkv.bias, Trainable Parameters: 3072
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.5.attn.proj.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.5.attn.proj.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.5.ls1.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.5.norm2.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.5.norm2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.5.mlp.fc1.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.5.mlp.fc1.bias, Trainable Parameters: 4096
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.5.mlp.fc2.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.5.mlp.fc2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.5.ls2.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.6.norm1.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.6.norm1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.6.attn.qkv.weight, Trainable Parameters: 3145728
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.6.attn.qkv.bias, Trainable Parameters: 3072
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.6.attn.proj.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.6.attn.proj.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.6.ls1.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.6.norm2.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.6.norm2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.6.mlp.fc1.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.6.mlp.fc1.bias, Trainable Parameters: 4096
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.6.mlp.fc2.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.6.mlp.fc2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.6.ls2.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.7.norm1.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.7.norm1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.7.attn.qkv.weight, Trainable Parameters: 3145728
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.7.attn.qkv.bias, Trainable Parameters: 3072
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.7.attn.proj.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.7.attn.proj.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.7.ls1.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.7.norm2.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.7.norm2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.7.mlp.fc1.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.7.mlp.fc1.bias, Trainable Parameters: 4096
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.7.mlp.fc2.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.7.mlp.fc2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.7.ls2.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,444][    INFO] Module: module.foundation.pretrained.blocks.8.norm1.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.8.norm1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.8.attn.qkv.weight, Trainable Parameters: 3145728
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.8.attn.qkv.bias, Trainable Parameters: 3072
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.8.attn.proj.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.8.attn.proj.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.8.ls1.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.8.norm2.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.8.norm2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.8.mlp.fc1.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.8.mlp.fc1.bias, Trainable Parameters: 4096
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.8.mlp.fc2.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.8.mlp.fc2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.8.ls2.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.9.norm1.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.9.norm1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.9.attn.qkv.weight, Trainable Parameters: 3145728
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.9.attn.qkv.bias, Trainable Parameters: 3072
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.9.attn.proj.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.9.attn.proj.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.9.ls1.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.9.norm2.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.9.norm2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.9.mlp.fc1.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.9.mlp.fc1.bias, Trainable Parameters: 4096
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.9.mlp.fc2.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.9.mlp.fc2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.9.ls2.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.10.norm1.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.10.norm1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.10.attn.qkv.weight, Trainable Parameters: 3145728
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.10.attn.qkv.bias, Trainable Parameters: 3072
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.10.attn.proj.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.10.attn.proj.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.10.ls1.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.10.norm2.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.10.norm2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.10.mlp.fc1.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.10.mlp.fc1.bias, Trainable Parameters: 4096
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.10.mlp.fc2.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.10.mlp.fc2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.10.ls2.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.11.norm1.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.11.norm1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.11.attn.qkv.weight, Trainable Parameters: 3145728
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.11.attn.qkv.bias, Trainable Parameters: 3072
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.11.attn.proj.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,445][    INFO] Module: module.foundation.pretrained.blocks.11.attn.proj.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.11.ls1.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.11.norm2.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.11.norm2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.11.mlp.fc1.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.11.mlp.fc1.bias, Trainable Parameters: 4096
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.11.mlp.fc2.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.11.mlp.fc2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.11.ls2.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.12.norm1.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.12.norm1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.12.attn.qkv.weight, Trainable Parameters: 3145728
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.12.attn.qkv.bias, Trainable Parameters: 3072
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.12.attn.proj.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.12.attn.proj.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.12.ls1.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.12.norm2.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.12.norm2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.12.mlp.fc1.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.12.mlp.fc1.bias, Trainable Parameters: 4096
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.12.mlp.fc2.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.12.mlp.fc2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.12.ls2.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.13.norm1.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.13.norm1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.13.attn.qkv.weight, Trainable Parameters: 3145728
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.13.attn.qkv.bias, Trainable Parameters: 3072
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.13.attn.proj.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.13.attn.proj.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.13.ls1.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.13.norm2.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.13.norm2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.13.mlp.fc1.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.13.mlp.fc1.bias, Trainable Parameters: 4096
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.13.mlp.fc2.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.13.mlp.fc2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.13.ls2.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.14.norm1.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.14.norm1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.14.attn.qkv.weight, Trainable Parameters: 3145728
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.14.attn.qkv.bias, Trainable Parameters: 3072
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.14.attn.proj.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.14.attn.proj.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.14.ls1.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.14.norm2.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.14.norm2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,446][    INFO] Module: module.foundation.pretrained.blocks.14.mlp.fc1.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.14.mlp.fc1.bias, Trainable Parameters: 4096
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.14.mlp.fc2.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.14.mlp.fc2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.14.ls2.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.15.norm1.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.15.norm1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.15.attn.qkv.weight, Trainable Parameters: 3145728
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.15.attn.qkv.bias, Trainable Parameters: 3072
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.15.attn.proj.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.15.attn.proj.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.15.ls1.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.15.norm2.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.15.norm2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.15.mlp.fc1.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.15.mlp.fc1.bias, Trainable Parameters: 4096
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.15.mlp.fc2.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.15.mlp.fc2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.15.ls2.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.16.norm1.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.16.norm1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.16.attn.qkv.weight, Trainable Parameters: 3145728
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.16.attn.qkv.bias, Trainable Parameters: 3072
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.16.attn.proj.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.16.attn.proj.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.16.ls1.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.16.norm2.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.16.norm2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.16.mlp.fc1.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.16.mlp.fc1.bias, Trainable Parameters: 4096
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.16.mlp.fc2.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.16.mlp.fc2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.16.ls2.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.17.norm1.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.17.norm1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.17.attn.qkv.weight, Trainable Parameters: 3145728
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.17.attn.qkv.bias, Trainable Parameters: 3072
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.17.attn.proj.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.17.attn.proj.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.17.ls1.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.17.norm2.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.17.norm2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.17.mlp.fc1.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.17.mlp.fc1.bias, Trainable Parameters: 4096
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.17.mlp.fc2.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.17.mlp.fc2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.17.ls2.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,447][    INFO] Module: module.foundation.pretrained.blocks.18.norm1.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.18.norm1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.18.attn.qkv.weight, Trainable Parameters: 3145728
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.18.attn.qkv.bias, Trainable Parameters: 3072
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.18.attn.proj.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.18.attn.proj.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.18.ls1.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.18.norm2.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.18.norm2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.18.mlp.fc1.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.18.mlp.fc1.bias, Trainable Parameters: 4096
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.18.mlp.fc2.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.18.mlp.fc2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.18.ls2.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.19.norm1.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.19.norm1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.19.attn.qkv.weight, Trainable Parameters: 3145728
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.19.attn.qkv.bias, Trainable Parameters: 3072
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.19.attn.proj.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.19.attn.proj.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.19.ls1.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.19.norm2.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.19.norm2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.19.mlp.fc1.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.19.mlp.fc1.bias, Trainable Parameters: 4096
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.19.mlp.fc2.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.19.mlp.fc2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.19.ls2.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.20.norm1.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.20.norm1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.20.attn.qkv.weight, Trainable Parameters: 3145728
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.20.attn.qkv.bias, Trainable Parameters: 3072
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.20.attn.proj.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.20.attn.proj.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.20.ls1.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.20.norm2.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.20.norm2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.20.mlp.fc1.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.20.mlp.fc1.bias, Trainable Parameters: 4096
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.20.mlp.fc2.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.20.mlp.fc2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.20.ls2.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.21.norm1.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.21.norm1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.21.attn.qkv.weight, Trainable Parameters: 3145728
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.21.attn.qkv.bias, Trainable Parameters: 3072
+[2024-12-21 11:48:37,448][    INFO] Module: module.foundation.pretrained.blocks.21.attn.proj.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.21.attn.proj.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.21.ls1.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.21.norm2.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.21.norm2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.21.mlp.fc1.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.21.mlp.fc1.bias, Trainable Parameters: 4096
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.21.mlp.fc2.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.21.mlp.fc2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.21.ls2.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.22.norm1.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.22.norm1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.22.attn.qkv.weight, Trainable Parameters: 3145728
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.22.attn.qkv.bias, Trainable Parameters: 3072
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.22.attn.proj.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.22.attn.proj.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.22.ls1.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.22.norm2.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.22.norm2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.22.mlp.fc1.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.22.mlp.fc1.bias, Trainable Parameters: 4096
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.22.mlp.fc2.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.22.mlp.fc2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.22.ls2.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.23.norm1.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.23.norm1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.23.attn.qkv.weight, Trainable Parameters: 3145728
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.23.attn.qkv.bias, Trainable Parameters: 3072
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.23.attn.proj.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.23.attn.proj.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.23.ls1.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.23.norm2.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.23.norm2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.23.mlp.fc1.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.23.mlp.fc1.bias, Trainable Parameters: 4096
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.23.mlp.fc2.weight, Trainable Parameters: 4194304
+[2024-12-21 11:48:37,449][    INFO] Module: module.foundation.pretrained.blocks.23.mlp.fc2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,450][    INFO] Module: module.foundation.pretrained.blocks.23.ls2.gamma, Trainable Parameters: 1024
+[2024-12-21 11:48:37,450][    INFO] Module: module.foundation.pretrained.norm.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,450][    INFO] Module: module.foundation.pretrained.norm.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,450][    INFO] Module: module.foundation.depth_head.projects.0.weight, Trainable Parameters: 262144
+[2024-12-21 11:48:37,450][    INFO] Module: module.foundation.depth_head.projects.0.bias, Trainable Parameters: 256
+[2024-12-21 11:48:37,450][    INFO] Module: module.foundation.depth_head.projects.1.weight, Trainable Parameters: 524288
+[2024-12-21 11:48:37,450][    INFO] Module: module.foundation.depth_head.projects.1.bias, Trainable Parameters: 512
+[2024-12-21 11:48:37,450][    INFO] Module: module.foundation.depth_head.projects.2.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,450][    INFO] Module: module.foundation.depth_head.projects.2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,450][    INFO] Module: module.foundation.depth_head.projects.3.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,450][    INFO] Module: module.foundation.depth_head.projects.3.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,450][    INFO] Module: module.foundation.depth_head.resize_layers.0.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,450][    INFO] Module: module.foundation.depth_head.resize_layers.0.bias, Trainable Parameters: 256
+[2024-12-21 11:48:37,450][    INFO] Module: module.foundation.depth_head.resize_layers.1.weight, Trainable Parameters: 1048576
+[2024-12-21 11:48:37,450][    INFO] Module: module.foundation.depth_head.resize_layers.1.bias, Trainable Parameters: 512
+[2024-12-21 11:48:37,450][    INFO] Module: module.foundation.depth_head.resize_layers.3.weight, Trainable Parameters: 9437184
+[2024-12-21 11:48:37,450][    INFO] Module: module.foundation.depth_head.resize_layers.3.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,450][    INFO] Module: module.foundation.depth_head.scratch.layer1_rn.weight, Trainable Parameters: 589824
+[2024-12-21 11:48:37,450][    INFO] Module: module.foundation.depth_head.scratch.layer2_rn.weight, Trainable Parameters: 1179648
+[2024-12-21 11:48:37,450][    INFO] Module: module.foundation.depth_head.scratch.layer3_rn.weight, Trainable Parameters: 2359296
+[2024-12-21 11:48:37,450][    INFO] Module: module.foundation.depth_head.scratch.layer4_rn.weight, Trainable Parameters: 2359296
+[2024-12-21 11:48:37,450][    INFO] Module: module.foundation.depth_head.scratch.refinenet1.out_conv.weight, Trainable Parameters: 65536
+[2024-12-21 11:48:37,450][    INFO] Module: module.foundation.depth_head.scratch.refinenet1.out_conv.bias, Trainable Parameters: 256
+[2024-12-21 11:48:37,450][    INFO] Module: module.foundation.depth_head.scratch.refinenet1.resConfUnit1.conv1.weight, Trainable Parameters: 589824
+[2024-12-21 11:48:37,450][    INFO] Module: module.foundation.depth_head.scratch.refinenet1.resConfUnit1.conv1.bias, Trainable Parameters: 256
+[2024-12-21 11:48:37,450][    INFO] Module: module.foundation.depth_head.scratch.refinenet1.resConfUnit1.conv2.weight, Trainable Parameters: 589824
+[2024-12-21 11:48:37,450][    INFO] Module: module.foundation.depth_head.scratch.refinenet1.resConfUnit1.conv2.bias, Trainable Parameters: 256
+[2024-12-21 11:48:37,451][    INFO] Module: module.foundation.depth_head.scratch.refinenet1.resConfUnit2.conv1.weight, Trainable Parameters: 589824
+[2024-12-21 11:48:37,451][    INFO] Module: module.foundation.depth_head.scratch.refinenet1.resConfUnit2.conv1.bias, Trainable Parameters: 256
+[2024-12-21 11:48:37,451][    INFO] Module: module.foundation.depth_head.scratch.refinenet1.resConfUnit2.conv2.weight, Trainable Parameters: 589824
+[2024-12-21 11:48:37,451][    INFO] Module: module.foundation.depth_head.scratch.refinenet1.resConfUnit2.conv2.bias, Trainable Parameters: 256
+[2024-12-21 11:48:37,451][    INFO] Module: module.foundation.depth_head.scratch.refinenet2.out_conv.weight, Trainable Parameters: 65536
+[2024-12-21 11:48:37,451][    INFO] Module: module.foundation.depth_head.scratch.refinenet2.out_conv.bias, Trainable Parameters: 256
+[2024-12-21 11:48:37,451][    INFO] Module: module.foundation.depth_head.scratch.refinenet2.resConfUnit1.conv1.weight, Trainable Parameters: 589824
+[2024-12-21 11:48:37,451][    INFO] Module: module.foundation.depth_head.scratch.refinenet2.resConfUnit1.conv1.bias, Trainable Parameters: 256
+[2024-12-21 11:48:37,451][    INFO] Module: module.foundation.depth_head.scratch.refinenet2.resConfUnit1.conv2.weight, Trainable Parameters: 589824
+[2024-12-21 11:48:37,451][    INFO] Module: module.foundation.depth_head.scratch.refinenet2.resConfUnit1.conv2.bias, Trainable Parameters: 256
+[2024-12-21 11:48:37,451][    INFO] Module: module.foundation.depth_head.scratch.refinenet2.resConfUnit2.conv1.weight, Trainable Parameters: 589824
+[2024-12-21 11:48:37,451][    INFO] Module: module.foundation.depth_head.scratch.refinenet2.resConfUnit2.conv1.bias, Trainable Parameters: 256
+[2024-12-21 11:48:37,451][    INFO] Module: module.foundation.depth_head.scratch.refinenet2.resConfUnit2.conv2.weight, Trainable Parameters: 589824
+[2024-12-21 11:48:37,451][    INFO] Module: module.foundation.depth_head.scratch.refinenet2.resConfUnit2.conv2.bias, Trainable Parameters: 256
+[2024-12-21 11:48:37,451][    INFO] Module: module.foundation.depth_head.scratch.refinenet3.out_conv.weight, Trainable Parameters: 65536
+[2024-12-21 11:48:37,451][    INFO] Module: module.foundation.depth_head.scratch.refinenet3.out_conv.bias, Trainable Parameters: 256
+[2024-12-21 11:48:37,451][    INFO] Module: module.foundation.depth_head.scratch.refinenet3.resConfUnit1.conv1.weight, Trainable Parameters: 589824
+[2024-12-21 11:48:37,451][    INFO] Module: module.foundation.depth_head.scratch.refinenet3.resConfUnit1.conv1.bias, Trainable Parameters: 256
+[2024-12-21 11:48:37,451][    INFO] Module: module.foundation.depth_head.scratch.refinenet3.resConfUnit1.conv2.weight, Trainable Parameters: 589824
+[2024-12-21 11:48:37,451][    INFO] Module: module.foundation.depth_head.scratch.refinenet3.resConfUnit1.conv2.bias, Trainable Parameters: 256
+[2024-12-21 11:48:37,451][    INFO] Module: module.foundation.depth_head.scratch.refinenet3.resConfUnit2.conv1.weight, Trainable Parameters: 589824
+[2024-12-21 11:48:37,451][    INFO] Module: module.foundation.depth_head.scratch.refinenet3.resConfUnit2.conv1.bias, Trainable Parameters: 256
+[2024-12-21 11:48:37,451][    INFO] Module: module.foundation.depth_head.scratch.refinenet3.resConfUnit2.conv2.weight, Trainable Parameters: 589824
+[2024-12-21 11:48:37,451][    INFO] Module: module.foundation.depth_head.scratch.refinenet3.resConfUnit2.conv2.bias, Trainable Parameters: 256
+[2024-12-21 11:48:37,451][    INFO] Module: module.foundation.depth_head.scratch.refinenet4.out_conv.weight, Trainable Parameters: 65536
+[2024-12-21 11:48:37,451][    INFO] Module: module.foundation.depth_head.scratch.refinenet4.out_conv.bias, Trainable Parameters: 256
+[2024-12-21 11:48:37,452][    INFO] Module: module.foundation.depth_head.scratch.refinenet4.resConfUnit1.conv1.weight, Trainable Parameters: 589824
+[2024-12-21 11:48:37,452][    INFO] Module: module.foundation.depth_head.scratch.refinenet4.resConfUnit1.conv1.bias, Trainable Parameters: 256
+[2024-12-21 11:48:37,452][    INFO] Module: module.foundation.depth_head.scratch.refinenet4.resConfUnit1.conv2.weight, Trainable Parameters: 589824
+[2024-12-21 11:48:37,452][    INFO] Module: module.foundation.depth_head.scratch.refinenet4.resConfUnit1.conv2.bias, Trainable Parameters: 256
+[2024-12-21 11:48:37,452][    INFO] Module: module.foundation.depth_head.scratch.refinenet4.resConfUnit2.conv1.weight, Trainable Parameters: 589824
+[2024-12-21 11:48:37,452][    INFO] Module: module.foundation.depth_head.scratch.refinenet4.resConfUnit2.conv1.bias, Trainable Parameters: 256
+[2024-12-21 11:48:37,452][    INFO] Module: module.foundation.depth_head.scratch.refinenet4.resConfUnit2.conv2.weight, Trainable Parameters: 589824
+[2024-12-21 11:48:37,452][    INFO] Module: module.foundation.depth_head.scratch.refinenet4.resConfUnit2.conv2.bias, Trainable Parameters: 256
+[2024-12-21 11:48:37,452][    INFO] Module: module.foundation.depth_head.scratch.output_conv1.weight, Trainable Parameters: 294912
+[2024-12-21 11:48:37,452][    INFO] Module: module.foundation.depth_head.scratch.output_conv1.bias, Trainable Parameters: 128
+[2024-12-21 11:48:37,452][    INFO] Module: module.foundation.depth_head.scratch.output_conv2.0.weight, Trainable Parameters: 36864
+[2024-12-21 11:48:37,452][    INFO] Module: module.foundation.depth_head.scratch.output_conv2.0.bias, Trainable Parameters: 32
+[2024-12-21 11:48:37,452][    INFO] Module: module.foundation.depth_head.scratch.output_conv2.2.weight, Trainable Parameters: 32
+[2024-12-21 11:48:37,452][    INFO] Module: module.foundation.depth_head.scratch.output_conv2.2.bias, Trainable Parameters: 1
+[2024-12-21 11:48:37,452][    INFO] Module: module.patch_embed_prompt.proj.weight, Trainable Parameters: 602112
+[2024-12-21 11:48:37,452][    INFO] Module: module.patch_embed_prompt.proj.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,452][    INFO] Module: module.prompt_blocks.0.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,452][    INFO] Module: module.prompt_blocks.0.conv0_0.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,452][    INFO] Module: module.prompt_blocks.0.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,452][    INFO] Module: module.prompt_blocks.0.conv0_1.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,452][    INFO] Module: module.prompt_blocks.0.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,452][    INFO] Module: module.prompt_blocks.0.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,452][    INFO] Module: module.prompt_blocks.0.fovea.smooth, Trainable Parameters: 1
+[2024-12-21 11:48:37,452][    INFO] Module: module.prompt_blocks.1.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,452][    INFO] Module: module.prompt_blocks.1.conv0_0.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,452][    INFO] Module: module.prompt_blocks.1.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,452][    INFO] Module: module.prompt_blocks.1.conv0_1.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,453][    INFO] Module: module.prompt_blocks.1.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,453][    INFO] Module: module.prompt_blocks.1.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,453][    INFO] Module: module.prompt_blocks.1.fovea.smooth, Trainable Parameters: 1
+[2024-12-21 11:48:37,453][    INFO] Module: module.prompt_blocks.2.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,453][    INFO] Module: module.prompt_blocks.2.conv0_0.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,453][    INFO] Module: module.prompt_blocks.2.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,453][    INFO] Module: module.prompt_blocks.2.conv0_1.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,453][    INFO] Module: module.prompt_blocks.2.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,453][    INFO] Module: module.prompt_blocks.2.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,453][    INFO] Module: module.prompt_blocks.2.fovea.smooth, Trainable Parameters: 1
+[2024-12-21 11:48:37,453][    INFO] Module: module.prompt_blocks.3.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,453][    INFO] Module: module.prompt_blocks.3.conv0_0.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,453][    INFO] Module: module.prompt_blocks.3.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,453][    INFO] Module: module.prompt_blocks.3.conv0_1.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,453][    INFO] Module: module.prompt_blocks.3.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,453][    INFO] Module: module.prompt_blocks.3.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,453][    INFO] Module: module.prompt_blocks.3.fovea.smooth, Trainable Parameters: 1
+[2024-12-21 11:48:37,453][    INFO] Module: module.prompt_blocks.4.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,453][    INFO] Module: module.prompt_blocks.4.conv0_0.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,453][    INFO] Module: module.prompt_blocks.4.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,453][    INFO] Module: module.prompt_blocks.4.conv0_1.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,453][    INFO] Module: module.prompt_blocks.4.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,453][    INFO] Module: module.prompt_blocks.4.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,453][    INFO] Module: module.prompt_blocks.4.fovea.smooth, Trainable Parameters: 1
+[2024-12-21 11:48:37,453][    INFO] Module: module.prompt_blocks.5.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,453][    INFO] Module: module.prompt_blocks.5.conv0_0.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,453][    INFO] Module: module.prompt_blocks.5.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,454][    INFO] Module: module.prompt_blocks.5.conv0_1.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,454][    INFO] Module: module.prompt_blocks.5.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,454][    INFO] Module: module.prompt_blocks.5.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,454][    INFO] Module: module.prompt_blocks.5.fovea.smooth, Trainable Parameters: 1
+[2024-12-21 11:48:37,454][    INFO] Module: module.prompt_blocks.6.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,454][    INFO] Module: module.prompt_blocks.6.conv0_0.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,454][    INFO] Module: module.prompt_blocks.6.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,454][    INFO] Module: module.prompt_blocks.6.conv0_1.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,454][    INFO] Module: module.prompt_blocks.6.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,454][    INFO] Module: module.prompt_blocks.6.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,454][    INFO] Module: module.prompt_blocks.6.fovea.smooth, Trainable Parameters: 1
+[2024-12-21 11:48:37,454][    INFO] Module: module.prompt_blocks.7.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,454][    INFO] Module: module.prompt_blocks.7.conv0_0.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,454][    INFO] Module: module.prompt_blocks.7.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,454][    INFO] Module: module.prompt_blocks.7.conv0_1.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,454][    INFO] Module: module.prompt_blocks.7.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,454][    INFO] Module: module.prompt_blocks.7.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,454][    INFO] Module: module.prompt_blocks.7.fovea.smooth, Trainable Parameters: 1
+[2024-12-21 11:48:37,454][    INFO] Module: module.prompt_blocks.8.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,454][    INFO] Module: module.prompt_blocks.8.conv0_0.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,454][    INFO] Module: module.prompt_blocks.8.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,454][    INFO] Module: module.prompt_blocks.8.conv0_1.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,454][    INFO] Module: module.prompt_blocks.8.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,454][    INFO] Module: module.prompt_blocks.8.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,454][    INFO] Module: module.prompt_blocks.8.fovea.smooth, Trainable Parameters: 1
+[2024-12-21 11:48:37,454][    INFO] Module: module.prompt_blocks.9.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,454][    INFO] Module: module.prompt_blocks.9.conv0_0.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.9.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.9.conv0_1.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.9.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.9.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.9.fovea.smooth, Trainable Parameters: 1
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.10.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.10.conv0_0.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.10.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.10.conv0_1.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.10.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.10.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.10.fovea.smooth, Trainable Parameters: 1
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.11.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.11.conv0_0.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.11.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.11.conv0_1.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.11.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.11.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.11.fovea.smooth, Trainable Parameters: 1
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.12.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.12.conv0_0.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.12.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.12.conv0_1.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.12.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.12.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.12.fovea.smooth, Trainable Parameters: 1
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.13.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,455][    INFO] Module: module.prompt_blocks.13.conv0_0.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,456][    INFO] Module: module.prompt_blocks.13.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,456][    INFO] Module: module.prompt_blocks.13.conv0_1.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,456][    INFO] Module: module.prompt_blocks.13.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,456][    INFO] Module: module.prompt_blocks.13.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,456][    INFO] Module: module.prompt_blocks.13.fovea.smooth, Trainable Parameters: 1
+[2024-12-21 11:48:37,456][    INFO] Module: module.prompt_blocks.14.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,456][    INFO] Module: module.prompt_blocks.14.conv0_0.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,456][    INFO] Module: module.prompt_blocks.14.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,456][    INFO] Module: module.prompt_blocks.14.conv0_1.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,456][    INFO] Module: module.prompt_blocks.14.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,456][    INFO] Module: module.prompt_blocks.14.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,456][    INFO] Module: module.prompt_blocks.14.fovea.smooth, Trainable Parameters: 1
+[2024-12-21 11:48:37,456][    INFO] Module: module.prompt_blocks.15.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,456][    INFO] Module: module.prompt_blocks.15.conv0_0.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,456][    INFO] Module: module.prompt_blocks.15.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,456][    INFO] Module: module.prompt_blocks.15.conv0_1.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,456][    INFO] Module: module.prompt_blocks.15.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,456][    INFO] Module: module.prompt_blocks.15.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,456][    INFO] Module: module.prompt_blocks.15.fovea.smooth, Trainable Parameters: 1
+[2024-12-21 11:48:37,456][    INFO] Module: module.prompt_blocks.16.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,456][    INFO] Module: module.prompt_blocks.16.conv0_0.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,456][    INFO] Module: module.prompt_blocks.16.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,456][    INFO] Module: module.prompt_blocks.16.conv0_1.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,456][    INFO] Module: module.prompt_blocks.16.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,456][    INFO] Module: module.prompt_blocks.16.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,456][    INFO] Module: module.prompt_blocks.16.fovea.smooth, Trainable Parameters: 1
+[2024-12-21 11:48:37,456][    INFO] Module: module.prompt_blocks.17.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.17.conv0_0.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.17.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.17.conv0_1.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.17.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.17.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.17.fovea.smooth, Trainable Parameters: 1
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.18.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.18.conv0_0.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.18.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.18.conv0_1.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.18.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.18.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.18.fovea.smooth, Trainable Parameters: 1
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.19.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.19.conv0_0.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.19.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.19.conv0_1.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.19.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.19.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.19.fovea.smooth, Trainable Parameters: 1
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.20.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.20.conv0_0.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.20.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.20.conv0_1.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.20.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.20.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.20.fovea.smooth, Trainable Parameters: 1
+[2024-12-21 11:48:37,457][    INFO] Module: module.prompt_blocks.21.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,458][    INFO] Module: module.prompt_blocks.21.conv0_0.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,458][    INFO] Module: module.prompt_blocks.21.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,458][    INFO] Module: module.prompt_blocks.21.conv0_1.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,458][    INFO] Module: module.prompt_blocks.21.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,458][    INFO] Module: module.prompt_blocks.21.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,458][    INFO] Module: module.prompt_blocks.21.fovea.smooth, Trainable Parameters: 1
+[2024-12-21 11:48:37,458][    INFO] Module: module.prompt_blocks.22.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,458][    INFO] Module: module.prompt_blocks.22.conv0_0.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,458][    INFO] Module: module.prompt_blocks.22.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,458][    INFO] Module: module.prompt_blocks.22.conv0_1.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,458][    INFO] Module: module.prompt_blocks.22.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,458][    INFO] Module: module.prompt_blocks.22.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,458][    INFO] Module: module.prompt_blocks.22.fovea.smooth, Trainable Parameters: 1
+[2024-12-21 11:48:37,458][    INFO] Module: module.prompt_blocks.23.conv0_0.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,458][    INFO] Module: module.prompt_blocks.23.conv0_0.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,458][    INFO] Module: module.prompt_blocks.23.conv0_1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,458][    INFO] Module: module.prompt_blocks.23.conv0_1.bias, Trainable Parameters: 8
+[2024-12-21 11:48:37,458][    INFO] Module: module.prompt_blocks.23.conv1x1.weight, Trainable Parameters: 8192
+[2024-12-21 11:48:37,458][    INFO] Module: module.prompt_blocks.23.conv1x1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,458][    INFO] Module: module.prompt_blocks.23.fovea.smooth, Trainable Parameters: 1
+[2024-12-21 11:48:37,458][    INFO] Module: module.prompt_norms.0.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,458][    INFO] Module: module.prompt_norms.0.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,458][    INFO] Module: module.prompt_norms.1.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,458][    INFO] Module: module.prompt_norms.1.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,458][    INFO] Module: module.prompt_norms.2.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,458][    INFO] Module: module.prompt_norms.2.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,458][    INFO] Module: module.prompt_norms.3.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.3.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.4.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.4.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.5.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.5.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.6.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.6.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.7.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.7.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.8.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.8.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.9.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.9.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.10.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.10.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.11.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.11.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.12.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.12.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.13.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.13.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.14.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.14.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.15.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.15.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.16.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.16.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,459][    INFO] Module: module.prompt_norms.17.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,460][    INFO] Module: module.prompt_norms.17.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,460][    INFO] Module: module.prompt_norms.18.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,460][    INFO] Module: module.prompt_norms.18.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,460][    INFO] Module: module.prompt_norms.19.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,460][    INFO] Module: module.prompt_norms.19.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,460][    INFO] Module: module.prompt_norms.20.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,460][    INFO] Module: module.prompt_norms.20.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,460][    INFO] Module: module.prompt_norms.21.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,460][    INFO] Module: module.prompt_norms.21.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,460][    INFO] Module: module.prompt_norms.22.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,460][    INFO] Module: module.prompt_norms.22.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,460][    INFO] Module: module.prompt_norms.23.weight, Trainable Parameters: 1024
+[2024-12-21 11:48:37,460][    INFO] Module: module.prompt_norms.23.bias, Trainable Parameters: 1024
+[2024-12-21 11:48:37,461][    INFO] Total Trainable Parameters: 336582745
+[2024-12-21 11:48:37,461][    INFO] ===========> Epoch: 0/50, d1: 0.000, d2: 0.000, d3: 0.000
+[2024-12-21 11:48:37,461][    INFO] ===========> Epoch: 0/50, abs_rel: 100.000, sq_rel: 100.000, rmse: 100.000, rmse_log: 100.000, log10: 100.000, silog: 100.000
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/autograd/__init__.py:266: UserWarning: Grad strides do not match bucket view strides. This may indicate grad was not created according to the gradient layout contract, or that the param's strides changed since DDP was constructed.  This is not an error, but may impair performance.
+grad.sizes() = [1, 32, 1, 1], strides() = [32, 1, 32, 32]
+bucket_view.sizes() = [1, 32, 1, 1], strides() = [32, 1, 1, 1] (Triggered internally at ../torch/csrc/distributed/c10d/reducer.cpp:322.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/autograd/__init__.py:266: UserWarning: Grad strides do not match bucket view strides. This may indicate grad was not created according to the gradient layout contract, or that the param's strides changed since DDP was constructed.  This is not an error, but may impair performance.
+grad.sizes() = [1, 32, 1, 1], strides() = [32, 1, 32, 32]
+bucket_view.sizes() = [1, 32, 1, 1], strides() = [32, 1, 1, 1] (Triggered internally at ../torch/csrc/distributed/c10d/reducer.cpp:322.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+[2024-12-21 11:48:43,779][    INFO] Iter: 0/7645, LR: 0.0000050, Loss: 0.477
+[2024-12-21 11:50:53,291][    INFO] Iter: 100/7645, LR: 0.0000050, Loss: 0.214
+[2024-12-21 11:53:03,208][    INFO] Iter: 200/7645, LR: 0.0000050, Loss: 0.173
+[2024-12-21 11:55:13,271][    INFO] Iter: 300/7645, LR: 0.0000050, Loss: 0.191
+[2024-12-21 11:57:23,451][    INFO] Iter: 400/7645, LR: 0.0000050, Loss: 0.148
+[2024-12-21 11:59:33,708][    INFO] Iter: 500/7645, LR: 0.0000050, Loss: 0.190
+[2024-12-21 12:01:44,170][    INFO] Iter: 600/7645, LR: 0.0000050, Loss: 0.139
+[2024-12-21 12:03:54,579][    INFO] Iter: 700/7645, LR: 0.0000050, Loss: 0.137
+[2024-12-21 12:06:04,644][    INFO] Iter: 800/7645, LR: 0.0000050, Loss: 0.149
+[2024-12-21 12:08:14,874][    INFO] Iter: 900/7645, LR: 0.0000050, Loss: 0.150
+[2024-12-21 12:10:25,077][    INFO] Iter: 1000/7645, LR: 0.0000050, Loss: 0.142
+[2024-12-21 12:12:35,533][    INFO] Iter: 1100/7645, LR: 0.0000050, Loss: 0.114
+[2024-12-21 12:14:46,075][    INFO] Iter: 1200/7645, LR: 0.0000050, Loss: 0.151
+[2024-12-21 12:16:56,395][    INFO] Iter: 1300/7645, LR: 0.0000050, Loss: 0.142
+[2024-12-21 12:19:06,750][    INFO] Iter: 1400/7645, LR: 0.0000050, Loss: 0.139
+[2024-12-21 12:21:17,162][    INFO] Iter: 1500/7645, LR: 0.0000050, Loss: 0.158
+[2024-12-21 12:23:27,677][    INFO] Iter: 1600/7645, LR: 0.0000050, Loss: 0.121
+[2024-12-21 12:25:38,188][    INFO] Iter: 1700/7645, LR: 0.0000050, Loss: 0.119
+[2024-12-21 12:27:48,682][    INFO] Iter: 1800/7645, LR: 0.0000050, Loss: 0.136
+[2024-12-21 12:29:58,978][    INFO] Iter: 1900/7645, LR: 0.0000050, Loss: 0.145
+[2024-12-21 12:32:09,302][    INFO] Iter: 2000/7645, LR: 0.0000050, Loss: 0.126
+[2024-12-21 12:34:19,737][    INFO] Iter: 2100/7645, LR: 0.0000050, Loss: 0.138
+[2024-12-21 12:36:30,154][    INFO] Iter: 2200/7645, LR: 0.0000050, Loss: 0.136
+[2024-12-21 12:38:40,629][    INFO] Iter: 2300/7645, LR: 0.0000050, Loss: 0.109
+[2024-12-21 12:40:50,806][    INFO] Iter: 2400/7645, LR: 0.0000050, Loss: 0.137
+[2024-12-21 12:43:00,990][    INFO] Iter: 2500/7645, LR: 0.0000050, Loss: 0.133
+[2024-12-21 12:45:11,211][    INFO] Iter: 2600/7645, LR: 0.0000050, Loss: 0.101
+[2024-12-21 12:47:21,582][    INFO] Iter: 2700/7645, LR: 0.0000050, Loss: 0.133
+[2024-12-21 12:49:31,936][    INFO] Iter: 2800/7645, LR: 0.0000050, Loss: 0.147
+[2024-12-21 12:51:42,484][    INFO] Iter: 2900/7645, LR: 0.0000050, Loss: 0.106
+[2024-12-21 12:53:52,969][    INFO] Iter: 3000/7645, LR: 0.0000050, Loss: 0.098
+[2024-12-21 12:56:03,387][    INFO] Iter: 3100/7645, LR: 0.0000050, Loss: 0.108
+[2024-12-21 12:58:13,757][    INFO] Iter: 3200/7645, LR: 0.0000050, Loss: 0.103
+[2024-12-21 13:00:24,300][    INFO] Iter: 3300/7645, LR: 0.0000050, Loss: 0.108
+[2024-12-21 13:02:34,881][    INFO] Iter: 3400/7645, LR: 0.0000050, Loss: 0.109
+[2024-12-21 13:04:45,376][    INFO] Iter: 3500/7645, LR: 0.0000050, Loss: 0.112
+[2024-12-21 13:06:55,822][    INFO] Iter: 3600/7645, LR: 0.0000050, Loss: 0.124
+[2024-12-21 13:09:06,261][    INFO] Iter: 3700/7645, LR: 0.0000050, Loss: 0.146
+[2024-12-21 13:11:16,850][    INFO] Iter: 3800/7645, LR: 0.0000050, Loss: 0.114
+[2024-12-21 13:13:27,645][    INFO] Iter: 3900/7645, LR: 0.0000050, Loss: 0.092
+[2024-12-21 13:15:38,400][    INFO] Iter: 4000/7645, LR: 0.0000050, Loss: 0.114
+[2024-12-21 13:17:49,414][    INFO] Iter: 4100/7645, LR: 0.0000050, Loss: 0.105
+[2024-12-21 13:20:00,646][    INFO] Iter: 4200/7645, LR: 0.0000050, Loss: 0.107
+[2024-12-21 13:22:11,825][    INFO] Iter: 4300/7645, LR: 0.0000049, Loss: 0.113
+[2024-12-21 13:24:22,903][    INFO] Iter: 4400/7645, LR: 0.0000049, Loss: 0.111
+[2024-12-21 13:26:33,873][    INFO] Iter: 4500/7645, LR: 0.0000049, Loss: 0.118
+[2024-12-21 13:28:44,860][    INFO] Iter: 4600/7645, LR: 0.0000049, Loss: 0.115
+[2024-12-21 13:30:55,655][    INFO] Iter: 4700/7645, LR: 0.0000049, Loss: 0.107
+[2024-12-21 13:33:06,372][    INFO] Iter: 4800/7645, LR: 0.0000049, Loss: 0.107
+[2024-12-21 13:35:16,852][    INFO] Iter: 4900/7645, LR: 0.0000049, Loss: 0.113
+[2024-12-21 13:37:27,683][    INFO] Iter: 5000/7645, LR: 0.0000049, Loss: 0.142
+[2024-12-21 13:39:38,160][    INFO] Iter: 5100/7645, LR: 0.0000049, Loss: 0.111
+[2024-12-21 13:41:48,627][    INFO] Iter: 5200/7645, LR: 0.0000049, Loss: 0.105
+[2024-12-21 13:43:59,131][    INFO] Iter: 5300/7645, LR: 0.0000049, Loss: 0.097
+[2024-12-21 13:46:09,516][    INFO] Iter: 5400/7645, LR: 0.0000049, Loss: 0.105
+[2024-12-21 13:48:19,995][    INFO] Iter: 5500/7645, LR: 0.0000049, Loss: 0.093
+[2024-12-21 13:50:30,481][    INFO] Iter: 5600/7645, LR: 0.0000049, Loss: 0.084
+[2024-12-21 13:52:41,200][    INFO] Iter: 5700/7645, LR: 0.0000049, Loss: 0.131
+[2024-12-21 13:54:51,698][    INFO] Iter: 5800/7645, LR: 0.0000049, Loss: 0.091
+[2024-12-21 13:57:02,019][    INFO] Iter: 5900/7645, LR: 0.0000049, Loss: 0.110
+[2024-12-21 13:59:12,600][    INFO] Iter: 6000/7645, LR: 0.0000049, Loss: 0.104
+[2024-12-21 14:01:22,990][    INFO] Iter: 6100/7645, LR: 0.0000049, Loss: 0.114
+[2024-12-21 14:03:33,407][    INFO] Iter: 6200/7645, LR: 0.0000049, Loss: 0.101
+[2024-12-21 14:05:44,038][    INFO] Iter: 6300/7645, LR: 0.0000049, Loss: 0.099
+[2024-12-21 14:07:54,443][    INFO] Iter: 6400/7645, LR: 0.0000049, Loss: 0.093
+[2024-12-21 14:10:04,631][    INFO] Iter: 6500/7645, LR: 0.0000049, Loss: 0.094
+[2024-12-21 14:12:14,949][    INFO] Iter: 6600/7645, LR: 0.0000049, Loss: 0.107
+[2024-12-21 14:14:25,179][    INFO] Iter: 6700/7645, LR: 0.0000049, Loss: 0.123
+[2024-12-21 14:16:35,645][    INFO] Iter: 6800/7645, LR: 0.0000049, Loss: 0.107
+[2024-12-21 14:18:46,000][    INFO] Iter: 6900/7645, LR: 0.0000049, Loss: 0.135
+[2024-12-21 14:20:56,242][    INFO] Iter: 7000/7645, LR: 0.0000049, Loss: 0.084
+[2024-12-21 14:23:06,588][    INFO] Iter: 7100/7645, LR: 0.0000049, Loss: 0.085
+[2024-12-21 14:25:16,853][    INFO] Iter: 7200/7645, LR: 0.0000049, Loss: 0.076
+[2024-12-21 14:27:27,334][    INFO] Iter: 7300/7645, LR: 0.0000049, Loss: 0.101
+[2024-12-21 14:29:37,861][    INFO] Iter: 7400/7645, LR: 0.0000049, Loss: 0.113
+[2024-12-21 14:31:48,577][    INFO] Iter: 7500/7645, LR: 0.0000049, Loss: 0.081
+[2024-12-21 14:33:59,327][    INFO] Iter: 7600/7645, LR: 0.0000049, Loss: 0.097
+/home/sph/event/da2-prompt-tuning/train.py:370: UserWarning: indexing with dtype torch.uint8 is now deprecated, please use a dtype torch.bool instead. (Triggered internally at ../aten/src/ATen/native/IndexingUtils.h:27.)
+  pred[valid_mask], depth[valid_mask], dataset=args.dataset
+/home/sph/event/da2-prompt-tuning/train.py:370: UserWarning: indexing with dtype torch.uint8 is now deprecated, please use a dtype torch.bool instead. (Triggered internally at ../aten/src/ATen/native/IndexingUtils.h:27.)
+  pred[valid_mask], depth[valid_mask], dataset=args.dataset
+[2024-12-21 14:35:51,755][    INFO] ==========================================================================================
+[2024-12-21 14:35:51,755][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2024-12-21 14:35:51,756][    INFO]    0.713,    0.839,    0.914,    0.208,   13.823,   56.555,    0.418,    0.095,    0.407
+[2024-12-21 14:35:51,756][    INFO] ==========================================================================================
+
+[2024-12-21 14:36:00,165][    INFO] ===========> Epoch: 1/50, d1: 0.713, d2: 0.839, d3: 0.914
+[2024-12-21 14:36:00,165][    INFO] ===========> Epoch: 1/50, abs_rel: 0.208, sq_rel: 13.823, rmse: 56.555, rmse_log: 0.418, log10: 0.095, silog: 0.407
+[2024-12-21 14:36:02,016][    INFO] Iter: 0/7645, LR: 0.0000049, Loss: 0.090
+[2024-12-21 14:38:12,736][    INFO] Iter: 100/7645, LR: 0.0000049, Loss: 0.084
+[2024-12-21 14:40:23,716][    INFO] Iter: 200/7645, LR: 0.0000049, Loss: 0.113
+[2024-12-21 14:42:34,636][    INFO] Iter: 300/7645, LR: 0.0000049, Loss: 0.116
+[2024-12-21 14:44:45,441][    INFO] Iter: 400/7645, LR: 0.0000049, Loss: 0.088
+[2024-12-21 14:46:56,473][    INFO] Iter: 500/7645, LR: 0.0000049, Loss: 0.078
+[2024-12-21 14:49:07,410][    INFO] Iter: 600/7645, LR: 0.0000049, Loss: 0.105
+[2024-12-21 14:51:18,298][    INFO] Iter: 700/7645, LR: 0.0000049, Loss: 0.089
+[2024-12-21 14:53:29,313][    INFO] Iter: 800/7645, LR: 0.0000049, Loss: 0.092
+[2024-12-21 14:55:40,260][    INFO] Iter: 900/7645, LR: 0.0000049, Loss: 0.102
+[2024-12-21 14:57:51,167][    INFO] Iter: 1000/7645, LR: 0.0000049, Loss: 0.097
+[2024-12-21 15:00:01,876][    INFO] Iter: 1100/7645, LR: 0.0000049, Loss: 0.090
+[2024-12-21 15:02:12,732][    INFO] Iter: 1200/7645, LR: 0.0000049, Loss: 0.091
+[2024-12-21 15:04:23,773][    INFO] Iter: 1300/7645, LR: 0.0000049, Loss: 0.096
+[2024-12-21 15:06:34,848][    INFO] Iter: 1400/7645, LR: 0.0000049, Loss: 0.094
+[2024-12-21 15:08:45,573][    INFO] Iter: 1500/7645, LR: 0.0000049, Loss: 0.091
+[2024-12-21 15:10:56,516][    INFO] Iter: 1600/7645, LR: 0.0000049, Loss: 0.079
+[2024-12-21 15:13:07,521][    INFO] Iter: 1700/7645, LR: 0.0000049, Loss: 0.071
+[2024-12-21 15:15:18,993][    INFO] Iter: 1800/7645, LR: 0.0000049, Loss: 0.090
+[2024-12-21 15:17:30,726][    INFO] Iter: 1900/7645, LR: 0.0000049, Loss: 0.096
+[2024-12-21 15:19:42,196][    INFO] Iter: 2000/7645, LR: 0.0000049, Loss: 0.080
+[2024-12-21 15:21:53,263][    INFO] Iter: 2100/7645, LR: 0.0000049, Loss: 0.119
+[2024-12-21 15:24:04,219][    INFO] Iter: 2200/7645, LR: 0.0000049, Loss: 0.101
+[2024-12-21 15:26:15,249][    INFO] Iter: 2300/7645, LR: 0.0000049, Loss: 0.105
+[2024-12-21 15:28:26,531][    INFO] Iter: 2400/7645, LR: 0.0000049, Loss: 0.078
+[2024-12-21 15:30:37,774][    INFO] Iter: 2500/7645, LR: 0.0000049, Loss: 0.111
+[2024-12-21 15:32:48,731][    INFO] Iter: 2600/7645, LR: 0.0000049, Loss: 0.083
+[2024-12-21 15:34:59,490][    INFO] Iter: 2700/7645, LR: 0.0000049, Loss: 0.099
+[2024-12-21 15:37:10,474][    INFO] Iter: 2800/7645, LR: 0.0000049, Loss: 0.088
+[2024-12-21 15:39:21,549][    INFO] Iter: 2900/7645, LR: 0.0000049, Loss: 0.103
+[2024-12-21 15:41:32,706][    INFO] Iter: 3000/7645, LR: 0.0000049, Loss: 0.092
+[2024-12-21 15:43:43,973][    INFO] Iter: 3100/7645, LR: 0.0000049, Loss: 0.087
+[2024-12-21 15:45:55,143][    INFO] Iter: 3200/7645, LR: 0.0000049, Loss: 0.080
+[2024-12-21 15:48:06,309][    INFO] Iter: 3300/7645, LR: 0.0000049, Loss: 0.107
+[2024-12-21 15:50:17,459][    INFO] Iter: 3400/7645, LR: 0.0000049, Loss: 0.071
+[2024-12-21 15:52:28,523][    INFO] Iter: 3500/7645, LR: 0.0000049, Loss: 0.089
+[2024-12-21 15:54:39,547][    INFO] Iter: 3600/7645, LR: 0.0000049, Loss: 0.117
+[2024-12-21 15:56:50,682][    INFO] Iter: 3700/7645, LR: 0.0000049, Loss: 0.076
+[2024-12-21 15:59:01,863][    INFO] Iter: 3800/7645, LR: 0.0000049, Loss: 0.127
+[2024-12-21 16:01:12,968][    INFO] Iter: 3900/7645, LR: 0.0000049, Loss: 0.092
+[2024-12-21 16:03:23,916][    INFO] Iter: 4000/7645, LR: 0.0000049, Loss: 0.085
+[2024-12-21 16:05:34,994][    INFO] Iter: 4100/7645, LR: 0.0000049, Loss: 0.084
+[2024-12-21 16:07:46,008][    INFO] Iter: 4200/7645, LR: 0.0000049, Loss: 0.107
+[2024-12-21 16:09:57,072][    INFO] Iter: 4300/7645, LR: 0.0000049, Loss: 0.090
+[2024-12-21 16:12:08,017][    INFO] Iter: 4400/7645, LR: 0.0000049, Loss: 0.076
+[2024-12-21 16:14:19,030][    INFO] Iter: 4500/7645, LR: 0.0000049, Loss: 0.095
+[2024-12-21 16:16:29,638][    INFO] Iter: 4600/7645, LR: 0.0000049, Loss: 0.103
+[2024-12-21 16:18:40,588][    INFO] Iter: 4700/7645, LR: 0.0000049, Loss: 0.078
+[2024-12-21 16:20:51,314][    INFO] Iter: 4800/7645, LR: 0.0000049, Loss: 0.083
+[2024-12-21 16:23:01,858][    INFO] Iter: 4900/7645, LR: 0.0000049, Loss: 0.071
+[2024-12-21 16:25:12,367][    INFO] Iter: 5000/7645, LR: 0.0000049, Loss: 0.100
+[2024-12-21 16:27:22,677][    INFO] Iter: 5100/7645, LR: 0.0000048, Loss: 0.098
+[2024-12-21 16:29:32,962][    INFO] Iter: 5200/7645, LR: 0.0000048, Loss: 0.096
+[2024-12-21 16:31:43,385][    INFO] Iter: 5300/7645, LR: 0.0000048, Loss: 0.091
+[2024-12-21 16:33:53,731][    INFO] Iter: 5400/7645, LR: 0.0000048, Loss: 0.079
+[2024-12-21 16:36:04,130][    INFO] Iter: 5500/7645, LR: 0.0000048, Loss: 0.087
+[2024-12-21 16:38:14,397][    INFO] Iter: 5600/7645, LR: 0.0000048, Loss: 0.091
+[2024-12-21 16:40:24,858][    INFO] Iter: 5700/7645, LR: 0.0000048, Loss: 0.088
+[2024-12-21 16:42:35,208][    INFO] Iter: 5800/7645, LR: 0.0000048, Loss: 0.080
+[2024-12-21 16:44:45,866][    INFO] Iter: 5900/7645, LR: 0.0000048, Loss: 0.095
+[2024-12-21 16:46:56,198][    INFO] Iter: 6000/7645, LR: 0.0000048, Loss: 0.108
+[2024-12-21 16:49:06,494][    INFO] Iter: 6100/7645, LR: 0.0000048, Loss: 0.093
+[2024-12-21 16:51:17,091][    INFO] Iter: 6200/7645, LR: 0.0000048, Loss: 0.081
+[2024-12-21 16:53:27,772][    INFO] Iter: 6300/7645, LR: 0.0000048, Loss: 0.087
+[2024-12-21 16:55:38,421][    INFO] Iter: 6400/7645, LR: 0.0000048, Loss: 0.090
+[2024-12-21 16:57:49,143][    INFO] Iter: 6500/7645, LR: 0.0000048, Loss: 0.086
+[2024-12-21 16:59:59,637][    INFO] Iter: 6600/7645, LR: 0.0000048, Loss: 0.076
+[2024-12-21 17:02:10,240][    INFO] Iter: 6700/7645, LR: 0.0000048, Loss: 0.085
+[2024-12-21 17:04:21,071][    INFO] Iter: 6800/7645, LR: 0.0000048, Loss: 0.083
+[2024-12-21 17:06:31,960][    INFO] Iter: 6900/7645, LR: 0.0000048, Loss: 0.072
+[2024-12-21 17:08:42,865][    INFO] Iter: 7000/7645, LR: 0.0000048, Loss: 0.086
+[2024-12-21 17:10:53,710][    INFO] Iter: 7100/7645, LR: 0.0000048, Loss: 0.087
+[2024-12-21 17:13:04,301][    INFO] Iter: 7200/7645, LR: 0.0000048, Loss: 0.097
+[2024-12-21 17:15:14,969][    INFO] Iter: 7300/7645, LR: 0.0000048, Loss: 0.072
+[2024-12-21 17:17:25,900][    INFO] Iter: 7400/7645, LR: 0.0000048, Loss: 0.090
+[2024-12-21 17:19:36,879][    INFO] Iter: 7500/7645, LR: 0.0000048, Loss: 0.086
+[2024-12-21 17:21:47,815][    INFO] Iter: 7600/7645, LR: 0.0000048, Loss: 0.084
+[2024-12-21 17:23:39,516][    INFO] ==========================================================================================
+[2024-12-21 17:23:39,516][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2024-12-21 17:23:39,516][    INFO]    0.748,    0.865,    0.930,    0.174,   12.860,   53.060,    0.385,    0.085,    0.376
+[2024-12-21 17:23:39,516][    INFO] ==========================================================================================
+
+[2024-12-21 17:23:55,923][    INFO] ===========> Epoch: 2/50, d1: 0.748, d2: 0.865, d3: 0.930
+[2024-12-21 17:23:55,923][    INFO] ===========> Epoch: 2/50, abs_rel: 0.174, sq_rel: 12.860, rmse: 53.060, rmse_log: 0.385, log10: 0.085, silog: 0.376
+[2024-12-21 17:23:57,717][    INFO] Iter: 0/7645, LR: 0.0000048, Loss: 0.082
+[2024-12-21 17:26:08,381][    INFO] Iter: 100/7645, LR: 0.0000048, Loss: 0.114
+[2024-12-21 17:28:19,285][    INFO] Iter: 200/7645, LR: 0.0000048, Loss: 0.081
+[2024-12-21 17:30:30,126][    INFO] Iter: 300/7645, LR: 0.0000048, Loss: 0.099
+[2024-12-21 17:32:40,702][    INFO] Iter: 400/7645, LR: 0.0000048, Loss: 0.094
+[2024-12-21 17:34:51,445][    INFO] Iter: 500/7645, LR: 0.0000048, Loss: 0.082
+[2024-12-21 17:37:02,025][    INFO] Iter: 600/7645, LR: 0.0000048, Loss: 0.111
+[2024-12-21 17:39:12,535][    INFO] Iter: 700/7645, LR: 0.0000048, Loss: 0.087
+[2024-12-21 17:41:23,516][    INFO] Iter: 800/7645, LR: 0.0000048, Loss: 0.095
+[2024-12-21 17:43:34,302][    INFO] Iter: 900/7645, LR: 0.0000048, Loss: 0.089
+[2024-12-21 17:45:45,285][    INFO] Iter: 1000/7645, LR: 0.0000048, Loss: 0.076
+[2024-12-21 17:47:56,277][    INFO] Iter: 1100/7645, LR: 0.0000048, Loss: 0.080
+[2024-12-21 17:50:07,300][    INFO] Iter: 1200/7645, LR: 0.0000048, Loss: 0.090
+[2024-12-21 17:52:18,216][    INFO] Iter: 1300/7645, LR: 0.0000048, Loss: 0.083
+[2024-12-21 17:54:29,088][    INFO] Iter: 1400/7645, LR: 0.0000048, Loss: 0.100
+[2024-12-21 17:56:40,019][    INFO] Iter: 1500/7645, LR: 0.0000048, Loss: 0.075
+[2024-12-21 17:58:50,881][    INFO] Iter: 1600/7645, LR: 0.0000048, Loss: 0.082
+[2024-12-21 18:01:01,951][    INFO] Iter: 1700/7645, LR: 0.0000048, Loss: 0.078
+[2024-12-21 18:03:12,948][    INFO] Iter: 1800/7645, LR: 0.0000048, Loss: 0.099
+[2024-12-21 18:05:23,775][    INFO] Iter: 1900/7645, LR: 0.0000048, Loss: 0.073
+[2024-12-21 18:07:34,810][    INFO] Iter: 2000/7645, LR: 0.0000048, Loss: 0.113
+[2024-12-21 18:09:45,818][    INFO] Iter: 2100/7645, LR: 0.0000048, Loss: 0.064
+[2024-12-21 18:11:56,724][    INFO] Iter: 2200/7645, LR: 0.0000048, Loss: 0.087
+[2024-12-21 18:14:07,778][    INFO] Iter: 2300/7645, LR: 0.0000048, Loss: 0.087
+[2024-12-21 18:16:18,808][    INFO] Iter: 2400/7645, LR: 0.0000048, Loss: 0.080
+[2024-12-21 18:18:29,733][    INFO] Iter: 2500/7645, LR: 0.0000048, Loss: 0.097
+[2024-12-21 18:20:40,556][    INFO] Iter: 2600/7645, LR: 0.0000048, Loss: 0.081
+[2024-12-21 18:22:51,487][    INFO] Iter: 2700/7645, LR: 0.0000048, Loss: 0.076
+[2024-12-21 18:25:02,487][    INFO] Iter: 2800/7645, LR: 0.0000048, Loss: 0.086
+[2024-12-21 18:27:13,229][    INFO] Iter: 2900/7645, LR: 0.0000048, Loss: 0.097
+[2024-12-21 18:29:24,246][    INFO] Iter: 3000/7645, LR: 0.0000048, Loss: 0.087
+[2024-12-21 18:31:35,223][    INFO] Iter: 3100/7645, LR: 0.0000048, Loss: 0.086
+[2024-12-21 18:33:46,190][    INFO] Iter: 3200/7645, LR: 0.0000048, Loss: 0.091
+[2024-12-21 18:35:57,271][    INFO] Iter: 3300/7645, LR: 0.0000048, Loss: 0.069
+[2024-12-21 18:38:08,406][    INFO] Iter: 3400/7645, LR: 0.0000048, Loss: 0.086
+[2024-12-21 18:40:19,538][    INFO] Iter: 3500/7645, LR: 0.0000048, Loss: 0.084
+[2024-12-21 18:42:30,673][    INFO] Iter: 3600/7645, LR: 0.0000048, Loss: 0.068
+[2024-12-21 18:44:41,692][    INFO] Iter: 3700/7645, LR: 0.0000048, Loss: 0.075
+[2024-12-21 18:46:52,870][    INFO] Iter: 3800/7645, LR: 0.0000048, Loss: 0.085
+[2024-12-21 18:49:04,121][    INFO] Iter: 3900/7645, LR: 0.0000048, Loss: 0.086
+[2024-12-21 18:51:15,250][    INFO] Iter: 4000/7645, LR: 0.0000048, Loss: 0.095
+[2024-12-21 18:53:26,393][    INFO] Iter: 4100/7645, LR: 0.0000048, Loss: 0.101
+[2024-12-21 18:55:37,420][    INFO] Iter: 4200/7645, LR: 0.0000048, Loss: 0.071
+[2024-12-21 18:57:48,528][    INFO] Iter: 4300/7645, LR: 0.0000048, Loss: 0.080
+[2024-12-21 18:59:59,637][    INFO] Iter: 4400/7645, LR: 0.0000048, Loss: 0.076
+[2024-12-21 19:02:10,626][    INFO] Iter: 4500/7645, LR: 0.0000048, Loss: 0.077
+[2024-12-21 19:04:21,738][    INFO] Iter: 4600/7645, LR: 0.0000048, Loss: 0.084
+[2024-12-21 19:06:32,737][    INFO] Iter: 4700/7645, LR: 0.0000048, Loss: 0.092
+[2024-12-21 19:08:43,566][    INFO] Iter: 4800/7645, LR: 0.0000048, Loss: 0.067
+[2024-12-21 19:10:54,635][    INFO] Iter: 4900/7645, LR: 0.0000048, Loss: 0.070
+[2024-12-21 19:13:05,820][    INFO] Iter: 5000/7645, LR: 0.0000048, Loss: 0.068
+[2024-12-21 19:15:17,034][    INFO] Iter: 5100/7645, LR: 0.0000048, Loss: 0.080
+[2024-12-21 19:17:28,320][    INFO] Iter: 5200/7645, LR: 0.0000048, Loss: 0.093
+[2024-12-21 19:19:39,503][    INFO] Iter: 5300/7645, LR: 0.0000048, Loss: 0.078
+[2024-12-21 19:21:50,663][    INFO] Iter: 5400/7645, LR: 0.0000048, Loss: 0.078
+[2024-12-21 19:24:01,865][    INFO] Iter: 5500/7645, LR: 0.0000048, Loss: 0.068
+[2024-12-21 19:26:13,136][    INFO] Iter: 5600/7645, LR: 0.0000048, Loss: 0.096
+[2024-12-21 19:28:24,388][    INFO] Iter: 5700/7645, LR: 0.0000048, Loss: 0.086
+[2024-12-21 19:30:35,578][    INFO] Iter: 5800/7645, LR: 0.0000048, Loss: 0.076
+[2024-12-21 19:32:46,740][    INFO] Iter: 5900/7645, LR: 0.0000047, Loss: 0.082
+[2024-12-21 19:34:57,797][    INFO] Iter: 6000/7645, LR: 0.0000047, Loss: 0.086
+[2024-12-21 19:37:08,754][    INFO] Iter: 6100/7645, LR: 0.0000047, Loss: 0.089
+[2024-12-21 19:39:19,893][    INFO] Iter: 6200/7645, LR: 0.0000047, Loss: 0.072
+[2024-12-21 19:41:31,063][    INFO] Iter: 6300/7645, LR: 0.0000047, Loss: 0.083
+[2024-12-21 19:43:42,104][    INFO] Iter: 6400/7645, LR: 0.0000047, Loss: 0.083
+[2024-12-21 19:45:53,171][    INFO] Iter: 6500/7645, LR: 0.0000047, Loss: 0.073
+[2024-12-21 19:48:04,339][    INFO] Iter: 6600/7645, LR: 0.0000047, Loss: 0.064
+[2024-12-21 19:50:15,648][    INFO] Iter: 6700/7645, LR: 0.0000047, Loss: 0.085
+[2024-12-21 19:52:26,914][    INFO] Iter: 6800/7645, LR: 0.0000047, Loss: 0.078
+[2024-12-21 19:54:37,912][    INFO] Iter: 6900/7645, LR: 0.0000047, Loss: 0.090
+[2024-12-21 19:56:48,819][    INFO] Iter: 7000/7645, LR: 0.0000047, Loss: 0.089
+[2024-12-21 19:58:59,978][    INFO] Iter: 7100/7645, LR: 0.0000047, Loss: 0.078
+[2024-12-21 20:01:11,181][    INFO] Iter: 7200/7645, LR: 0.0000047, Loss: 0.077
+[2024-12-21 20:03:22,442][    INFO] Iter: 7300/7645, LR: 0.0000047, Loss: 0.093
+[2024-12-21 20:05:33,656][    INFO] Iter: 7400/7645, LR: 0.0000047, Loss: 0.073
+[2024-12-21 20:07:44,838][    INFO] Iter: 7500/7645, LR: 0.0000047, Loss: 0.104
+[2024-12-21 20:09:56,022][    INFO] Iter: 7600/7645, LR: 0.0000047, Loss: 0.088
+[2024-12-21 20:11:48,059][    INFO] ==========================================================================================
+[2024-12-21 20:11:48,059][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2024-12-21 20:11:48,060][    INFO]    0.750,    0.866,    0.933,    0.172,    9.961,   46.291,    0.365,    0.080,    0.356
+[2024-12-21 20:11:48,060][    INFO] ==========================================================================================
+
+[2024-12-21 20:11:57,616][    INFO] ===========> Epoch: 3/50, d1: 0.750, d2: 0.866, d3: 0.933
+[2024-12-21 20:11:57,617][    INFO] ===========> Epoch: 3/50, abs_rel: 0.172, sq_rel: 9.961, rmse: 46.291, rmse_log: 0.365, log10: 0.080, silog: 0.356
+[2024-12-21 20:11:59,538][    INFO] Iter: 0/7645, LR: 0.0000047, Loss: 0.075
+[2024-12-21 20:14:10,668][    INFO] Iter: 100/7645, LR: 0.0000047, Loss: 0.061
+[2024-12-21 20:16:21,830][    INFO] Iter: 200/7645, LR: 0.0000047, Loss: 0.075
+[2024-12-21 20:18:33,019][    INFO] Iter: 300/7645, LR: 0.0000047, Loss: 0.069
+[2024-12-21 20:20:44,054][    INFO] Iter: 400/7645, LR: 0.0000047, Loss: 0.064
+[2024-12-21 20:22:55,793][    INFO] Iter: 500/7645, LR: 0.0000047, Loss: 0.060
+[2024-12-21 20:25:07,150][    INFO] Iter: 600/7645, LR: 0.0000047, Loss: 0.070
+[2024-12-21 20:27:19,215][    INFO] Iter: 700/7645, LR: 0.0000047, Loss: 0.077
+[2024-12-21 20:29:31,184][    INFO] Iter: 800/7645, LR: 0.0000047, Loss: 0.086
+[2024-12-21 20:31:43,279][    INFO] Iter: 900/7645, LR: 0.0000047, Loss: 0.060
+[2024-12-21 20:33:54,839][    INFO] Iter: 1000/7645, LR: 0.0000047, Loss: 0.082
+[2024-12-21 20:36:06,077][    INFO] Iter: 1100/7645, LR: 0.0000047, Loss: 0.089
+[2024-12-21 20:38:17,244][    INFO] Iter: 1200/7645, LR: 0.0000047, Loss: 0.069
+[2024-12-21 20:40:28,421][    INFO] Iter: 1300/7645, LR: 0.0000047, Loss: 0.083
+[2024-12-21 20:42:39,759][    INFO] Iter: 1400/7645, LR: 0.0000047, Loss: 0.123
+[2024-12-21 20:44:51,061][    INFO] Iter: 1500/7645, LR: 0.0000047, Loss: 0.078
+[2024-12-21 20:47:02,499][    INFO] Iter: 1600/7645, LR: 0.0000047, Loss: 0.071
+[2024-12-21 20:49:13,855][    INFO] Iter: 1700/7645, LR: 0.0000047, Loss: 0.066
+[2024-12-21 20:51:25,313][    INFO] Iter: 1800/7645, LR: 0.0000047, Loss: 0.058
+[2024-12-21 20:53:36,694][    INFO] Iter: 1900/7645, LR: 0.0000047, Loss: 0.094
+[2024-12-21 20:55:47,864][    INFO] Iter: 2000/7645, LR: 0.0000047, Loss: 0.069
+[2024-12-21 20:57:58,954][    INFO] Iter: 2100/7645, LR: 0.0000047, Loss: 0.063
+[2024-12-21 21:00:10,345][    INFO] Iter: 2200/7645, LR: 0.0000047, Loss: 0.081
+[2024-12-21 21:02:21,743][    INFO] Iter: 2300/7645, LR: 0.0000047, Loss: 0.080
+[2024-12-21 21:04:33,190][    INFO] Iter: 2400/7645, LR: 0.0000047, Loss: 0.080
+[2024-12-21 21:06:44,593][    INFO] Iter: 2500/7645, LR: 0.0000047, Loss: 0.087
+[2024-12-21 21:08:55,880][    INFO] Iter: 2600/7645, LR: 0.0000047, Loss: 0.061
+[2024-12-21 21:11:07,247][    INFO] Iter: 2700/7645, LR: 0.0000047, Loss: 0.060
+[2024-12-21 21:13:18,599][    INFO] Iter: 2800/7645, LR: 0.0000047, Loss: 0.117
+[2024-12-21 21:15:29,991][    INFO] Iter: 2900/7645, LR: 0.0000047, Loss: 0.090
+[2024-12-21 21:17:41,589][    INFO] Iter: 3000/7645, LR: 0.0000047, Loss: 0.086
