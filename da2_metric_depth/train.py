@@ -18,9 +18,11 @@ from dataset.hypersim import Hypersim
 from dataset.kitti import KITTI
 from dataset.vkitti2 import VKITTI2
 from dataset.mvsec import MVSEC
+from dataset.eventscape import EventScape
+
 from depth_anything_v2.dpt import DepthAnythingV2
 from util.dist_helper import setup_distributed
-from util.loss import SiLogLoss
+from util.loss import SiLogLoss, MixedLoss
 from util.metric import eval_depth, eval_depth_ori
 from util.utils import init_log
 
@@ -29,11 +31,13 @@ parser = argparse.ArgumentParser(
     description="Depth Anything V2 for Metric Depth Estimation"
 )
 
-parser.add_argument("--encoder", default="vitl", choices=["vits", "vitb", "vitl", "vitg"])
+parser.add_argument(
+    "--encoder", default="vitl", choices=["vits", "vitb", "vitl", "vitg"]
+)
 parser.add_argument("--dataset", default="mvsec", choices=["eventscape", "mvsec"])
-parser.add_argument("--img-size", default=518, type=int)
 parser.add_argument("--min-depth", default=0.001, type=float)
-parser.add_argument("--max-depth", default=20, type=float)
+parser.add_argument("--max-depth", default=1, type=float)
+parser.add_argument("--img-size", default=518, type=int)
 parser.add_argument("--epochs", default=40, type=int)
 parser.add_argument("--bs", default=2, type=int)
 parser.add_argument("--lr", default=0.000005, type=float)
@@ -41,7 +45,10 @@ parser.add_argument("--pretrained-from", type=str)
 parser.add_argument("--save-path", type=str, required=True)
 parser.add_argument("--local-rank", default=0, type=int)
 parser.add_argument("--port", default=None, type=int)
-parser.add_argument("--normalized_depth", action='store_true', help="Enable normalized depth.")
+parser.add_argument(
+    "--normalized_depth", action="store_true", help="Enable normalized depth."
+)
+
 
 def eval_val(valloader, model, logger, args, rank):
     model.eval()
@@ -56,7 +63,7 @@ def eval_val(valloader, model, logger, args, rank):
         "log10": torch.tensor([0.0]).cuda(),
         "silog": torch.tensor([0.0]).cuda(),
     }
-    
+
     nsamples = torch.tensor([0.0]).cuda()
     for i, sample in enumerate(valloader):
 
@@ -73,16 +80,16 @@ def eval_val(valloader, model, logger, args, rank):
             )[0, 0]
 
         valid_mask = (
-            (valid_mask == 1)
-            & (depth >= args.min_depth)
-            & (depth <= args.max_depth)
+            (valid_mask == 1) & (depth >= args.min_depth) & (depth <= args.max_depth)
         )
 
         if valid_mask.sum() < 10:
             continue
 
         if args.normalized_depth:
-            cur_results = eval_depth(pred[valid_mask], depth[valid_mask], dataset=args.dataset)
+            cur_results = eval_depth(
+                pred[valid_mask], depth[valid_mask], dataset=args.dataset
+            )
         else:
             cur_results = eval_depth_ori(pred[valid_mask], depth[valid_mask])
 
@@ -95,7 +102,7 @@ def eval_val(valloader, model, logger, args, rank):
     for k in results.keys():
         dist.reduce(results[k], dst=0)
     dist.reduce(nsamples, dst=0)
-    
+
     if rank == 0:
         logger.info(
             "=========================================================================================="
@@ -117,14 +124,14 @@ def eval_val(valloader, model, logger, args, rank):
 
         # for name, metric in results.items():
         #     writer.add_scalar(f"eval/{name}", (metric / nsamples).item(), epoch)
-    
+
     cur_results = {}
     for k in results.keys():
         cur_results[k] = (results[k] / nsamples).item()
-    
+
     return cur_results
 
-    
+
 def main():
     args = parser.parse_args()
 
@@ -149,7 +156,19 @@ def main():
     elif args.dataset == "vkitti":
         trainset = VKITTI2("dataset/splits/vkitti2/train.txt", "train", size=size)
     elif args.dataset == "mvsec":
-        trainset = MVSEC("dataset/splits/mvsec/train.txt", "train", normalized_d=args.normalized_depth, size=size)
+        trainset = MVSEC(
+            "dataset/splits/mvsec/train.txt",
+            "train",
+            normalized_d=args.normalized_depth,
+            size=size,
+        )
+    elif args.dataset == "eventscape":
+        trainset = EventScape(
+            "dataset/splits/eventscape/train.txt",
+            "train",
+            normalized_d=args.normalized_depth,
+            size=size,
+        )
     else:
         raise NotImplementedError
     trainsampler = torch.utils.data.distributed.DistributedSampler(trainset)
@@ -167,9 +186,22 @@ def main():
     elif args.dataset == "vkitti":
         valset = KITTI("dataset/splits/kitti/val.txt", "val", size=size)
     elif args.dataset == "mvsec":
-        valset = MVSEC("dataset/splits/mvsec/val_outdoor_day.txt", "val", normalized_d=args.normalized_depth, size=size)
+        valset = MVSEC(
+            "./dataset/splits/mvsec/outdoor_night1_val.txt",
+            "val",
+            normalized_d=args.normalized_depth,
+            size=size,
+        )
+    elif args.dataset == "eventscape":
+        valset = EventScape(
+            "./dataset/splits/eventscape/val_1k.txt",
+            "val",
+            normalized_d=args.normalized_depth,
+            size=size,
+        )
     else:
         raise NotImplementedError
+
     valsampler = torch.utils.data.distributed.DistributedSampler(valset)
     valloader = DataLoader(
         valset,
@@ -224,7 +256,8 @@ def main():
         find_unused_parameters=True,
     )
 
-    criterion = SiLogLoss().cuda(local_rank)
+    # criterion = SiLogLoss().cuda(local_rank)
+    criterion = MixedLoss().cuda(local_rank)
 
     optimizer = AdamW(
         [
@@ -272,9 +305,11 @@ def main():
                 logger.info(f"Module: {name}, Trainable Parameters: {param.numel()}")
 
         # Optional: Total trainable parameters
-        total_trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+        total_trainable_params = sum(
+            p.numel() for p in model.parameters() if p.requires_grad
+        )
         logger.info(f"Total Trainable Parameters: {total_trainable_params}")
-    
+
     # Eval the performance befor fine-tune
     cur_results = eval_val(valloader, model, logger, args, rank)
     if rank == 0:
@@ -309,7 +344,7 @@ def main():
         trainloader.sampler.set_epoch(epoch + 1)
 
         model.train()
-        total_loss = 0
+        total_si_loss = 0
 
         for i, sample in enumerate(trainloader):
             optimizer.zero_grad()
@@ -327,7 +362,7 @@ def main():
 
             pred = model(img)
 
-            loss = criterion(
+            loss, si_loss, grad_loss = criterion(
                 pred,
                 depth,
                 (valid_mask == 1)
@@ -338,7 +373,7 @@ def main():
             loss.backward()
             optimizer.step()
 
-            total_loss += loss.item()
+            total_si_loss += si_loss.item()
 
             iters = epoch * len(trainloader) + i
 
@@ -349,6 +384,8 @@ def main():
 
             if rank == 0:
                 writer.add_scalar("train/loss", loss.item(), iters)
+                writer.add_scalar("train/si_loss", si_loss.item(), iters)
+                writer.add_scalar("train/grad_loss", grad_loss.item(), iters)
 
             if rank == 0 and i % 100 == 0:
                 logger.info(
@@ -366,7 +403,7 @@ def main():
         if rank == 0:
             for name, metric in cur_results.items():
                 writer.add_scalar(f"eval/{name}", (metric), epoch)
-        
+
         if rank == 0 and (epoch + 1) % 20 == 0:
             checkpoint = {
                 "model": model.state_dict(),
