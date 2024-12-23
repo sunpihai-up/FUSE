@@ -38,6 +38,8 @@ parser.add_argument(
     default="mvsec",
     choices=["mvsec", "eventscape"],
 )
+parser.add_argument("--min-depth", default=0.001, type=float)
+parser.add_argument("--max-depth", default=1, type=float)
 parser.add_argument("--img-size", default=518, type=int)
 parser.add_argument("--epochs", default=40, type=int)
 parser.add_argument("--bs", default=2, type=int)
@@ -149,6 +151,7 @@ def main():
     model = EPDE(
         model_name=args.encoder,
         dataset=args.dataset,
+        max_depth=args.max_depth,
         event_voxel_chans=args.event_voxel_chans,
         prompt_type=args.prompt_type,
         depth_anything_pretrained=args.depth_anything_pretrained,
@@ -293,7 +296,7 @@ def main():
                 valid_mask = valid_mask.flip(-1)
 
             pred = model(img)
-
+            # print(pred.min(), pred.max())
             # loss, si_loss, grad_loss = criterion(
             #     pred,
             #     depth,
