@@ -61,7 +61,6 @@ parser.add_argument(
 parser.add_argument(
     "--finetune-mode",
     choices=["prompt", "decoder", "bias", "bias_and_decoder", "overall"],
-    default="prompt",
     type=str,
 )
 
@@ -158,14 +157,15 @@ def main():
     )
 
     if args.pretrained_from:
-        model.load_state_dict(
-            {
-                k: v
-                for k, v in torch.load(args.pretrained_from, map_location="cpu").items()
-                if "pretrained" in k
-            },
-            strict=False,
-        )
+        checkpoint = torch.load(args.pretrained_from, map_location='cpu')
+        if 'model' in checkpoint.keys():
+            checkpoint = checkpoint['model']
+            checkpoint = {
+                (key[7:] if key.startswith("module.") else key): value
+                for key, value in checkpoint.items()
+            }
+        model.load_state_dict(checkpoint)
+        print(f"Model weights load from {args.pretrained_from} successfully!")
 
     model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
     model.cuda(local_rank)

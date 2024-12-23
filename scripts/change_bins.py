@@ -82,7 +82,8 @@ def parse_arguments():
     return parser.parse_args()
 
 if __name__ == "__main__":
-    split_names = ["train.txt", "val.txt", "test.txt"]
+    # split_names = ["train.txt", "val.txt", "test.txt"]
+    split_names = ["test.txt"]
     args = parse_arguments()
     
     voxel_paths = []
@@ -102,9 +103,9 @@ if __name__ == "__main__":
         event_paths = [p.replace("voxels", "data") for p in voxel_paths]
         event_paths = [p.replace("npy", "npz") for p in event_paths]
     
-    # v = np.load(voxel_paths[0])
-    # b, h, w = v.shape
-    h, w = 256, 512
+    v = np.load(voxel_paths[0])
+    b, h, w = v.shape
+    # h, w = 256, 512
     
     for i in tqdm(range(len(event_paths)), total=len(event_paths)):
         event = np.load(event_paths[i])
@@ -121,6 +122,6 @@ if __name__ == "__main__":
 '''
 python scripts/change_bins.py \
     --new-numbins 3 \
-    --split-dir ./dataset/splits/eventscape \
-    --dataset eventscape
+    --split-dir ./dataset/splits/mvsec \
+    --dataset mvsec
 '''
