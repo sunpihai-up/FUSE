@@ -26,6 +26,7 @@ class EPDEVisionTransformer(nn.Module):
         embed_layer=PatchEmbed,
         encoder="vitl",
         dataset="mvsec",
+        max_depth=1,
         norm_layer=None,
         prompt_type=None,
         depth_anything_pretrained=None,
@@ -38,6 +39,7 @@ class EPDEVisionTransformer(nn.Module):
         self.event_voxel_chans = event_voxel_chans
         self.embed_dim = embed_dim
         self.depth = depth
+        self.max_depth = max_depth
         self.embed_layer = embed_layer
         self.norm_layer = norm_layer or partial(nn.LayerNorm, eps=1e-6)
         self.prompt_type = prompt_type
@@ -246,7 +248,7 @@ class EPDEVisionTransformer(nn.Module):
             return_class_token=True,
         )
 
-        depth = self.foundation.depth_head(features, patch_h, patch_w)
+        depth = self.foundation.depth_head(features, patch_h, patch_w) * self.max_depth
 
         return depth.squeeze(1)
 
@@ -349,6 +351,7 @@ def EPDE(
     model_name,
     prompt_type,
     dataset="dense",
+    max_depth=1,
     depth_anything_pretrained=None,
     event_voxel_chans=5,
     embed_layer=PatchEmbed,
@@ -366,6 +369,7 @@ def EPDE(
         patch_size=14,
         event_voxel_chans=event_voxel_chans,
         dataset=dataset,
+        max_depth=max_depth,
         depth_anything_pretrained=depth_anything_pretrained,
         embed_layer=embed_layer,
         norm_layer=norm_layer,

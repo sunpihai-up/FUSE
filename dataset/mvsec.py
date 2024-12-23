@@ -78,6 +78,7 @@ class MVSEC(Dataset):
             sample["valid_mask"] = np.isfinite(sample["depth"]) & (sample["depth"] >= 0)
         else:
             sample['valid_mask'] = np.isfinite(sample["depth"]) & (sample['depth'] <= 80)
+        sample["valid_mask"] = sample["valid_mask"].bool()
         sample["image_path"] = img_path
 
         return sample

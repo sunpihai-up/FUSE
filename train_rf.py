@@ -174,8 +174,8 @@ def main():
         find_unused_parameters=True,
     )
 
-    # criterion = SiLogLoss().cuda(local_rank)
-    criterion = MixedLoss().cuda(local_rank)
+    criterion = SiLogLoss().cuda(local_rank)
+    # criterion = MixedLoss().cuda(local_rank)
 
     # Handling frozen parameters
     if args.finetune_mode == "prompt":
@@ -294,7 +294,12 @@ def main():
 
             pred = model(img)
 
-            loss, si_loss, grad_loss = criterion(
+            # loss, si_loss, grad_loss = criterion(
+            #     pred,
+            #     depth,
+            #     valid_mask,
+            # )
+            loss = criterion(
                 pred,
                 depth,
                 valid_mask,
@@ -303,7 +308,7 @@ def main():
             loss.backward()
             optimizer.step()
 
-            total_si_loss += si_loss.item()
+            # total_si_loss += si_loss.item()
 
             iters = epoch * len(trainloader) + i
 
@@ -314,8 +319,8 @@ def main():
 
             if rank == 0:
                 writer.add_scalar("train/loss", loss.item(), iters)
-                writer.add_scalar("train/si_loss", si_loss.item(), iters)
-                writer.add_scalar("train/grad_loss", grad_loss.item(), iters)
+                # writer.add_scalar("train/si_loss", si_loss.item(), iters)
+                # writer.add_scalar("train/grad_loss", grad_loss.item(), iters)
 
             if rank == 0 and i % 100 == 0:
                 logger.info(
