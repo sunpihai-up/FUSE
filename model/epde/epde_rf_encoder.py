@@ -9,8 +9,19 @@ from torchvision.transforms import Compose
 
 from typing import Sequence, Tuple, Union
 from model.depth_anything_v2.dpt import DepthAnythingV2
-from model.layers.patch_embed import PatchEmbed
-from model.epde.prompt_module import FeatureRectifyModule, FeatureFusionModule, Prompt_block, Prompt_block_rf
+
+# from model.layers.patch_embed import PatchEmbed
+from model.depth_anything_v2.dinov2_layers import (
+    PatchEmbed,
+    Mlp,
+    NestedTensorBlock as Block,
+)
+from model.epde.prompt_module import (
+    FeatureRectifyModule,
+    FeatureFusionModule,
+    Prompt_block,
+    Prompt_block_rf,
+)
 from dataset.transform import Resize, NormalizeImage, PrepareForNet
 from .utils import token2feature, feature2token, init_weights_vit_timm
 
@@ -72,7 +83,7 @@ class EPDEVisionTransformer(nn.Module):
         self.foundation = DepthAnythingV2(**depth_anything_model_configs[self.encoder])
         self.blocks_to_take = self.foundation.intermediate_layer_idx[encoder]
         self.num_heads = self.foundation.pretrained.num_heads
-        
+
         self.patch_embed_prompt = embed_layer(
             img_size=img_size,
             patch_size=patch_size,
@@ -82,29 +93,52 @@ class EPDEVisionTransformer(nn.Module):
 
         if self.prompt_type in ["epde_shaw", "epde_deep"]:
             prompt_blocks = []
-            block_nums = depth if self.prompt_type == "epde_deep" else 1
-            for i in range(block_nums):
-                prompt_blocks.append(FeatureRectifyModule(dim=embed_dim, reduction=8))
-            self.prompt_blocks = nn.Sequential(*prompt_blocks)
-
             prompt_norms = []
-            for i in range(block_nums):
-                prompt_norms.append(self.norm_layer(embed_dim))
-            self.prompt_norms = nn.Sequential(*prompt_norms)
+            prompt_rectify = []
+            prompt_fuse = []
 
-            fuse_blocks = []
-            for i in range(block_nums):
+            prompt_blocks.append(
+                Block(
+                    dim=embed_dim,
+                    num_heads=self.num_heads,
+                    norm_layer=self.norm_layer,
+                    qkv_bias=True,
+                )
+            )
+            prompt_norms.append(self.norm_layer(embed_dim))
+            prompt_rectify.append(FeatureRectifyModule(dim=embed_dim, reduction=8))
+            prompt_fuse.append(nn.Identity())
+
+            block_nums = depth if self.prompt_type == "epde_deep" else 1
+            for i in range(1, block_nums):
                 if i in self.blocks_to_take:
-                    fuse_blocks.append(
-                        FeatureFusionModule(
+                    prompt_blocks.append(
+                        Block(
                             dim=embed_dim,
                             num_heads=self.num_heads,
-                            reduction=1
+                            norm_layer=self.norm_layer,
+                            qkv_bias=True,
+                        )
+                    )
+                    prompt_norms.append(self.norm_layer(embed_dim))
+                    prompt_rectify.append(
+                        FeatureRectifyModule(dim=embed_dim, reduction=8)
+                    )
+                    prompt_fuse.append(
+                        FeatureFusionModule(
+                            dim=embed_dim, num_heads=self.num_heads, reduction=1
                         )
                     )
                 else:
-                    fuse_blocks.append(nn.Identity())
-            self.fuse_blocks = nn.Sequential(*fuse_blocks)
+                    prompt_blocks.append(nn.Identity())
+                    prompt_norms.append(nn.Identity())
+                    prompt_rectify.append(nn.Identity())
+                    prompt_fuse.append(nn.Identity())
+
+            self.prompt_blocks = nn.Sequential(*prompt_blocks)
+            self.prompt_norms = nn.Sequential(*prompt_norms)
+            self.prompt_rectify = nn.Sequential(*prompt_rectify)
+            self.prompt_fuse = nn.Sequential(*prompt_fuse)
 
         self.init_weights()
 
@@ -153,6 +187,7 @@ class EPDEVisionTransformer(nn.Module):
             image_feat, prompt_feat = self.prompt_blocks[0](image_feat, prompt_feat)
             prompt_token = feature2token(prompt_feat)
             image_token = feature2token(image_feat)
+            prompt_token = self.prompt_blocks[0](prompt_token)
         elif self.prompt_type == "add":
             image_token = image_token + prompt_token
 
@@ -190,7 +225,7 @@ class EPDEVisionTransformer(nn.Module):
         )
 
         for i, blk in enumerate(self.foundation.pretrained.blocks):
-            if i >= 1 and self.prompt_type == "epde_deep":
+            if i >= 1 and self.prompt_type == "epde_deep" and i in blocks_to_take:
                 # Add Prompt information from 1st layer
                 # TODO: Why ViPT use i - 1
                 # use [:, 1:] to exclude the cls_token
@@ -204,8 +239,8 @@ class EPDEVisionTransformer(nn.Module):
                 image_token = image_token.clone()
                 prompt_token[:, 1:] = feature2token(prompt_feat)
                 image_token[:, 1:] = feature2token(image_feat)
-
-            if i in blocks_to_take and self.prompt_type == "epde_deep":
+                
+                # Feature Fuse
                 image_feat = token2feature(image_token[:, 1:], patch_grid_size)
                 prompt_feat = token2feature(prompt_token[:, 1:], patch_grid_size)
                 fuse_token = feature2token(
@@ -213,6 +248,9 @@ class EPDEVisionTransformer(nn.Module):
                 )
                 cls_token = image_token[:, 0].unsqueeze(1)
                 output.append(torch.cat((cls_token, fuse_token), dim=1))
+                
+                # prompt block
+                prompt_token = self.prompt_blocks[0](prompt_token)
 
             image_token = blk(image_token)
             if i in blocks_to_take and self.prompt_type != "epde_deep":
