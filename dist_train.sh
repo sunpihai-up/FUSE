@@ -9,13 +9,13 @@ encoder=vitl
 dataset=mvsec
 img_size=350
 min_depth=0
-max_depth=80
+max_depth=100
 event_voxel_chans=3
 prompt_type=epde_deep # choices=["epde_deep", "epde_shaw", "add", "none"],
 depth_anything_pretrained=/data_nvme/sph/da2_checkpoints/depth_anything_v2_vitl.pth
 finetune_mode=overall # choices=["prompt", "decoder", "bias", "bias_and_decoder", "overall"], 
 # pretrained_from=/home/sph/code/Depth-Anything-V2/metric_depth/checkpoints/depth_anything_v2_metric_vkitti_vitl.pth
-save_path=/home/sph/event/da2-prompt-tuning/exp/ffr_${dataset}_${finetune_mode}_nl_${now}
+save_path=/home/sph/event/da2-prompt-tuning/exp/ffr_debug_100_${dataset}_${finetune_mode}_metric_${now}
 
 mkdir -p $save_path
 

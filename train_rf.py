@@ -20,6 +20,7 @@ from dataset.mvsec import MVSEC
 from dataset.eventscape import EventScape
 
 from model.epde.epde_rf import EPDE
+# from model.epde.epde_rf_encoder import EPDE
 from util.dist_helper import setup_distributed
 from util.loss import SiLogLoss, MixedLoss
 from util.metric import eval_depth, eval_depth_ori

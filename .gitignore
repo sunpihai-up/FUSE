@@ -7,3 +7,4 @@ results
 *.gz
 *.png
 splits
+vis_feature_maps

@@ -50,7 +50,10 @@ class MVSEC(Dataset):
         return depth
 
     def __getitem__(self, item):
-        reg_factor, d_max = 3.70378, 80
+        if self.mode == "train":
+            reg_factor, d_max = 3.70378, 100
+        else:
+            reg_factor, d_max = 3.70378, 80
 
         img_path = self.filelist[item].split(" ")[0]
         depth_path = self.filelist[item].split(" ")[1]
@@ -77,7 +80,7 @@ class MVSEC(Dataset):
         if self.normalized_d:
             sample["valid_mask"] = np.isfinite(sample["depth"]) & (sample["depth"] >= 0)
         else:
-            sample['valid_mask'] = np.isfinite(sample["depth"]) & (sample['depth'] <= 80)
+            sample['valid_mask'] = np.isfinite(sample["depth"]) & (sample['depth'] <= d_max)
         sample["valid_mask"] = sample["valid_mask"].bool()
         sample["image_path"] = img_path
 

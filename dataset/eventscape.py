@@ -76,7 +76,6 @@ class EventScape(Dataset):
         # Convert absolute scale depth to normalized log depth
         if self.normalized_d:
             depth = self.prepare_depth(depth, reg_factor, d_max)
-
         sample = self.transform({"image": image, "depth": depth, "event_voxel": event_voxel})
 
         image = torch.from_numpy(sample["image"])

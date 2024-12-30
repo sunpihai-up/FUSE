@@ -136,12 +136,24 @@ class EPDEVisionTransformer(nn.Module):
     def _get_intermediate_layers_not_chunked(self, x, n=1):
         image = x[:, :3, :, :]
         event = x[:, 3:, :, :]
-        B, nc, w, h = image.shape
-        patch_grid_size = (w // self.patch_size, h // self.patch_size)
+        # TODO
+        B, nc, h, w = image.shape
+        patch_grid_size = (h // self.patch_size, w // self.patch_size)
 
         # Compute event and image embedding
         image_token = self.foundation.pretrained.patch_embed(image)
         prompt_token = self.patch_embed_prompt(event)
+        # print(image.shape)
+        # print(patch_grid_size)
+        
+        # print(image_token.shape)
+        # print("patch resolution: ")
+        # print(self.patch_embed_prompt.patches_resolution)
+        # print(self.foundation.pretrained.patch_embed.patches_resolution)
+        # print(self.patch_embed_prompt.num_patches)
+        # print(self.foundation.pretrained.patch_embed.num_patches)
+        # print(f"img_size: {self.img_size}")
+        # exit()
 
         # Injecting modal supplementary information
         if self.prompt_type in ["epde_shaw", "epde_deep"]:
@@ -149,7 +161,8 @@ class EPDEVisionTransformer(nn.Module):
             prompt_token = self.prompt_norms[0](prompt_token)
             image_feat = token2feature(image_token, patch_grid_size)
             prompt_feat = token2feature(prompt_token, patch_grid_size)
-
+            # print(image_feat.shape, prompt_feat.shape)
+            # exit()
             image_feat, prompt_feat = self.prompt_blocks[0](image_feat, prompt_feat)
             prompt_token = feature2token(prompt_feat)
             image_token = feature2token(image_feat)
@@ -209,7 +222,7 @@ class EPDEVisionTransformer(nn.Module):
                 image_feat = token2feature(image_token[:, 1:], patch_grid_size)
                 prompt_feat = token2feature(prompt_token[:, 1:], patch_grid_size)
                 fuse_token = feature2token(
-                    self.fuse_blocks[i](prompt_feat, prompt_feat)
+                    self.fuse_blocks[i](image_feat, prompt_feat)
                 )
                 cls_token = image_token[:, 0].unsqueeze(1)
                 output.append(torch.cat((cls_token, fuse_token), dim=1))

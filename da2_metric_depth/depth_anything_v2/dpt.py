@@ -35,6 +35,23 @@ class ConvBlock(nn.Module):
         return self.conv_block(x)
 
 
+def get_variance_maps(features, use_cls_token=True):
+    feature_maps = []
+    if use_cls_token:
+        for feature in features:
+            fea = feature[0]
+            feature_maps.append(fea)
+    else:
+        feature_maps = features
+
+    var_maps = []
+    for fea in feature_maps:
+        var = torch.var(fea, dim=1, keepdim=True)
+        var_maps.append(var)
+
+    return var_maps
+
+
 class DPTHead(nn.Module):
     def __init__(
         self,
@@ -208,6 +225,7 @@ class DepthAnythingV2(nn.Module):
             x, self.intermediate_layer_idx[self.encoder], return_class_token=True
         )
 
+        var_maps = get_variance_maps(features)
         depth = self.depth_head(features, patch_h, patch_w) * self.max_depth
         # depth = self.depth_head(features, patch_h, patch_w)
         # depth = F.relu(depth)

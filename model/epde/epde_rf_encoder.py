@@ -97,16 +97,17 @@ class EPDEVisionTransformer(nn.Module):
             prompt_rectify = []
             prompt_fuse = []
 
-            prompt_blocks.append(
-                Block(
-                    dim=embed_dim,
-                    num_heads=self.num_heads,
-                    norm_layer=self.norm_layer,
-                    qkv_bias=True,
-                )
-            )
+            # prompt_blocks.append(
+            #     Block(
+            #         dim=embed_dim,
+            #         num_heads=self.num_heads,
+            #         norm_layer=self.norm_layer,
+            #         qkv_bias=True,
+            #     )
+            # )
+            prompt_blocks.append(nn.Identity())
             prompt_norms.append(self.norm_layer(embed_dim))
-            prompt_rectify.append(FeatureRectifyModule(dim=embed_dim, reduction=8))
+            prompt_rectify.append(FeatureRectifyModule(dim=embed_dim, reduction=1))
             prompt_fuse.append(nn.Identity())
 
             block_nums = depth if self.prompt_type == "epde_deep" else 1
@@ -184,10 +185,10 @@ class EPDEVisionTransformer(nn.Module):
             image_feat = token2feature(image_token, patch_grid_size)
             prompt_feat = token2feature(prompt_token, patch_grid_size)
 
-            image_feat, prompt_feat = self.prompt_blocks[0](image_feat, prompt_feat)
+            image_feat, prompt_feat = self.prompt_rectify[0](image_feat, prompt_feat)
             prompt_token = feature2token(prompt_feat)
             image_token = feature2token(image_feat)
-            prompt_token = self.prompt_blocks[0](prompt_token)
+            # prompt_token = self.prompt_blocks[0](prompt_token)
         elif self.prompt_type == "add":
             image_token = image_token + prompt_token
 
@@ -218,6 +219,7 @@ class EPDEVisionTransformer(nn.Module):
         prompt_token += self.foundation.pretrained.interpolate_pos_encoding(
             prompt_token, w, h
         )
+        # prompt_token = self.prompt_blocks[0](prompt_token)
 
         output, total_block_len = [], len(self.foundation.pretrained.blocks)
         blocks_to_take = (
@@ -234,25 +236,26 @@ class EPDEVisionTransformer(nn.Module):
                 image_feat = token2feature(image_token[:, 1:], patch_grid_size)
                 prompt_feat = token2feature(prompt_token[:, 1:], patch_grid_size)
 
-                image_feat, prompt_feat = self.prompt_blocks[i](image_feat, prompt_feat)
+                image_feat, prompt_feat = self.prompt_rectify[i](image_feat, prompt_feat)
                 prompt_token = prompt_token.clone()
                 image_token = image_token.clone()
                 prompt_token[:, 1:] = feature2token(prompt_feat)
                 image_token[:, 1:] = feature2token(image_feat)
                 
+                # prompt block
+                prompt_token = self.prompt_blocks[i](prompt_token)
+                
                 # Feature Fuse
                 image_feat = token2feature(image_token[:, 1:], patch_grid_size)
                 prompt_feat = token2feature(prompt_token[:, 1:], patch_grid_size)
                 fuse_token = feature2token(
-                    self.fuse_blocks[i](prompt_feat, prompt_feat)
+                    self.prompt_fuse[i](image_feat, prompt_feat)
                 )
                 cls_token = image_token[:, 0].unsqueeze(1)
                 output.append(torch.cat((cls_token, fuse_token), dim=1))
-                
-                # prompt block
-                prompt_token = self.prompt_blocks[0](prompt_token)
 
             image_token = blk(image_token)
+            #  and self.prompt_type != "epde_deep"
             if i in blocks_to_take and self.prompt_type != "epde_deep":
                 output.append(image_token)
 

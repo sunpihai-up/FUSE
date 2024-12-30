@@ -1,13 +1,13 @@
 encoder=vitl
 dataset=mvsec
-scene=night1_2b
+scene=night1
 img_size=350
-max_depth=1
-load_from=/home/sph/event/da2-prompt-tuning/exp/eventscape_overall_nl_20241222_010732/abs_rel-0.17139266431331635-4.pth
-outdir=/home/sph/event/da2-prompt-tuning/results/${dataset}_metric_vitl_overall_${scene}_5_grad_350
+max_depth=80
+load_from=/home/sph/event/da2-prompt-tuning/exp/ffr_debug_mvsec_overall_metric_20241224_210053/abs_rel-0.3608552813529968-43.pth
+outdir=/home/sph/event/da2-prompt-tuning/results/test/ffr_debug_${dataset}_metric_vitl_overall_${scene}_44_crop
 event_voxel_chans=3
 
-python run.py \
+python run_rf.py \
     --encoder $encoder \
     --dataset $dataset --scene $scene \
     --input-size $img_size \
@@ -15,4 +15,4 @@ python run.py \
     --outdir $outdir \
     --event-voxel-chans $event_voxel_chans \
     --save-numpy \
-    --normalized-depth
+    # --normalized-depth
