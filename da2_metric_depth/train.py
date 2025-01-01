@@ -19,6 +19,7 @@ from dataset.kitti import KITTI
 from dataset.vkitti2 import VKITTI2
 from dataset.mvsec import MVSEC
 from dataset.eventscape import EventScape
+from dataset.eventscape_voxel import EventScape_voxel
 
 from depth_anything_v2.dpt import DepthAnythingV2
 from util.dist_helper import setup_distributed
@@ -34,7 +35,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument(
     "--encoder", default="vitl", choices=["vits", "vitb", "vitl", "vitg"]
 )
-parser.add_argument("--dataset", default="mvsec", choices=["eventscape", "mvsec"])
+parser.add_argument("--dataset", default="mvsec", choices=["eventscape", "mvsec", "event_voxel"])
 parser.add_argument("--min-depth", default=0.001, type=float)
 parser.add_argument("--max-depth", default=1, type=float)
 parser.add_argument("--img-size", default=518, type=int)
@@ -171,6 +172,13 @@ def main():
             normalized_d=args.normalized_depth,
             size=size,
         )
+    elif args.dataset == "eventscape_voxel":
+        trainset = EventScape_voxel(
+            "dataset/splits/eventscape/train.txt",
+            "train",
+            normalized_d=args.normalized_depth,
+            size=size,
+        )
     else:
         raise NotImplementedError
     trainsampler = torch.utils.data.distributed.DistributedSampler(trainset)
@@ -196,6 +204,13 @@ def main():
         )
     elif args.dataset == "eventscape":
         valset = EventScape(
+            "./dataset/splits/eventscape/val_1k.txt",
+            "val",
+            normalized_d=args.normalized_depth,
+            size=size,
+        )
+    elif args.dataset == "eventscape_voxel":
+        valset = EventScape_voxel(
             "./dataset/splits/eventscape/val_1k.txt",
             "val",
             normalized_d=args.normalized_depth,
@@ -351,6 +366,8 @@ def main():
         for i, sample in enumerate(trainloader):
             optimizer.zero_grad()
 
+            if i >= 5:
+                exit()
             img, depth, valid_mask = (
                 sample["image"].cuda(),
                 sample["depth"].cuda(),
@@ -362,6 +379,9 @@ def main():
                 depth = depth.flip(-1)
                 valid_mask = valid_mask.flip(-1)
 
+            import cv2
+            cv2.imwrite(f"i_test.png", img)
+            continue
             pred = model(img)
 
             loss, si_loss, grad_loss = criterion(
