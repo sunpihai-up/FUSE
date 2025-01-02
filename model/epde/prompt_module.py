@@ -412,7 +412,7 @@ class MaxVar_Feat_Fuse(nn.Module):
     def __init__(self):
         super(MaxVar_Feat_Fuse, self).__init__()
     
-    def forward(feat_a, feat_b):
+    def forward(self, feat_a, feat_b):
         A = feat_a
         B = feat_b
         mean_A = torch.mean(A, dim=1, keepdim=True)

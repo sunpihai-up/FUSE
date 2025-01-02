@@ -140,7 +140,7 @@ class EPDEVisionTransformer(nn.Module):
             patch_embed_state_dict = {
                 k: v for k, v in pretrained_weights.items() if "patch_embed" in k
             }
-            self.prompt_patch.load_state_dict(patch_embed_state_dict, strict=False)
+            self.patch_embed_prompt.load_state_dict(patch_embed_state_dict, strict=False)
             print(f"Loaded pretrained weights from {self.depth_anything_pretrained}")
         else:
             self.foundation.pretrained.init_weights()
@@ -218,7 +218,7 @@ class EPDEVisionTransformer(nn.Module):
                 cls_token = image_token[:, 0].unsqueeze(1)
                 output.append(torch.cat((cls_token, fuse_token), dim=1))
 
-            if i >= self.blocks_to_take and i in blocks_to_take:
+            if i >= self.prompt_depth and i in blocks_to_take:
                 output.append(image_token)
 
         assert len(output) == len(

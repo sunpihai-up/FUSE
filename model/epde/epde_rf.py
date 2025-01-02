@@ -109,29 +109,34 @@ class EPDEVisionTransformer(nn.Module):
         self.init_weights()
 
     def init_weights(self):
-        # Load pre-trained foundation model weights
         if self.depth_anything_pretrained is not None:
-            try:
-                self.foundation.load_state_dict(
-                    {
-                        k: v
-                        for k, v in torch.load(
-                            self.depth_anything_pretrained, map_location="cpu"
-                        ).items()
-                        if "pretrained" in k
-                    },
-                    strict=False,
-                )
-                print(
-                    f"Loaded pretrained weights from {self.depth_anything_pretrained}"
-                )
-            except Exception as e:
-                print(f"Error loading pretrained weights: {e}")
+            pretrained_weights = torch.load(
+                self.depth_anything_pretrained, map_location="cpu"
+            )
+            # Initialize self.foundation
+            self.foundation.load_state_dict(pretrained_weights, strict=False)
+
+            # # Initialize self.prompt_blocks with corresponding layers
+            # for i, layer in enumerate(self.prompt_blocks):
+            #     pretrained_layer_prefix = f"pretrained.blocks.{i}."
+            #     layer_state_dict = {
+            #         k: v
+            #         for k, v in pretrained_weights.items()
+            #         if k.startswith(pretrained_layer_prefix)
+            #     }
+            #     layer.load_state_dict(layer_state_dict, strict=False)
+
+            # Initialize self.prompt_patch using pretrained.patch_embed
+            patch_embed_state_dict = {
+                k: v for k, v in pretrained_weights.items() if "patch_embed" in k
+            }
+            self.patch_embed_prompt.load_state_dict(patch_embed_state_dict, strict=False)
+            print(f"Loaded pretrained weights from {self.depth_anything_pretrained}")
         else:
             self.foundation.pretrained.init_weights()
+            init_weights_vit_timm(self.patch_embed_prompt)
+            init_weights_vit_timm(self.prompt_blocks)
             print(f"Initializing encoder parameters without pre-trained weights")
-
-        init_weights_vit_timm(self.patch_embed_prompt)
 
     def _get_intermediate_layers_not_chunked(self, x, n=1):
         image = x[:, :3, :, :]
@@ -154,20 +159,6 @@ class EPDEVisionTransformer(nn.Module):
         # print(self.foundation.pretrained.patch_embed.num_patches)
         # print(f"img_size: {self.img_size}")
         # exit()
-
-        # Injecting modal supplementary information
-        if self.prompt_type in ["epde_shaw", "epde_deep"]:
-            image_token = self.prompt_norms[0](image_token)
-            prompt_token = self.prompt_norms[0](prompt_token)
-            image_feat = token2feature(image_token, patch_grid_size)
-            prompt_feat = token2feature(prompt_token, patch_grid_size)
-            # print(image_feat.shape, prompt_feat.shape)
-            # exit()
-            image_feat, prompt_feat = self.prompt_blocks[0](image_feat, prompt_feat)
-            prompt_token = feature2token(prompt_feat)
-            image_token = feature2token(image_feat)
-        elif self.prompt_type == "add":
-            image_token = image_token + prompt_token
 
         # Adding cls_token
         image_token = torch.cat(
@@ -203,7 +194,7 @@ class EPDEVisionTransformer(nn.Module):
         )
 
         for i, blk in enumerate(self.foundation.pretrained.blocks):
-            if i >= 1 and self.prompt_type == "epde_deep":
+            if self.prompt_type == "epde_deep":
                 # Add Prompt information from 1st layer
                 # TODO: Why ViPT use i - 1
                 # use [:, 1:] to exclude the cls_token
@@ -228,8 +219,8 @@ class EPDEVisionTransformer(nn.Module):
                 output.append(torch.cat((cls_token, fuse_token), dim=1))
 
             image_token = blk(image_token)
-            if i in blocks_to_take and self.prompt_type != "epde_deep":
-                output.append(image_token)
+            # if i in blocks_to_take and self.prompt_type != "epde_deep":
+            #     output.append(image_token)
 
         assert len(output) == len(
             blocks_to_take
