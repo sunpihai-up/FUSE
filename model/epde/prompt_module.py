@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from torch.nn import functional as F
 from timm.models.layers import trunc_normal_
 import math
 
@@ -345,3 +346,103 @@ class Prompt_block_rf(nn.Module):
         x_fused = self.ffm(x0, x1)
 
         return x_fused
+
+
+class MaxVar_Feat_Rect(nn.Module):
+    def __init__(self):
+        super(MaxVar_Feat_Rect, self).__init__()
+
+    def forward(self, feat_a, feat_b):
+        A = feat_a
+        B = feat_b
+        mean_A = torch.mean(A, dim=1, keepdim=True)
+        mean_B = torch.mean(B, dim=1, keepdim=True)
+        A_demeaned = A - mean_A
+        B_demeaned = B - mean_B
+        covariance = torch.sum(A_demeaned * B_demeaned, dim=1)
+        std_A = torch.sqrt(torch.sum(A_demeaned**2, dim=1))
+        std_B = torch.sqrt(torch.sum(B_demeaned**2, dim=1))
+        correlation = covariance / (std_A * std_B)
+        A_flat = A.view(A.size(0), A.size(1), -1)
+        B_flat = B.view(B.size(0), B.size(1), -1)
+
+        cosine_sim = (F.cosine_similarity(A_flat, B_flat, dim=1) + 1) / 2
+
+        cosine_sim = cosine_sim.view(A.size(0), A.size(2), A.size(3))
+
+        std_A = torch.std(A, dim=1, keepdim=True)
+        std_B = torch.std(B, dim=1, keepdim=True)
+
+        var_A = torch.var(A, dim=1, keepdim=True)
+        var_B = torch.var(B, dim=1, keepdim=True)
+
+        var_A = var_A / torch.sum(var_A)
+        var_B = var_B / torch.sum(var_B)
+
+        high_sim_threshold = 0.7
+        average = (A + B) / 2
+
+        fuse_based_on_variance1 = torch.where(
+            var_A >= var_B, A, torch.div(B * std_A, std_B)
+        )
+        fuse_based_on_variance2 = torch.where(
+            var_A >= var_B, torch.div(A * std_B, std_A), B
+        )
+
+        # Decide which values to take based on the cosine similarity
+        fused_tensor1 = torch.where(
+            correlation.unsqueeze(1) > high_sim_threshold,
+            average,
+            fuse_based_on_variance1,
+        )
+        fused_tensor2 = torch.where(
+            correlation.unsqueeze(1) > high_sim_threshold,
+            average,
+            fuse_based_on_variance2,
+        )
+
+        rect_feat_a = fused_tensor1
+        rect_feat_b = fused_tensor2
+
+        return rect_feat_a, rect_feat_b
+
+
+
+class MaxVar_Feat_Fuse(nn.Module):
+    def __init__(self):
+        super(MaxVar_Feat_Fuse, self).__init__()
+    
+    def forward(feat_a, feat_b):
+        A = feat_a
+        B = feat_b
+        mean_A = torch.mean(A, dim=1, keepdim=True)
+        mean_B = torch.mean(B, dim=1, keepdim=True)
+        A_demeaned = A - mean_A
+        B_demeaned = B - mean_B
+        covariance = torch.sum(A_demeaned * B_demeaned, dim=1)
+        std_A = torch.sqrt(torch.sum(A_demeaned**2, dim=1))
+        std_B = torch.sqrt(torch.sum(B_demeaned**2, dim=1))
+        correlation = covariance / (std_A * std_B)
+        A_flat = A.view(A.size(0), A.size(1), -1)
+        B_flat = B.view(B.size(0), B.size(1), -1)
+
+        cosine_sim = (F.cosine_similarity(A_flat, B_flat, dim=1) + 1) / 2
+        cosine_sim = cosine_sim.view(A.size(0), A.size(2), A.size(3))
+
+        std_A = torch.std(A, dim=1, keepdim=True)
+        std_B = torch.std(B, dim=1, keepdim=True)
+
+        var_A = torch.var(A, dim=1, keepdim=True)
+        var_B = torch.var(B, dim=1, keepdim=True)
+        var_A = var_A / torch.sum(var_A)
+        var_B = var_B / torch.sum(var_B)
+
+        high_sim_threshold = 0.7
+        average = (A + B) / 2
+
+        fuse_based_on_variance = torch.where(var_A >= var_B, A, B)
+        fused_tensor = torch.where(
+            correlation.unsqueeze(1) > high_sim_threshold, average, fuse_based_on_variance
+        )
+
+        return fused_tensor

@@ -308,7 +308,7 @@ class Crop(object):
 
 
 class Noise(object):
-    def __init__(self, size):
+    def __init__(self):
         pass
 
     def add_gaussian_noise(self, image, mean=0, sigma=25):
@@ -351,84 +351,95 @@ class Noise(object):
         return sample
 
 
-class Grid(object):
-    def __init__(self, d1, d2, rotate = 1, ratio = 0.5, mode=0, prob=1.):
-        self.d1 = d1
-        self.d2 = d2
-        self.rotate = rotate
-        self.ratio = ratio
-        self.mode=mode
-        self.st_prob = self.prob = prob
+import random
 
-    def set_prob(self, epoch, max_epoch):
-        self.prob = self.st_prob * min(1, epoch / max_epoch)
 
-    def __call__(self, img):
-        if np.random.rand() > self.prob:
-            return img
-        h = img.size(1)
-        w = img.size(2)
+class Image_Corruption(object):
+    def __init__(
+        self,
+        noise_pro=0.3,
+        mask_pro=0.3,
+        num_masks=3,
+        mask_radio=0.2,
+        exposure_alpha=2.5,
+        exposure_beta=200,
+        blur_size=25,
+        blur_sigmaX=2,
+    ):
+        self.add_noise = Noise()
+        self.noise_pro = noise_pro
+        self.mask_pro = mask_pro
+
+        self.num_masks = num_masks
+        self.mask_radio = mask_radio
+
+        self.exposure_alpha = exposure_alpha
+        self.exposure_beta = exposure_beta
+
+        self.blur_size = blur_size
+        self.blur_sigmaX = blur_sigmaX
+
+    def generate_masks(self, image_shape, num_masks, width_ratio=0.2, height_ratio=0.2):
+        assert width_ratio <= 1
+        assert height_ratio <= 1
+
+        height, width, _ = image_shape
+        masks = []
+
+        # Convert ratios to actual dimensions
+        w = int(width * width_ratio)
+        h = int(height * height_ratio)
+
+        for _ in range(num_masks):
+            mask = np.zeros((height, width), dtype=np.uint8)
+            # Generate a rectangle mask with size based on the percentage of the image dimensions
+            x = random.randint(0, width - w) if width > w else 0
+            y = random.randint(0, height - h) if height > h else 0
+            cv2.rectangle(mask, (x, y), (x + w, y + h), 255, -1)
+
+            masks.append(mask)
+
+        return masks
+
+    def apply_gaussian_blur_region(self, image, mask, k_size=(15, 15), sigmaX=0):
+        if isinstance(k_size, int):
+            k_size = (k_size, k_size)
+        blurred = cv2.GaussianBlur(image, k_size, sigmaX)
+        return np.where(mask[..., None] == 255, blurred, image)
+
+    def apply_overexposure_region(self, image, mask, alpha=1.5, beta=50):
+        overexposed = cv2.convertScaleAbs(image, alpha=alpha, beta=beta)
+        return np.where(mask[..., None] == 255, overexposed, image)
+
+    def mask_region(self, image, mask, mask_color=(0, 0, 0)):
+        colored_mask = np.zeros_like(image)
+        colored_mask[:] = mask_color
+        return np.where(mask[..., None] == 255, colored_mask, image)
+
+    def __call__(self, sample):
+        if random.random() >= self.noise_pro:
+            sample = self.add_noise(sample)
+
+        if random.random() >= self.mask_pro:
+            masks = self.generate_masks(
+                image_shape=sample["image"].shape,
+                num_masks=self.num_masks,
+                width_ratio=self.mask_radio,
+                height_ratio=self.mask_radio,
+            )
+            effect_type = random.choice(["blur", "overexpose", "mask"])
+            for mask in masks:
+                if effect_type == "blur":
+                    sample["image"] = self.apply_gaussian_blur_region(
+                        sample["image"], mask, k_size=self.blur_size, sigmaX=self.blur_sigmaX
+                    )
+                elif effect_type == "overexpose":
+                    sample["image"] = self.apply_overexposure_region(
+                        sample["image"], mask, alpha=2.5, beta=200
+                    )
+                elif effect_type == "mask":
+                    sample["image"] = self.mask_region(
+                        sample["image"], mask, mask_color=(0, 0, 0)
+                    )
         
-        # 1.5 * h, 1.5 * w works fine with the squared images
-        # But with rectangular input, the mask might not be able to recover back to the input image shape
-        # A square mask with edge length equal to the diagnoal of the input image 
-        # will be able to cover all the image spot after the rotation. This is also the minimum square.
-        hh = math.ceil((math.sqrt(h*h + w*w)))
-        
-        d = np.random.randint(self.d1, self.d2)
-        #d = self.d
-        
-        # maybe use ceil? but i guess no big difference
-        self.l = math.ceil(d*self.ratio)
-        
-        mask = np.ones((hh, hh), np.float32)
-        st_h = np.random.randint(d)
-        st_w = np.random.randint(d)
-        for i in range(-1, hh//d+1):
-                s = d*i + st_h
-                t = s+self.l
-                s = max(min(s, hh), 0)
-                t = max(min(t, hh), 0)
-                mask[s:t,:] *= 0
-        for i in range(-1, hh//d+1):
-                s = d*i + st_w
-                t = s+self.l
-                s = max(min(s, hh), 0)
-                t = max(min(t, hh), 0)
-                mask[:,s:t] *= 0
-        r = np.random.randint(self.rotate)
-        mask = Image.fromarray(np.uint8(mask))
-        mask = mask.rotate(r)
-        mask = np.asarray(mask)
-        mask = mask[(hh-h)//2:(hh-h)//2+h, (hh-w)//2:(hh-w)//2+w]
-
-        mask = torch.from_numpy(mask).float().cuda()
-        if self.mode == 1:
-            mask = 1-mask
-
-        mask = mask.expand_as(img)
-        img = img * mask 
-
-        return img
-
-# class GridMask(nn.Module):
-#     def __init__(self, d1, d2, rotate = 1, ratio = 0.5, mode=0, prob=1.):
-#         super(GridMask, self).__init__()
-#         self.rotate = rotate
-#         self.ratio = ratio
-#         self.mode = mode
-#         self.st_prob = prob
-#         self.grid = Grid(d1, d2, rotate, ratio, mode, prob)
-
-#     def set_prob(self, epoch, max_epoch):
-#         self.grid.set_prob(epoch, max_epoch)
-
-#     def forward(self, x):
-#         if not self.training:
-#             return x
-#         n,c,h,w = x.size()
-#         y = []
-#         for i in range(n):
-#             y.append(self.grid(x[i]))
-#         y = torch.cat(y).view(n,c,h,w)
-#         return y
+        return sample
