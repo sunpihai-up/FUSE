@@ -95,7 +95,7 @@ class EPDEVisionTransformer(nn.Module):
         )
 
         prompt_blocks = []
-        prompt_rectify = []
+        # prompt_rectify = []
         prompt_fuse = []
         for i in range(self.prompt_depth):
             prompt_blocks.append(
@@ -106,14 +106,14 @@ class EPDEVisionTransformer(nn.Module):
                     qkv_bias=True,
                 )
             )
-            prompt_rectify.append(MaxVar_Feat_Rect())
+            # prompt_rectify.append(MaxVar_Feat_Rect())
 
             if i in self.blocks_to_take:
                 prompt_fuse.append(MaxVar_Feat_Fuse())
             else:
                 prompt_fuse.append(nn.Identity())
         self.prompt_blocks = nn.Sequential(*prompt_blocks)
-        self.prompt_rectify = nn.Sequential(*prompt_rectify)
+        # self.prompt_rectify = nn.Sequential(*prompt_rectify)
         self.prompt_fuse = nn.Sequential(*prompt_fuse)
 
         self.init_weights()
@@ -201,15 +201,15 @@ class EPDEVisionTransformer(nn.Module):
         for i, blk in enumerate(self.foundation.pretrained.blocks):
             if i < self.prompt_depth:
                 # use [:, 1:] to exclude the cls_token
-                image_feat = token2feature(image_token[:, 1:], patch_grid_size)
-                prompt_feat = token2feature(prompt_token[:, 1:], patch_grid_size)
+                # image_feat = token2feature(image_token[:, 1:], patch_grid_size)
+                # prompt_feat = token2feature(prompt_token[:, 1:], patch_grid_size)
 
-                image_feat, prompt_feat = self.prompt_rectify[i](
-                    image_feat, prompt_feat
-                )
-                prompt_token = prompt_token.clone()
+                # image_feat, prompt_feat = self.prompt_rectify[i](
+                #     image_feat, prompt_feat
+                # )
+                # prompt_token = prompt_token.clone()
                 # image_token = image_token.clone()
-                prompt_token[:, 1:] = feature2token(prompt_feat)
+                # prompt_token[:, 1:] = feature2token(prompt_feat)
                 # image_token[:, 1:] = feature2token(image_feat)
 
                 # prompt block

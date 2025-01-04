@@ -19,8 +19,8 @@ from dataset.dense import Dense
 from dataset.mvsec import MVSEC
 from dataset.eventscape import EventScape
 
-# from model.epde.epde_rf_var import EPDE
-from model.epde.epde_rf import EPDE
+from model.epde.epde_rf_var import EPDE
+# from model.epde.epde_rf import EPDE
 # from model.epde.epde_rf_encoder import EPDE
 from util.dist_helper import setup_distributed
 from util.loss import SiLogLoss, MixedLoss
@@ -336,6 +336,15 @@ def main():
                         loss.item(),
                     )
                 )
+            
+            if iters % 2000 == 0 and rank == 0:
+                checkpoint = {
+                    "model": model.state_dict(),
+                    "optimizer": optimizer.state_dict(),
+                    "epoch": epoch,
+                    "previous_best": previous_best,
+                }
+                torch.save(checkpoint, os.path.join(args.save_path, "latest.pth"))
 
         model.eval()
 

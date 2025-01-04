@@ -15,7 +15,7 @@ prompt_type=epde_deep # choices=["epde_deep", "epde_shaw", "add", "none"],
 depth_anything_pretrained=/data/coding/upload-data/checkpoints/depth_anything_v2_vitl.pth
 finetune_mode=decoder # choices=["prompt", "decoder", "bias", "bias_and_decoder", "overall"], 
 # pretrained_from=/home/sph/code/Depth-Anything-V2/metric_depth/checkpoints/depth_anything_v2_metric_vkitti_vitl.pth
-save_path=/data/coding/code/da2-prompt-tuning/exp/ffr_${dataset}_${finetune_mode}_nl_${now}
+save_path=/data/coding/code/da2-prompt-tuning/exp/var_fuse_erect_${dataset}_${finetune_mode}_nl_${now}
 
 mkdir -p $save_path
 
