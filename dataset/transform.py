@@ -176,6 +176,13 @@ class Resize(object):
             interpolation=self.__image_interpolation_method,
         )
 
+        if "bad_image" in sample:
+            sample["bad_image"] = cv2.resize(
+                sample["bad_image"],
+                (width, height),
+                interpolation=self.__image_interpolation_method,
+            )
+
         if "event_voxel" in sample:
             sample["event_voxel"] = sample["event_voxel"].transpose(1, 2, 0)
             sample["event_voxel"] = cv2.resize(
@@ -235,6 +242,10 @@ class NormalizeImage(object):
 
     def __call__(self, sample):
         sample["image"] = (sample["image"] - self.__mean) / self.__std
+        
+        if "bad_image" in sample:
+            sample["bad_image"] = (sample["bad_image"] - self.__mean) / self.__std
+
         if "event_voxel" in sample:
             sample["event_voxel"] = self.normalize_voxelgrid(sample["event_voxel"])
         return sample
@@ -250,6 +261,10 @@ class PrepareForNet(object):
         image = np.transpose(sample["image"], (2, 0, 1))
         sample["image"] = np.ascontiguousarray(image).astype(np.float32)
 
+        if "bad_image" in sample:
+            bad_image = np.transpose(sample["bad_image"], (2, 0, 1))
+            sample["bad_image"] = np.ascontiguousarray(bad_image).astype(np.float32)
+            
         if "mask" in sample:
             sample["mask"] = sample["mask"].astype(np.float32)
             sample["mask"] = np.ascontiguousarray(sample["mask"])
@@ -290,6 +305,9 @@ class Crop(object):
 
         sample["image"] = sample["image"][:, h_start:h_end, w_start:w_end]
 
+        if "bad_image" in sample:
+            sample["bad_image"] = sample["bad_image"][:, h_start:h_end, w_start:w_end]
+            
         if "event_voxel" in sample:
             sample["event_voxel"] = sample["event_voxel"][
                 :, h_start:h_end, w_start:w_end
@@ -345,10 +363,10 @@ class Noise(object):
 
         return noisy_image
 
-    def __call__(self, sample):
-        sample["image"] = self.add_gaussian_noise(sample["image"])
-        sample["image"] = self.add_salt_and_pepper_noise(sample["image"])
-        return sample
+    def __call__(self, image):
+        image = self.add_gaussian_noise(image)
+        image = self.add_salt_and_pepper_noise(image)
+        return image
 
 
 import random
@@ -365,6 +383,7 @@ class Image_Corruption(object):
         exposure_beta=200,
         blur_size=25,
         blur_sigmaX=2,
+        cor_types=["blur", "overexpose", "mask"],
     ):
         self.add_noise = Noise()
         self.noise_pro = noise_pro
@@ -378,6 +397,8 @@ class Image_Corruption(object):
 
         self.blur_size = blur_size
         self.blur_sigmaX = blur_sigmaX
+        
+        self.cor_type = cor_types
 
     def generate_masks(self, image_shape, num_masks, width_ratio=0.2, height_ratio=0.2):
         assert width_ratio <= 1
@@ -416,30 +437,33 @@ class Image_Corruption(object):
         colored_mask[:] = mask_color
         return np.where(mask[..., None] == 255, colored_mask, image)
 
-    def __call__(self, sample):
-        if random.random() >= self.noise_pro:
-            sample = self.add_noise(sample)
+    def __call__(self, image):
+        # if random.random() >= self.noise_pro:
+        #     image = self.add_noise(image)
 
         if random.random() >= self.mask_pro:
             masks = self.generate_masks(
-                image_shape=sample["image"].shape,
+                image_shape=image.shape,
                 num_masks=self.num_masks,
                 width_ratio=self.mask_radio,
                 height_ratio=self.mask_radio,
             )
-            effect_type = random.choice(["blur", "overexpose", "mask"])
+            effect_type = random.choice(self.cor_types)
             for mask in masks:
                 if effect_type == "blur":
-                    sample["image"] = self.apply_gaussian_blur_region(
-                        sample["image"], mask, k_size=self.blur_size, sigmaX=self.blur_sigmaX
+                    image = self.apply_gaussian_blur_region(
+                        image,
+                        mask,
+                        k_size=self.blur_size,
+                        sigmaX=self.blur_sigmaX,
                     )
                 elif effect_type == "overexpose":
-                    sample["image"] = self.apply_overexposure_region(
-                        sample["image"], mask, alpha=2.5, beta=200
+                    image = self.apply_overexposure_region(
+                        image, mask, alpha=self.exposure_alpha, beta=self.exposure_beta
                     )
                 elif effect_type == "mask":
-                    sample["image"] = self.mask_region(
-                        sample["image"], mask, mask_color=(0, 0, 0)
+                    image = self.mask_region(
+                        image, mask, mask_color=(0, 0, 0)
                     )
-        
-        return sample
+
+        return image

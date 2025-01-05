@@ -19,7 +19,8 @@ from dataset.dense import Dense
 from dataset.mvsec import MVSEC
 from dataset.eventscape import EventScape
 
-from model.epde.epde_rf_var import EPDE
+from model.epde.epde_rf_encoder_n import EPDE
+# from model.epde.epde_rf_var import EPDE
 # from model.epde.epde_rf import EPDE
 # from model.epde.epde_rf_encoder import EPDE
 from util.dist_helper import setup_distributed

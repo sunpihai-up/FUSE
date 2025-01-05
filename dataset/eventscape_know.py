@@ -4,7 +4,14 @@ import torch
 from torch.utils.data import Dataset
 from torchvision.transforms import Compose
 
-from dataset.transform import Resize, NormalizeImage, PrepareForNet, Crop
+import random
+from dataset.transform import (
+    Resize,
+    NormalizeImage,
+    PrepareForNet,
+    Crop,
+    Image_Corruption,
+)
 
 DEPTH_MAX = 1000
 ALPHA = 5.7
@@ -15,6 +22,7 @@ ALPHA = 5.7
 # GRAY_STD  = [ 52.621100 ]
 GRAY_MEAN = 0.370166
 GRAY_STD = 0.206369
+
 
 class EventScape(Dataset):
     def __init__(self, filelist_path, mode, normalized_d, size):
@@ -27,7 +35,7 @@ class EventScape(Dataset):
 
         mean = [GRAY_MEAN, GRAY_MEAN, GRAY_MEAN]
         std = [GRAY_STD, GRAY_STD, GRAY_STD]
-        
+
         net_w, net_h = size
         self.transform = Compose(
             [
@@ -46,8 +54,11 @@ class EventScape(Dataset):
             + ([Crop(size[0])] if self.mode == "train" else [])
         )
 
+        self.image_cor = Image_Corruption()
+        self.voxel_cor = Image_Corruption(cor_types=["mask"])
+
     def rgb2gray(self, rgb):
-        return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140]).astype(np.float32)
+        return np.dot(rgb[..., :3], [0.2989, 0.5870, 0.1140]).astype(np.float32)
 
     def gray2rgb(self, gray):
         return np.stack((gray,) * 3, axis=-1)
@@ -62,21 +73,33 @@ class EventScape(Dataset):
         image = cv2.imread(img_path)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) / 255.0
         bad_image = image
-        
+
         event_voxel = np.load(event_voxel_path)
-        
-        sample = self.transform({"image": image, "event_voxel": event_voxel})
+
+        if self.mode == "train" and random.random() >= 0.3:
+            # Corrupt Input
+            kind = random.choice(["image", "voxel"])
+            if kind == "image":
+                bad_image = self.image_cor(bad_image)
+            else:
+                event_voxel = self.voxel_cor(event_voxel)
+
+        sample = self.transform(
+            {"image": image, "bad_image": bad_image, "event_voxel": event_voxel}
+        )
 
         image = torch.from_numpy(sample["image"])
+        bad_image = torch.from_numpy(sample["bad_image"])
         event_voxel = torch.from_numpy(sample["event_voxel"])
+
         sample["input"] = torch.cat([image, event_voxel], dim=0)
+        sample["image"] = bad_image
 
-        del sample['image']
-        del sample['event_voxel']
-
+        del sample["bad_image"]
+        del sample["event_voxel"]
 
         sample["image_path"] = img_path
-        
+
         return sample
 
     def __len__(self):
