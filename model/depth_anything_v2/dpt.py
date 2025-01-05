@@ -179,6 +179,7 @@ class DepthAnythingV2(nn.Module):
         use_bn=False,
         use_clstoken=False,
         max_depth=20.0,
+        return_feature=False,
     ):
         super(DepthAnythingV2, self).__init__()
 
@@ -190,7 +191,8 @@ class DepthAnythingV2(nn.Module):
         }
 
         self.max_depth = max_depth
-
+        self.return_feature = return_feature
+        
         self.encoder = encoder
         self.pretrained = DINOv2(model_name=encoder)
 
@@ -211,7 +213,13 @@ class DepthAnythingV2(nn.Module):
 
         depth = self.depth_head(features, patch_h, patch_w)
 
-        return depth.squeeze(1)
+        if self.return_feature:
+            fea_maps = []
+            for i, fea in enumerate(features):
+                fea_maps.append(fea[0])
+            return depth.squeeze(1), fea_maps
+        else:
+            return depth.squeeze(1)
 
     @torch.no_grad()
     def infer_image(self, raw_image, input_size=518):

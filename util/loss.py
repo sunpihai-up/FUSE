@@ -176,3 +176,42 @@ class MixedLoss(nn.Module):
         total_loss = si_loss_value + self.grad_loss_weight * grad_loss_value
         
         return total_loss, si_loss_value, grad_loss_value
+
+
+class FeatureCosLoss(nn.Module):
+    def __init__(self, alpha=0.7):
+        super().__init__()
+        self.alpha = alpha
+
+    def forward(self, student_features, teacher_features):
+        total_loss = 0.0
+        count = 0
+
+        for s_feat, t_feat in zip(student_features, teacher_features):
+            # Ensure features have the same shape
+            if s_feat.shape != t_feat.shape:
+                raise ValueError(f"Shape mismatch: {s_feat.shape} vs {t_feat.shape}")
+            
+            # Normalize features to compute cosine similarity
+            s_feat_norm = F.normalize(s_feat, dim=-1)
+            t_feat_norm = F.normalize(t_feat, dim=-1)
+
+            # Compute cosine similarity
+            cosine_sim = torch.sum(s_feat_norm * t_feat_norm, dim=-1)  # Shape: (batch_size, num_tokens)
+
+            # Mask tokens with cosine similarity > alpha
+            mask = cosine_sim <= self.alpha
+
+            # Compute cosine distance for the valid tokens
+            valid_diff = 1.0 - cosine_sim[mask]  # Cosine distance is 1 - cosine similarity
+
+            # Accumulate loss and count valid tokens
+            if valid_diff.numel() > 0:
+                total_loss += valid_diff.mean()
+                count += 1
+
+        # Average loss across all layers
+        if count > 0:
+            return total_loss / count
+        else:
+            return torch.tensor(0.0, requires_grad=True).cuda()

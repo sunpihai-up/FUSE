@@ -8,7 +8,9 @@ import torch.nn.functional as F
 from torchvision.transforms import Compose
 
 from typing import Sequence, Tuple, Union
-from model.depth_anything_v2.dpt import DepthAnythingV2
+from model.depth_anything_v2.dpt import DepthAnythingV2, DPTHead
+from model.depth_anything_v2.dinov2 import DINOv2
+from model.depth_anything_v2.util.blocks import FeatureFusionBlock, _make_scratch
 
 # from model.layers.patch_embed import PatchEmbed
 from model.depth_anything_v2.dinov2_layers import (
@@ -19,13 +21,60 @@ from model.depth_anything_v2.dinov2_layers import (
 from model.epde.prompt_module import (
     FeatureRectifyModule,
     FeatureFusionModule,
-    MaxVar_Feat_Fuse,
-    MaxVar_Feat_Rect,
     Prompt_block,
     Prompt_block_rf,
 )
 from dataset.transform import Resize, NormalizeImage, PrepareForNet
 from .utils import token2feature, feature2token, init_weights_vit_timm
+
+depth_anything_model_configs = {
+    "vits": {
+        "encoder": "vits",
+        "features": 64,
+        "out_channels": [48, 96, 192, 384],
+    },
+    "vitb": {
+        "encoder": "vitb",
+        "features": 128,
+        "out_channels": [96, 192, 384, 768],
+    },
+    "vitl": {
+        "encoder": "vitl",
+        "features": 256,
+        "out_channels": [256, 512, 1024, 1024],
+    },
+    "vitg": {
+        "encoder": "vitg",
+        "features": 384,
+        "out_channels": [1536, 1536, 1536, 1536],
+    },
+}
+
+intermediate_layer_idx = {
+    "vits": [2, 5, 8, 11],
+    "vitb": [2, 5, 8, 11],
+    "vitl": [4, 11, 17, 23],
+    "vitg": [9, 19, 29, 39],
+}
+
+
+class READ_OUT(nn.Module):
+    def __init__(self, in_channels, use_clstoken=False):
+        self.use_clstoken = use_clstoken
+        if use_clstoken:
+            self.readout_project = nn.Sequential(
+                nn.Linear(2 * in_channels, in_channels), nn.GELU()
+            )
+
+    def forward(self, tokens):
+        cls_token = tokens[:, 0]
+        feature_token = tokens[:, 1:]
+        if self.use_clstoken:
+            cls_token = cls_token.unsqueeze(1).expand_as(x)
+            x = self.readout_project(torch.cat((feature_token, cls_token), -1))
+        else:
+            x = feature_token
+        return x
 
 
 class EPDEVisionTransformer(nn.Module):
@@ -43,6 +92,7 @@ class EPDEVisionTransformer(nn.Module):
         norm_layer=None,
         prompt_type=None,
         depth_anything_pretrained=None,
+        return_feature=False,
     ):
         super(EPDEVisionTransformer, self).__init__()
 
@@ -52,40 +102,25 @@ class EPDEVisionTransformer(nn.Module):
         self.event_voxel_chans = event_voxel_chans
         self.embed_dim = embed_dim
         self.depth = depth
-        self.prompt_depth = self.depth // 2
         self.max_depth = max_depth
         self.embed_layer = embed_layer
         self.norm_layer = norm_layer or partial(nn.LayerNorm, eps=1e-6)
         self.prompt_type = prompt_type
         self.depth_anything_pretrained = depth_anything_pretrained
         self.dataset = dataset
-
-        depth_anything_model_configs = {
-            "vits": {
-                "encoder": "vits",
-                "features": 64,
-                "out_channels": [48, 96, 192, 384],
-            },
-            "vitb": {
-                "encoder": "vitb",
-                "features": 128,
-                "out_channels": [96, 192, 384, 768],
-            },
-            "vitl": {
-                "encoder": "vitl",
-                "features": 256,
-                "out_channels": [256, 512, 1024, 1024],
-            },
-            "vitg": {
-                "encoder": "vitg",
-                "features": 384,
-                "out_channels": [1536, 1536, 1536, 1536],
-            },
-        }
-
-        self.foundation = DepthAnythingV2(**depth_anything_model_configs[self.encoder])
-        self.blocks_to_take = self.foundation.intermediate_layer_idx[encoder]
-        self.num_heads = self.foundation.pretrained.num_heads
+        self.blocks_to_take = intermediate_layer_idx[encoder]
+        self.depth_anything_config = depth_anything_model_configs[encoder]
+        self.return_feature = return_feature
+        
+        self.image_encoder = DINOv2(model_name=encoder)
+        self.num_heads = self.image_encoder.num_heads
+        self.depth_head = DPTHead(
+            in_channels=embed_dim,
+            features=self.depth_anything_config["features"],
+            use_bn=False,
+            out_channels=self.depth_anything_config["out_channels"],
+            use_clstoken=False,
+        )
 
         self.patch_embed_prompt = embed_layer(
             img_size=img_size,
@@ -94,51 +129,61 @@ class EPDEVisionTransformer(nn.Module):
             embed_dim=embed_dim,
         )
 
-        prompt_blocks = []
-        # prompt_rectify = []
-        prompt_fuse = []
-        for i in range(self.prompt_depth):
-            prompt_blocks.append(
-                Block(
-                    dim=embed_dim,
-                    num_heads=self.num_heads,
-                    norm_layer=self.norm_layer,
-                    qkv_bias=True,
-                )
-            )
-            # prompt_rectify.append(MaxVar_Feat_Rect())
-
+        prompt_blocks, prompt_fuse = [], []
+        img_read_out, prompt_read_out = [], []
+        for i in range(depth):
             if i in self.blocks_to_take:
-                prompt_fuse.append(MaxVar_Feat_Fuse())
+                prompt_blocks.append(
+                    Block(
+                        dim=embed_dim,
+                        num_heads=self.num_heads,
+                        norm_layer=self.norm_layer,
+                        qkv_bias=True,
+                    )
+                )
+                prompt_fuse.append(
+                    FeatureFusionModule(
+                        dim=embed_dim, num_heads=self.num_heads, reduction=1
+                    )
+                )
+                img_read_out.append(READ_OUT(in_channels=embed_dim))
+                prompt_read_out.append(READ_OUT(in_channels=embed_dim))
+
             else:
+                prompt_blocks.append(nn.Identity())
                 prompt_fuse.append(nn.Identity())
-        self.prompt_blocks = nn.Sequential(*prompt_blocks)
-        # self.prompt_rectify = nn.Sequential(*prompt_rectify)
-        self.prompt_fuse = nn.Sequential(*prompt_fuse)
+                img_read_out.append(nn.Identity())
+                prompt_read_out.append(nn.Identity())
+
+            self.prompt_blocks = nn.Sequential(*prompt_blocks)
+            self.prompt_fuse = nn.Sequential(*prompt_fuse)
+            self.img_read_out = nn.Sequential(*img_read_out)
+            self.prompt_read_out = nn.Sequential(*prompt_read_out)
 
         self.init_weights()
 
     def init_weights(self):
+        # Load pre-trained foundation model weights
         if self.depth_anything_pretrained is not None:
             pretrained_weights = torch.load(
                 self.depth_anything_pretrained, map_location="cpu"
             )
-            # Initialize self.foundation
-            self.foundation.load_state_dict(
+            # Initialize self.image_encoder
+            self.image_encoder.load_state_dict(
                 {k: v for k, v in pretrained_weights.items() if "pretrained" in k},
                 strict=False,
             )
-            # self.foundation.load_state_dict(pretrained_weights, strict=False)
 
             # Initialize self.prompt_blocks with corresponding layers
             for i, layer in enumerate(self.prompt_blocks):
-                pretrained_layer_prefix = f"pretrained.blocks.{i}."
-                layer_state_dict = {
-                    k: v
-                    for k, v in pretrained_weights.items()
-                    if k.startswith(pretrained_layer_prefix)
-                }
-                layer.load_state_dict(layer_state_dict, strict=False)
+                if i in self.blocks_to_take:
+                    pretrained_layer_prefix = f"pretrained.blocks.{i}."
+                    layer_state_dict = {
+                        k: v
+                        for k, v in pretrained_weights.items()
+                        if k.startswith(pretrained_layer_prefix)
+                    }
+                    layer.load_state_dict(layer_state_dict, strict=False)
 
             # Initialize self.prompt_patch using pretrained.patch_embed
             patch_embed_state_dict = {
@@ -149,7 +194,7 @@ class EPDEVisionTransformer(nn.Module):
             )
             print(f"Loaded pretrained weights from {self.depth_anything_pretrained}")
         else:
-            self.foundation.pretrained.init_weights()
+            self.image_encoder.init_weights()
             init_weights_vit_timm(self.patch_embed_prompt)
             init_weights_vit_timm(self.prompt_blocks)
             print(f"Initializing encoder parameters without pre-trained weights")
@@ -161,13 +206,13 @@ class EPDEVisionTransformer(nn.Module):
         patch_grid_size = (w // self.patch_size, h // self.patch_size)
 
         # Compute event and image embedding
-        image_token = self.foundation.pretrained.patch_embed(image)
+        image_token = self.image_encoder.patch_embed(image)
         prompt_token = self.patch_embed_prompt(event)
 
         # Adding cls_token
         image_token = torch.cat(
             (
-                self.foundation.pretrained.cls_token.expand(
+                self.image_encoder.cls_token.expand(
                     image_token.shape[0], -1, -1
                 ),
                 image_token,
@@ -176,7 +221,7 @@ class EPDEVisionTransformer(nn.Module):
         )
         prompt_token = torch.cat(
             (
-                self.foundation.pretrained.cls_token.expand(
+                self.image_encoder.cls_token.expand(
                     prompt_token.shape[0], -1, -1
                 ),
                 prompt_token,
@@ -185,47 +230,31 @@ class EPDEVisionTransformer(nn.Module):
         )
 
         # Add positional encoding
-        image_token += self.foundation.pretrained.interpolate_pos_encoding(
+        image_token += self.image_encoder.interpolate_pos_encoding(
             image_token, w, h
         )
-        prompt_token += self.foundation.pretrained.interpolate_pos_encoding(
+        prompt_token += self.image_encoder.interpolate_pos_encoding(
             prompt_token, w, h
         )
-        # prompt_token = self.prompt_blocks[0](prompt_token)
 
-        output, total_block_len = [], len(self.foundation.pretrained.blocks)
+        output, total_block_len = [], len(self.image_encoder.blocks)
         blocks_to_take = (
             range(total_block_len - n, total_block_len) if isinstance(n, int) else n
         )
 
-        for i, blk in enumerate(self.foundation.pretrained.blocks):
-            if i < self.prompt_depth:
-                # use [:, 1:] to exclude the cls_token
-                # image_feat = token2feature(image_token[:, 1:], patch_grid_size)
-                # prompt_feat = token2feature(prompt_token[:, 1:], patch_grid_size)
+        for i in range(self.depth):
+            image_token = self.image_encoder.blocks[i](image_token)
+            prompt_token = self.prompt_blocks[i](prompt_token)
 
-                # image_feat, prompt_feat = self.prompt_rectify[i](
-                #     image_feat, prompt_feat
-                # )
-                # prompt_token = prompt_token.clone()
-                # image_token = image_token.clone()
-                # prompt_token[:, 1:] = feature2token(prompt_feat)
-                # image_token[:, 1:] = feature2token(image_feat)
-
-                # prompt block
-                prompt_token = self.prompt_blocks[i](prompt_token)
-
-            image_token = blk(image_token)
-            if i < self.prompt_depth and i in blocks_to_take:
+            if i in self.blocks_to_take:
                 # Feature Fuse
-                image_feat = token2feature(image_token[:, 1:], patch_grid_size)
-                prompt_feat = token2feature(prompt_token[:, 1:], patch_grid_size)
+                img_read_out = self.img_read_out[i](image_token)
+                pro_read_out = self.prompt_read_out[i](prompt_token)
+                image_feat = token2feature(img_read_out, patch_grid_size)
+                prompt_feat = token2feature(pro_read_out, patch_grid_size)
                 fuse_token = feature2token(self.prompt_fuse[i](image_feat, prompt_feat))
                 cls_token = image_token[:, 0].unsqueeze(1)
                 output.append(torch.cat((cls_token, fuse_token), dim=1))
-
-            if i >= self.prompt_depth and i in blocks_to_take:
-                output.append(image_token)
 
         assert len(output) == len(
             blocks_to_take
@@ -242,7 +271,7 @@ class EPDEVisionTransformer(nn.Module):
         outputs = self._get_intermediate_layers_not_chunked(x, n)
 
         if norm:
-            outputs = [self.foundation.pretrained.norm(out) for out in outputs]
+            outputs = [self.image_encoder.norm(out) for out in outputs]
 
         class_tokens = [out[:, 0] for out in outputs]
         outputs = [out[:, 1:] for out in outputs]
@@ -255,13 +284,19 @@ class EPDEVisionTransformer(nn.Module):
         patch_h, patch_w = x.shape[-2] // 14, x.shape[-1] // 14
         features = self.get_intermediate_layers(
             x,
-            self.foundation.intermediate_layer_idx[self.encoder],
+            self.blocks_to_take,
             return_class_token=True,
         )
 
-        depth = self.foundation.depth_head(features, patch_h, patch_w) * self.max_depth
+        depth = self.depth_head(features, patch_h, patch_w) * self.max_depth
 
-        return depth.squeeze(1)
+        if self.return_feature:
+            fea_maps = []
+            for i, fea in enumerate(features):
+                fea_maps.append(fea[0])
+            return depth.squeeze(1), fea_maps
+        else:
+            return depth.squeeze(1)
 
     @torch.no_grad()
     def infer(self, image, event, input_size=518):
@@ -367,6 +402,7 @@ def EPDE(
     event_voxel_chans=5,
     embed_layer=PatchEmbed,
     norm_layer=None,
+    return_feature=False,
 ):
     model_zoo = {
         "vits": epde_small,
@@ -385,4 +421,5 @@ def EPDE(
         embed_layer=embed_layer,
         norm_layer=norm_layer,
         prompt_type=prompt_type,
+        return_feature=return_feature
     )
