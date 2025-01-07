@@ -1,7 +1,7 @@
 #!/bin/bash
 now=$(date +"%Y%m%d_%H%M%S")
 
-epoch=50
+epoch=20
 bs=8
 gpus=2
 lr=0.000005

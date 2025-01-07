@@ -19,8 +19,8 @@ from dataset.dense import Dense
 from dataset.mvsec import MVSEC
 from dataset.eventscape import EventScape
 
-from model.epde.epde_rf_encoder_n import EPDE
-# from model.epde.epde_rf_var import EPDE
+# from model.epde.epde_rf_encoder_n import EPDE
+from model.epde.epde_rf_var import EPDE
 # from model.epde.epde_rf import EPDE
 # from model.epde.epde_rf_encoder import EPDE
 from util.dist_helper import setup_distributed
@@ -186,11 +186,11 @@ def main():
     # Handling frozen parameters
     if args.finetune_mode == "prompt":
         for name, param in model.named_parameters():
-            if "foundation" in name:
+            if "foundation" in name or "image_encoder" in name:
                 param.requires_grad = False
     elif args.finetune_mode == "decoder":
         for name, param in model.named_parameters():
-            if "foundation.pretrained" in name:
+            if "foundation.pretrained" in name or "image_encoder" in name:
                 param.requires_grad = False
     elif args.finetune_mode == "bias":
         for name, param in model.named_parameters():

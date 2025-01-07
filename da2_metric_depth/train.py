@@ -18,6 +18,7 @@ from dataset.hypersim import Hypersim
 from dataset.kitti import KITTI
 from dataset.vkitti2 import VKITTI2
 from dataset.mvsec import MVSEC
+from dataset.mvsec_voxel import MVSEC_voxel
 from dataset.eventscape import EventScape
 from dataset.eventscape_voxel import EventScape_voxel
 
@@ -35,7 +36,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument(
     "--encoder", default="vitl", choices=["vits", "vitb", "vitl", "vitg"]
 )
-parser.add_argument("--dataset", default="mvsec", choices=["eventscape", "mvsec", "event_voxel"])
+parser.add_argument("--dataset", default="mvsec", choices=["eventscape", "mvsec", "eventscape_voxel", "mvsec_voxel"])
 parser.add_argument("--min-depth", default=0.001, type=float)
 parser.add_argument("--max-depth", default=1, type=float)
 parser.add_argument("--img-size", default=518, type=int)
@@ -179,6 +180,13 @@ def main():
             normalized_d=args.normalized_depth,
             size=size,
         )
+    elif args.dataset == "mvsec_voxel":
+        trainset = MVSEC_voxel(
+            "dataset/splits/mvsec/train.txt",
+            "train",
+            normalized_d=args.normalized_depth,
+            size=size,
+        )
     else:
         raise NotImplementedError
     trainsampler = torch.utils.data.distributed.DistributedSampler(trainset)
@@ -212,6 +220,13 @@ def main():
     elif args.dataset == "eventscape_voxel":
         valset = EventScape_voxel(
             "./dataset/splits/eventscape/val_1k.txt",
+            "val",
+            normalized_d=args.normalized_depth,
+            size=size,
+        )
+    elif args.dataset == "mvsec_voxel":
+        valset = MVSEC_voxel(
+            "./dataset/splits/mvsec/outdoor_night1_val.txt",
             "val",
             normalized_d=args.normalized_depth,
             size=size,
@@ -252,16 +267,17 @@ def main():
     model = DepthAnythingV2(
         **{**model_configs[args.encoder], "max_depth": args.max_depth}
     )
-
+    
     if args.pretrained_from:
-        model.load_state_dict(
-            {
-                k: v
-                for k, v in torch.load(args.pretrained_from, map_location="cpu").items()
-                if "pretrained" in k
-            },
-            strict=False,
-        )
+        checkpoint = torch.load(args.pretrained_from, map_location='cpu')
+        if 'model' in checkpoint.keys():
+            checkpoint = checkpoint['model']
+        checkpoint = {
+            k: v
+            for k, v in checkpoint.items()
+            if "pretrained" in k
+        }
+        model.load_state_dict(checkpoint, strict=False)
 
     model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
     model.cuda(local_rank)
@@ -366,7 +382,7 @@ def main():
         for i, sample in enumerate(trainloader):
             optimizer.zero_grad()
 
-            if i >= 5:
+            if i > 5:
                 exit()
             img, depth, valid_mask = (
                 sample["image"].cuda(),
@@ -380,7 +396,11 @@ def main():
                 valid_mask = valid_mask.flip(-1)
 
             import cv2
-            cv2.imwrite(f"i_test.png", img)
+            print(img[0].shape)
+            img = img[0].permute(1, 2, 0).cpu().numpy()
+            img = (img - img.min()) / (img.max() - img.min()) * 255.0
+            img = img.astype(np.uint8)
+            cv2.imwrite(f"i_test_{i}.png", img)
             continue
             pred = model(img)
 
@@ -418,6 +438,15 @@ def main():
                         loss.item(),
                     )
                 )
+            
+            if iters % 2000 == 0 and rank == 0:
+                checkpoint = {
+                    "model": model.state_dict(),
+                    "optimizer": optimizer.state_dict(),
+                    "epoch": epoch,
+                    "previous_best": previous_best,
+                }
+                torch.save(checkpoint, os.path.join(args.save_path, "latest.pth"))
 
         # eval
         model.eval()

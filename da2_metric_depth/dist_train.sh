@@ -1,18 +1,19 @@
 #!/bin/bash
 now=$(date +"%Y%m%d_%H%M%S")
 
-epoch=50
+epoch=10
 bs=8
 gpus=2
 lr=0.000005
 encoder=vitl
-dataset=eventscape # vkitti
+dataset=mvsec_voxel # vkitti
 img_size=350
 min_depth=0
 max_depth=1
 # pretrained_from=/data/coding/upload-data/checkpoints/depth_anything_v2_metric_vkitti_vitl.pth
-pretrained_from=/data/coding/upload-data/checkpoints/depth_anything_v2_vitl.pth
-save_path=/data/coding/code/da2-prompt-tuning/exp/${dataset}_nl_disp_da2${encoder}_${now}
+# pretrained_from=/data/coding/upload-data/checkpoints/depth_anything_v2_vitl.pth
+pretrained_from=/data/coding/code/da2-prompt-tuning/da2_metric_depth/exp/eventscape_voxel_nl_disp_da2vitl_20250107_000222/latest.pth
+save_path=/data/coding/code/da2-prompt-tuning/da2_metric_depth/exp/${dataset}_nl_disp_da2${encoder}_${now}
 
 mkdir -p $save_path
 

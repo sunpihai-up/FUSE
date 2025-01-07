@@ -5,6 +5,7 @@ dataset2params = {
     "dense": {"clip_distance": 1000.0, "reg_factor": 6.2044},
     "mvsec": {"clip_distance": 80.0, "reg_factor": 3.70378},
     "eventscape": {"clip_distance": 1000.0, "reg_factor": 5.7},
+    "eventscape_voxel": {"clip_distance": 1000.0, "reg_factor": 5.7},
 }
 
 def convert_nl2abs_depth(depth, clip_distance, reg_factor):

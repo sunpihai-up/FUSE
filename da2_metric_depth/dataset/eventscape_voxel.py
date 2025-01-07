@@ -87,7 +87,7 @@ class EventScape_voxel(Dataset):
         if self.normalized_d:
             sample["valid_mask"] = np.isfinite(sample["depth"]) & (sample["depth"] >= 0)
         else:
-            sample['valid_mask'] = np.isfinite(sample["depth"]) & (sample['depth'] <= 80)
+            sample['valid_mask'] = np.isfinite(sample["depth"]) & (sample['depth'] <= d_max)
         sample["image_path"] = event_voxel_path
 
         return sample

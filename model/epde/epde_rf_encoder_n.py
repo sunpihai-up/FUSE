@@ -60,6 +60,7 @@ intermediate_layer_idx = {
 
 class READ_OUT(nn.Module):
     def __init__(self, in_channels, use_clstoken=False):
+        super(READ_OUT, self).__init__()
         self.use_clstoken = use_clstoken
         if use_clstoken:
             self.readout_project = nn.Sequential(
