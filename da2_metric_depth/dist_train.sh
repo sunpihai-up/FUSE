@@ -13,7 +13,7 @@ max_depth=1
 # pretrained_from=/data/coding/upload-data/checkpoints/depth_anything_v2_metric_vkitti_vitl.pth
 # pretrained_from=/data/coding/upload-data/checkpoints/depth_anything_v2_vitl.pth
 pretrained_from=/data/coding/code/da2-prompt-tuning/da2_metric_depth/exp/eventscape_voxel_nl_disp_da2vitl_20250107_000222/latest.pth
-save_path=/data/coding/code/da2-prompt-tuning/da2_metric_depth/exp/${dataset}_nl_disp_da2${encoder}_${now}
+save_path=/data/coding/code/da2-prompt-tuning/da2_metric_depth/exp/${dataset}_2_nl_da2${encoder}_${now}
 
 mkdir -p $save_path
 

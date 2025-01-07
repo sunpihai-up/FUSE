@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torchvision.transforms import Compose
 
-from .dinov2 import DINOv2
+from .dinov2_lora import DINOv2_lora
 from .util.blocks import FeatureFusionBlock, _make_scratch
 from .util.transform import Resize, NormalizeImage, PrepareForNet
 
@@ -171,7 +171,7 @@ class DPTHead(nn.Module):
         return out
 
 
-class DepthAnythingV2(nn.Module):
+class DepthAnythingV2_lora(nn.Module):
     def __init__(
         self,
         encoder="vitl",
@@ -182,7 +182,7 @@ class DepthAnythingV2(nn.Module):
         max_depth=20.0,
         return_feature=False,
     ):
-        super(DepthAnythingV2, self).__init__()
+        super(DepthAnythingV2_lora, self).__init__()
 
         self.intermediate_layer_idx = {
             "vits": [2, 5, 8, 11],
@@ -195,7 +195,7 @@ class DepthAnythingV2(nn.Module):
         self.return_feature = return_feature
         
         self.encoder = encoder
-        self.pretrained = DINOv2(model_name=encoder)
+        self.pretrained = DINOv2_lora(model_name=encoder)
 
         self.depth_head = DPTHead(
             self.pretrained.embed_dim,

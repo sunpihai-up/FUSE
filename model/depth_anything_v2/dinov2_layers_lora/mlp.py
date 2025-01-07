@@ -10,7 +10,7 @@
 
 
 from typing import Callable, Optional
-
+import loralib as lora
 from torch import Tensor, nn
 
 
@@ -27,9 +27,11 @@ class Mlp(nn.Module):
         super().__init__()
         out_features = out_features or in_features
         hidden_features = hidden_features or in_features
-        self.fc1 = nn.Linear(in_features, hidden_features, bias=bias)
+        # self.fc1 = nn.Linear(in_features, hidden_features, bias=bias)
+        self.fc1 = lora.Linear(in_features, hidden_features, bias=bias)
         self.act = act_layer()
-        self.fc2 = nn.Linear(hidden_features, out_features, bias=bias)
+        # self.fc2 = nn.Linear(hidden_features, out_features, bias=bias)
+        self.fc2 = lora.Linear(hidden_features, out_features, bias=bias)
         self.drop = nn.Dropout(drop)
 
     def forward(self, x: Tensor) -> Tensor:

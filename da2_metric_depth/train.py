@@ -24,7 +24,7 @@ from dataset.eventscape_voxel import EventScape_voxel
 
 from depth_anything_v2.dpt import DepthAnythingV2
 from util.dist_helper import setup_distributed
-from util.loss import SiLogLoss, MixedLoss
+from util.loss import SiLogLoss, MixedLoss, SiLoss
 from util.metric import eval_depth, eval_depth_ori
 from util.utils import init_log
 
@@ -182,7 +182,7 @@ def main():
         )
     elif args.dataset == "mvsec_voxel":
         trainset = MVSEC_voxel(
-            "dataset/splits/mvsec/train.txt",
+            "dataset/splits/mvsec/train_2.txt",
             "train",
             normalized_d=args.normalized_depth,
             size=size,
@@ -290,7 +290,8 @@ def main():
     )
 
     # criterion = SiLogLoss().cuda(local_rank)
-    criterion = MixedLoss().cuda(local_rank)
+    # criterion = MixedLoss().cuda(local_rank)
+    criterion = SiLoss().cuda(local_rank)
 
     optimizer = AdamW(
         [
@@ -382,8 +383,8 @@ def main():
         for i, sample in enumerate(trainloader):
             optimizer.zero_grad()
 
-            if i > 5:
-                exit()
+            # if i > 5:
+            #     exit()
             img, depth, valid_mask = (
                 sample["image"].cuda(),
                 sample["depth"].cuda(),
@@ -395,16 +396,23 @@ def main():
                 depth = depth.flip(-1)
                 valid_mask = valid_mask.flip(-1)
 
-            import cv2
-            print(img[0].shape)
-            img = img[0].permute(1, 2, 0).cpu().numpy()
-            img = (img - img.min()) / (img.max() - img.min()) * 255.0
-            img = img.astype(np.uint8)
-            cv2.imwrite(f"i_test_{i}.png", img)
-            continue
+            # import cv2
+            # print(img[0].shape)
+            # img = img[0].permute(1, 2, 0).cpu().numpy()
+            # img = (img - img.min()) / (img.max() - img.min()) * 255.0
+            # img = img.astype(np.uint8)
+            # cv2.imwrite(f"i_test_{i}.png", img)
+            # continue
             pred = model(img)
 
-            loss, si_loss, grad_loss = criterion(
+            # loss, si_loss, grad_loss = criterion(
+            #     pred,
+            #     depth,
+            #     (valid_mask == 1)
+            #     & (depth >= args.min_depth)
+            #     & (depth <= args.max_depth),
+            # )
+            loss = criterion(
                 pred,
                 depth,
                 (valid_mask == 1)
@@ -415,7 +423,7 @@ def main():
             loss.backward()
             optimizer.step()
 
-            total_si_loss += si_loss.item()
+            # total_si_loss += si_loss.item()
 
             iters = epoch * len(trainloader) + i
 
@@ -426,8 +434,8 @@ def main():
 
             if rank == 0:
                 writer.add_scalar("train/loss", loss.item(), iters)
-                writer.add_scalar("train/si_loss", si_loss.item(), iters)
-                writer.add_scalar("train/grad_loss", grad_loss.item(), iters)
+                # writer.add_scalar("train/si_loss", si_loss.item(), iters)
+                # writer.add_scalar("train/grad_loss", grad_loss.item(), iters)
 
             if rank == 0 and i % 100 == 0:
                 logger.info(

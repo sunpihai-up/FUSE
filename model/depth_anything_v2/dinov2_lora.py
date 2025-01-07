@@ -445,7 +445,7 @@ def vit_giant2(patch_size=16, num_register_tokens=0, **kwargs):
     return model
 
 
-def DINOv2(model_name):
+def DINOv2_lora(model_name):
     model_zoo = {
         "vits": vit_small,
         "vitb": vit_base,
