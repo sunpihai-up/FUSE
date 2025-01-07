@@ -18,6 +18,7 @@ from torch.utils.tensorboard import SummaryWriter
 from dataset.dense import Dense
 from dataset.mvsec import MVSEC
 from dataset.eventscape import EventScape
+from dataset.eventscape_align import EventScape_Align
 
 from model.depth_anything_v2.dpt import DepthAnythingV2
 from model.depth_anything_v2.dpt_lora import DepthAnythingV2_lora
@@ -58,11 +59,9 @@ parser.add_argument(
 )
 parser.add_argument(
     "--dataset",
-    default="mvsec",
-    choices=["mvsec", "eventscape"],
+    choices=["mvsec", "eventscape", "eventscape_align"],
 )
-parser.add_argument("--min-depth", default=0.001, type=float)
-parser.add_argument("--max-depth", default=1, type=float)
+
 parser.add_argument("--img-size", default=518, type=int)
 parser.add_argument("--epochs", default=40, type=int)
 parser.add_argument("--bs", default=2, type=int)
@@ -75,19 +74,6 @@ parser.add_argument("--local-rank", default=0, type=int)
 parser.add_argument("--port", default=None, type=int)
 parser.add_argument("--event_voxel_chans", default=5, type=int)
 parser.add_argument("--return_feature", action="store_true")
-parser.add_argument(
-    "--normalized_depth", action="store_true", help="Enable normalized depth."
-)
-parser.add_argument(
-    "--prompt_type",
-    choices=["epde_deep", "epde_shaw", "add", "none"],
-    type=str,
-)
-parser.add_argument(
-    "--finetune-mode",
-    choices=["prompt", "decoder", "bias", "bias_and_decoder", "overall"],
-    type=str,
-)
 
 
 def get_dataloader(args):
@@ -103,6 +89,13 @@ def get_dataloader(args):
         )
     elif args.dataset == "eventscape":
         trainset = EventScape(
+            "dataset/splits/eventscape/train.txt",
+            "train",
+            normalized_d=args.normalized_depth,
+            size=size,
+        )
+    elif args.dataset == "eventscape_aligin":
+        trainset = EventScape_Align(
             "dataset/splits/eventscape/train.txt",
             "train",
             normalized_d=args.normalized_depth,
@@ -135,6 +128,13 @@ def get_dataloader(args):
     elif args.dataset == "eventscape":
         valset = EventScape(
             "./dataset/splits/eventscape/val_1k.txt",
+            "val",
+            normalized_d=args.normalized_depth,
+            size=size,
+        )
+    elif args.dataset == "eventscape_aligin":
+        trainset = EventScape_Align(
+            "dataset/splits/eventscape/val_1k.txt",
             "val",
             normalized_d=args.normalized_depth,
             size=size,
@@ -214,12 +214,17 @@ def main():
         output_device=local_rank,
         find_unused_parameters=True,
     )
-    # Train student by LoRA
-    lora.mark_only_lora_as_trainable(student_model)
     
-    # Place teacher on the same device
+    # Place teacher on the same device and set teacher to eval mode
     teacher_model = teacher_model.cuda(local_rank)
     teacher_model.eval()
+    
+    # Train student by LoRA
+    lora.mark_only_lora_as_trainable(student_model)
+    for name, param in student_model.named_parameters():
+        # Add cls_token, patch_embed, pos_embed for train
+        if "pretrained" in name and "blocks" not in name:
+            param.requires_grad = True
     
     # criterion = SiLogLoss().cuda(local_rank)
     criterion = MixedLoss().cuda(local_rank)
@@ -232,7 +237,7 @@ def main():
                 "params": [
                     param
                     for name, param in student_model.named_parameters()
-                    if "pretrained" in name and param.requires_grad
+                    if "pretrained" in name and "lora" not in name
                 ],
                 "lr": args.lr,
             },
@@ -240,7 +245,15 @@ def main():
                 "params": [
                     param
                     for name, param in student_model.named_parameters()
-                    if "pretrained" not in name and param.requires_grad
+                    if "pretrained" not in name
+                ],
+                "lr": args.lr * 10.0,
+            },
+            {
+                "params": [
+                    param
+                    for name, param in student_model.named_parameters()
+                    if "lora" in name
                 ],
                 "lr": args.lr * 10.0,
             },
@@ -266,12 +279,12 @@ def main():
 
     if rank == 0:
         # Log module names and trainable parameter counts
-        for name, param in model.named_parameters():
+        for name, param in student_model.named_parameters():
             if param.requires_grad:
                 logger.info(f"Module: {name}, Trainable Parameters: {param.numel()}")
 
         total_trainable_params = sum(
-            p.numel() for p in model.parameters() if p.requires_grad
+            p.numel() for p in student_model.parameters() if p.requires_grad
         )
         logger.info(f"Total Trainable Parameters: {total_trainable_params}")
 
@@ -302,32 +315,32 @@ def main():
 
         trainloader.sampler.set_epoch(epoch + 1)
 
-        model.train()
+        student_model.train()
 
         for i, sample in enumerate(trainloader):
             optimizer.zero_grad()
 
-            img, img_voxel = (
+            img, voxel = (
                 sample["image"].cuda(),
-                sample["input"].cuda(),
+                sample["event_voxel"].cuda(),
             )
 
             if random.random() < 0.5:
                 img = img.flip(-1)
-                img_voxel = img_voxel.flip(-1)
+                voxel = voxel.flip(-1)
 
             # Teacher output
             with torch.no_grad():
-                teacher_pred, teacher_features = depth_anything(img)
-            student_pred, student_features = model(img_voxel)
+                teacher_pred, teacher_features = teacher_model(img)
+            student_pred, student_features = student_model(voxel)
 
             loss, si_loss, grad_loss = criterion(
                 student_pred,
                 teacher_pred,
             )
             feature_loss = feature_loss(student_features, teacher_features)
-            loss = loss + feature_loss
-            loss.backward()
+            total_loss = loss + feature_loss
+            total_loss.backward()
             optimizer.step()
 
             iters = epoch * len(trainloader) + i
@@ -336,6 +349,7 @@ def main():
 
             optimizer.param_groups[0]["lr"] = lr
             optimizer.param_groups[1]["lr"] = lr * 10.0
+            optimizer.param_groups[2]["lr"] = lr * 10.0
 
             if rank == 0:
                 writer.add_scalar("train/loss", loss.item(), iters)
@@ -355,14 +369,14 @@ def main():
 
             if iters % 2000 == 0 and rank == 0:
                 checkpoint = {
-                    "model": model.state_dict(),
+                    "model": student_features.state_dict(),
                     "optimizer": optimizer.state_dict(),
                     "epoch": epoch,
                     "previous_best": previous_best,
                 }
                 torch.save(checkpoint, os.path.join(args.save_path, "latest.pth"))
 
-        model.eval()
+        student_features.eval()
 
         results = {
             "d1": torch.tensor([0.0]).cuda(),
@@ -381,16 +395,16 @@ def main():
 
         for i, sample in enumerate(valloader):
 
-            img, img_voxel = (
+            img, voxel = (
                 sample["image"].cuda(),
-                sample["input"].cuda(),
+                sample["event_voxel"].cuda(),
             )
 
             with torch.no_grad():
-                pred = model(img_voxel)
-                teacher_pred = depth_anything(img)
+                student_pred, _ = student_model(voxel)
+                teacher_pred, _ = teacher_model(img)
 
-            cur_results = eval_disparity(pred, teacher_pred)
+            cur_results = eval_disparity(student_pred, teacher_pred)
 
             for k in results.keys():
                 results[k] += cur_results[k]
@@ -426,7 +440,7 @@ def main():
 
         if rank == 0 and (epoch + 1) % 20 == 0:
             checkpoint = {
-                "model": model.state_dict(),
+                "model": student_model.state_dict(),
                 "optimizer": optimizer.state_dict(),
                 "epoch": epoch,
                 "previous_best": previous_best,
@@ -451,7 +465,7 @@ def main():
                         if file.startswith(k) and file.endswith(".pth"):
                             os.remove(os.path.join(args.save_path, file))
                     checkpoint = {
-                        "model": model.state_dict(),
+                        "model": student_model.state_dict(),
                         "epoch": epoch,
                         "previous_best": previous_best,
                     }
@@ -470,7 +484,7 @@ def main():
 
         if rank == 0:
             checkpoint = {
-                "model": model.state_dict(),
+                "model": student_model.state_dict(),
                 "optimizer": optimizer.state_dict(),
                 "epoch": epoch,
                 "previous_best": previous_best,

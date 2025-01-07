@@ -22,11 +22,12 @@ from dataset.mvsec_voxel import MVSEC_voxel
 from dataset.eventscape import EventScape
 from dataset.eventscape_voxel import EventScape_voxel
 
-from depth_anything_v2.dpt import DepthAnythingV2
+from depth_anything_v2.dpt_lora import DepthAnythingV2_lora
 from util.dist_helper import setup_distributed
 from util.loss import SiLogLoss, MixedLoss, SiLoss
 from util.metric import eval_depth, eval_depth_ori
 from util.utils import init_log
+import loralib as lora
 
 
 parser = argparse.ArgumentParser(
@@ -43,6 +44,7 @@ parser.add_argument("--img-size", default=518, type=int)
 parser.add_argument("--epochs", default=40, type=int)
 parser.add_argument("--bs", default=2, type=int)
 parser.add_argument("--lr", default=0.000005, type=float)
+parser.add_argument("--lr-lora", default=0.0001, type=float)
 parser.add_argument("--pretrained-from", type=str)
 parser.add_argument("--save-path", type=str, required=True)
 parser.add_argument("--local-rank", default=0, type=int)
@@ -264,7 +266,7 @@ def main():
             "out_channels": [1536, 1536, 1536, 1536],
         },
     }
-    model = DepthAnythingV2(
+    model = DepthAnythingV2_lora(
         **{**model_configs[args.encoder], "max_depth": args.max_depth}
     )
     
@@ -277,10 +279,7 @@ def main():
             for k, v in checkpoint.items()
             if "pretrained" in k
         }
-        missing_keys, unexpected_keys = model.load_state_dict(checkpoint, strict=False)
-        logger.info(missing_keys)
-        logger.info(unexpected_keys)
-        exit()
+        model.load_state_dict(checkpoint, strict=False)
 
     model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
     model.cuda(local_rank)
@@ -291,7 +290,13 @@ def main():
         output_device=local_rank,
         find_unused_parameters=True,
     )
-
+    
+    lora.mark_only_lora_as_trainable(model)
+    # Handling frozen parameters
+    for name, param in model.named_parameters():
+        if "pretrained.blocks" not in name:
+            param.requires_grad = True
+    
     # criterion = SiLogLoss().cuda(local_rank)
     # criterion = MixedLoss().cuda(local_rank)
     criterion = SiLoss().cuda(local_rank)
@@ -302,7 +307,7 @@ def main():
                 "params": [
                     param
                     for name, param in model.named_parameters()
-                    if "pretrained" in name
+                    if "pretrained" in name and "lora" not in name
                 ],
                 "lr": args.lr,
             },
@@ -310,7 +315,15 @@ def main():
                 "params": [
                     param
                     for name, param in model.named_parameters()
-                    if "pretrained" not in name
+                    if "pretrained" not in name and "lora" not in name
+                ],
+                "lr": args.lr * 10.0,
+            },
+            {
+                "params": [
+                    param
+                    for name, param in model.named_parameters()
+                    if "lora" in name
                 ],
                 "lr": args.lr * 10.0,
             },
@@ -346,12 +359,12 @@ def main():
             p.numel() for p in model.parameters() if p.requires_grad
         )
         logger.info(f"Total Trainable Parameters: {total_trainable_params}")
-
+    
     # Eval the performance befor fine-tune
-    cur_results = eval_val(valloader, model, logger, args, rank)
-    if rank == 0:
-        for name, metric in cur_results.items():
-            writer.add_scalar(f"eval/{name}", (metric), -1)
+    # cur_results = eval_val(valloader, model, logger, args, rank)
+    # if rank == 0:
+    #     for name, metric in cur_results.items():
+    #         writer.add_scalar(f"eval/{name}", (metric), -1)
 
     for epoch in range(args.epochs):
         if rank == 0:
@@ -434,6 +447,7 @@ def main():
 
             optimizer.param_groups[0]["lr"] = lr
             optimizer.param_groups[1]["lr"] = lr * 10.0
+            optimizer.param_groups[2]["lr"] = lr * 10.0
 
             if rank == 0:
                 writer.add_scalar("train/loss", loss.item(), iters)
@@ -458,6 +472,9 @@ def main():
                     "previous_best": previous_best,
                 }
                 torch.save(checkpoint, os.path.join(args.save_path, "latest.pth"))
+            
+            # if i >= 500:
+            #     break
 
         # eval
         model.eval()
