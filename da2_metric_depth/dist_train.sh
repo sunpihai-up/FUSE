@@ -7,13 +7,13 @@ gpus=2
 lr=0.000005
 lr_lora=0.0001
 encoder=vitl
-dataset=eventscape_voxel # vkitti
+dataset=mvsec_voxel # vkitti
 img_size=350
 min_depth=0
 max_depth=1
 # pretrained_from=/data/coding/upload-data/checkpoints/depth_anything_v2_metric_vkitti_vitl.pth
-pretrained_from=/data/coding/upload-data/checkpoints/depth_anything_v2_vitl.pth
-# pretrained_from=/data/coding/code/da2-prompt-tuning/da2_metric_depth/exp/eventscape_voxel_nl_disp_da2vitl_20250107_000222/latest.pth
+# pretrained_from=/data/coding/upload-data/checkpoints/depth_anything_v2_vitl.pth
+pretrained_from=/data/coding/code/da2-prompt-tuning/da2_metric_depth/exp/eventscape_voxel_nl_da2_lora_vitl_20250107_230532/latest.pth
 save_path=/data/coding/code/da2-prompt-tuning/da2_metric_depth/exp/${dataset}_nl_da2_lora_${encoder}_${now}
 
 mkdir -p $save_path

@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torchvision.transforms import Compose
 
-from .dinov2 import DINOv2
+from .dinov2_lora import DINOv2_lora
 from .util.blocks import FeatureFusionBlock, _make_scratch
 from .util.transform import Resize, NormalizeImage, PrepareForNet
 
@@ -125,8 +125,8 @@ class DPTHead(nn.Module):
             ),
             nn.ReLU(True),
             nn.Conv2d(head_features_2, 1, kernel_size=1, stride=1, padding=0),
-            nn.Sigmoid(),
-            # nn.ReLU(True),
+            nn.ReLU(True),
+            nn.Identity(),
         )
 
     def forward(self, out_features, patch_h, patch_w):
@@ -143,8 +143,7 @@ class DPTHead(nn.Module):
 
             x = self.projects[i](x)
             x = self.resize_layers[i](x)
-            # if torch.isnan(x).any().item():
-            #     print(f"x have nan {i}")
+
             out.append(x)
 
         layer_1, layer_2, layer_3, layer_4 = out
@@ -171,7 +170,7 @@ class DPTHead(nn.Module):
         return out
 
 
-class DepthAnythingV2(nn.Module):
+class DepthAnythingV2_lora(nn.Module):
     def __init__(
         self,
         encoder="vitl",
@@ -179,10 +178,9 @@ class DepthAnythingV2(nn.Module):
         out_channels=[256, 512, 1024, 1024],
         use_bn=False,
         use_clstoken=False,
-        max_depth=20.0,
         return_feature=False,
     ):
-        super(DepthAnythingV2, self).__init__()
+        super(DepthAnythingV2_lora, self).__init__()
 
         self.intermediate_layer_idx = {
             "vits": [2, 5, 8, 11],
@@ -190,12 +188,9 @@ class DepthAnythingV2(nn.Module):
             "vitl": [4, 11, 17, 23],
             "vitg": [9, 19, 29, 39],
         }
-
-        self.max_depth = max_depth
         self.return_feature = return_feature
-        
         self.encoder = encoder
-        self.pretrained = DINOv2(model_name=encoder)
+        self.pretrained = DINOv2_lora(model_name=encoder)
 
         self.depth_head = DPTHead(
             self.pretrained.embed_dim,
@@ -213,6 +208,7 @@ class DepthAnythingV2(nn.Module):
         )
 
         depth = self.depth_head(features, patch_h, patch_w)
+        depth = F.relu(depth)
 
         if self.return_feature:
             fea_maps = []
@@ -222,47 +218,47 @@ class DepthAnythingV2(nn.Module):
         else:
             return depth.squeeze(1)
 
-    @torch.no_grad()
-    def infer_image(self, raw_image, input_size=518):
-        image, (h, w) = self.image2tensor(raw_image, input_size)
+    # @torch.no_grad()
+    # def infer_image(self, raw_image, input_size=518):
+    #     image, (h, w) = self.image2tensor(raw_image, input_size)
 
-        depth = self.forward(image)
+    #     depth = self.forward(image)
 
-        depth = F.interpolate(
-            depth[:, None], (h, w), mode="bilinear", align_corners=True
-        )[0, 0]
+    #     depth = F.interpolate(
+    #         depth[:, None], (h, w), mode="bilinear", align_corners=True
+    #     )[0, 0]
 
-        return depth.cpu().numpy()
+    #     return depth.cpu().numpy()
 
-    def image2tensor(self, raw_image, input_size=518):
-        transform = Compose(
-            [
-                Resize(
-                    width=input_size,
-                    height=input_size,
-                    resize_target=False,
-                    keep_aspect_ratio=True,
-                    ensure_multiple_of=14,
-                    resize_method="lower_bound",
-                    image_interpolation_method=cv2.INTER_CUBIC,
-                ),
-                NormalizeImage(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-                PrepareForNet(),
-            ]
-        )
+    # def image2tensor(self, raw_image, input_size=518):
+    #     transform = Compose(
+    #         [
+    #             Resize(
+    #                 width=input_size,
+    #                 height=input_size,
+    #                 resize_target=False,
+    #                 keep_aspect_ratio=True,
+    #                 ensure_multiple_of=14,
+    #                 resize_method="lower_bound",
+    #                 image_interpolation_method=cv2.INTER_CUBIC,
+    #             ),
+    #             NormalizeImage(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+    #             PrepareForNet(),
+    #         ]
+    #     )
 
-        h, w = raw_image.shape[:2]
+    #     h, w = raw_image.shape[:2]
 
-        image = cv2.cvtColor(raw_image, cv2.COLOR_BGR2RGB) / 255.0
+    #     image = cv2.cvtColor(raw_image, cv2.COLOR_BGR2RGB) / 255.0
 
-        image = transform({"image": image})["image"]
-        image = torch.from_numpy(image).unsqueeze(0)
+    #     image = transform({"image": image})["image"]
+    #     image = torch.from_numpy(image).unsqueeze(0)
 
-        DEVICE = (
-            "cuda"
-            if torch.cuda.is_available()
-            else "mps" if torch.backends.mps.is_available() else "cpu"
-        )
-        image = image.to(DEVICE)
+    #     DEVICE = (
+    #         "cuda"
+    #         if torch.cuda.is_available()
+    #         else "mps" if torch.backends.mps.is_available() else "cpu"
+    #     )
+    #     image = image.to(DEVICE)
 
-        return image, (h, w)
+    #     return image, (h, w)

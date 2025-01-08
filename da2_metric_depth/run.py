@@ -7,6 +7,8 @@ import os
 import torch
 
 from depth_anything_v2.dpt import DepthAnythingV2
+from depth_anything_v2.dpt_lora import DepthAnythingV2_lora
+
 from util.metric import convert_nl2abs_depth, dataset2params
 import torch.nn.functional as F
 
@@ -16,13 +18,15 @@ from dataset.vkitti2 import VKITTI2
 from dataset.mvsec import MVSEC
 from dataset.eventscape import EventScape
 from torch.utils.data import DataLoader
+from dataset.mvsec_voxel import MVSEC_voxel
+from dataset.eventscape_voxel import EventScape_voxel
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Depth Anything V2 Metric Depth Estimation')
     parser.add_argument('--input-size', type=int, default=518)
     parser.add_argument('--outdir', type=str, default='./vis_depth')
     
-    parser.add_argument("--dataset", choices=["eventscape", "mvsec"])
+    parser.add_argument("--dataset", choices=["eventscape", "mvsec", "mvsec_voxel"])
     parser.add_argument('--encoder', type=str, default='vitl', choices=['vits', 'vitb', 'vitl', 'vitg'])
     parser.add_argument("--scene", choices=["day1", "night1", "train", "test", "test_1k", "night1_2b", "day1_2b"])
     parser.add_argument('--load-from', type=str, default='checkpoints/depth_anything_v2_metric_hypersim_vitl.pth')
@@ -60,6 +64,13 @@ if __name__ == '__main__':
             normalized_d=args.normalized_depth,
             size=size,
         )
+    elif args.dataset == "mvsec_voxel":
+        valset = MVSEC_voxel(
+            "./dataset/splits/mvsec/outdoor_night1_val.txt",
+            "val",
+            normalized_d=args.normalized_depth,
+            size=size,
+        )
     else:
         raise NotImplementedError
 
@@ -81,6 +92,9 @@ if __name__ == '__main__':
     }
     
     depth_anything = DepthAnythingV2(**{**model_configs[args.encoder], 'max_depth': args.max_depth})
+    # depth_anything = DepthAnythingV2_lora(
+    #     **{**model_configs[args.encoder], "max_depth": args.max_depth}
+    # )
     
     checkpoint = torch.load(args.load_from, map_location='cpu')
     if 'model' in checkpoint.keys():

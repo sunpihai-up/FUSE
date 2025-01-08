@@ -134,10 +134,13 @@ def eval_depth_ori(pred, target, dataset, eps=1e-6):
             'rmse': rmse.item(), 'rmse_log': rmse_log.item(), 'log10':log10.item(), 'silog':silog.item()}
 
 
-def eval_disparity(pred, target, eps=1e-8):
+def eval_disparity(pred, target, eps=1e-7):
     assert pred.shape == target.shape
     pred = pred + eps
     target = target + eps
+    
+    pred = 1.0 / pred
+    target = 1.0 / target
     
     thresh = torch.max((target / pred), (pred / target))
 

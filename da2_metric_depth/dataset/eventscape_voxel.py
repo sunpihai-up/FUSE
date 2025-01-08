@@ -88,7 +88,7 @@ class EventScape_voxel(Dataset):
             sample["valid_mask"] = np.isfinite(sample["depth"]) & (sample["depth"] >= 0)
         else:
             sample['valid_mask'] = np.isfinite(sample["depth"]) & (sample['depth'] <= d_max)
-        sample["image_path"] = event_voxel_path
+        sample["image_path"] = img_path
 
         return sample
 

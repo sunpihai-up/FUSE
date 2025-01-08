@@ -36,6 +36,33 @@ class SiLoss(nn.Module):
         )
         return loss
 
+
+class F1_Loss(nn.Module):
+    def __init__(self, log_normalized=False):
+        super().__init__()
+        self.log_normalized = log_normalized
+
+    def log_normalize_fun(self, depth_map, max_val=None):        
+        # Find the maximum value
+        if max_val != None:
+            max_value = torch.max(depth_map)
+        else:
+            max_value = max_val
+        # Apply log normalization
+        normalized_depth_map = torch.log1p(depth_map) / torch.log1p(max_value)
+        return normalized_depth_map
+    
+    def forward(self, pred, target, valid_mask):
+        pred = pred[valid_mask]
+        target = target[valid_mask]
+        
+        if self.log_normalized:
+            max_val = torch.max(target)
+            pred = self.log_normalize_fun(pred, max_val=max_val)
+            target = self.log_normalize_fun(target, max_val=max_val)
+        diff = torch.abs(pred - target)
+        return diff.mean()
+
 class MSGIL_NORM_Loss(nn.Module):
     """
     Our proposed GT normalized Multi-scale Gradient Loss Function.
@@ -160,16 +187,34 @@ class MultiScaleGradient(torch.nn.Module):
 
 
 class MixedLoss(nn.Module):
-    def __init__(self, siloss_lambd=0.5, grad_loss_weight=0.5):
+    def __init__(self, siloss_lambd=0.5, grad_loss_weight=0.5, log_normalize=False):
         super().__init__()
         self.siloss_lambd = siloss_lambd
         self.grad_loss_weight = grad_loss_weight
-
-        self.si_loss = SiLoss(lambd=siloss_lambd)
+        self.log_normalize = log_normalize
+        
+        # self.si_loss = SiLoss(lambd=siloss_lambd)
+        # self.si_loss = SiLogLoss(lambd=siloss_lambd)
+        self.si_loss = F1_Loss()
         self.grad_loss = MultiScaleGradient()
         # self.grad_loss = MSGIL_NORM_Loss()
 
+    def log_normalize_fun(self, depth_map, max_val=None):        
+        # Find the maximum value
+        if max_val != None:
+            max_value = torch.max(depth_map)
+        else:
+            max_value = max_val
+        # Apply log normalization
+        normalized_depth_map = torch.log1p(depth_map) / torch.log1p(max_value)
+        return normalized_depth_map
+    
     def forward(self, pred, target, valid_mask, eps=1e-8):
+        if self.log_normalize:
+            max_val = torch.max(target)
+            pred = self.log_normalize_fun(pred, max_val=max_val)
+            target = self.log_normalize_fun(target, max_val=max_val)
+        
         si_loss_value = self.si_loss(pred, target, valid_mask)
         grad_loss_value = self.grad_loss(pred, target)
 
@@ -179,9 +224,10 @@ class MixedLoss(nn.Module):
 
 
 class FeatureCosLoss(nn.Module):
-    def __init__(self, alpha=0.7):
+    def __init__(self, alpha=1.0, beta=0.0):
         super().__init__()
         self.alpha = alpha
+        self.beta = beta
 
     def forward(self, student_features, teacher_features):
         total_loss = 0.0
@@ -200,7 +246,7 @@ class FeatureCosLoss(nn.Module):
             cosine_sim = torch.sum(s_feat_norm * t_feat_norm, dim=-1)  # Shape: (batch_size, num_tokens)
 
             # Mask tokens with cosine similarity > alpha
-            mask = cosine_sim <= self.alpha
+            mask = (cosine_sim <= self.alpha) & (cosine_sim >= self.beta)
 
             # Compute cosine distance for the valid tokens
             valid_diff = 1.0 - cosine_sim[mask]  # Cosine distance is 1 - cosine similarity

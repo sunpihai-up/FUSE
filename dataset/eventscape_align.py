@@ -17,10 +17,9 @@ GRAY_MEAN = 0.370166
 GRAY_STD = 0.206369
 
 class EventScape_Align(Dataset):
-    def __init__(self, filelist_path, mode, normalized_d, size):
+    def __init__(self, filelist_path, mode, size):
         self.mode = mode
         self.size = size
-        self.normalized_d = normalized_d
 
         with open(filelist_path, "r") as f:
             self.filelist = f.read().splitlines()
