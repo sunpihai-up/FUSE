@@ -367,7 +367,7 @@ def main():
             l1  = l1_loss(student_pred, teacher_pred, valid_mask)
             # total_loss = loss + fea_loss
             # total_loss = loss
-            total_loss = l1
+            total_loss = l1 + fea_loss
             total_loss.backward()
             optimizer.step()
 

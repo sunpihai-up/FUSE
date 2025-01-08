@@ -224,7 +224,7 @@ class MixedLoss(nn.Module):
 
 
 class FeatureCosLoss(nn.Module):
-    def __init__(self, alpha=1.0, beta=0.0):
+    def __init__(self, alpha=8.5, beta=0.4):
         super().__init__()
         self.alpha = alpha
         self.beta = beta
