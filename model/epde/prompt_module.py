@@ -3,6 +3,7 @@ import torch.nn as nn
 from torch.nn import functional as F
 from timm.models.layers import trunc_normal_
 import math
+from .utils import token2feature, feature2token
 
 
 class Fovea(nn.Module):
@@ -446,3 +447,142 @@ class MaxVar_Feat_Fuse(nn.Module):
         )
 
         return fused_tensor
+
+
+class FeatureFusionWeight(nn.Module):
+    def __init__(self, in_channels, kernel_size=3):
+        super().__init__()
+        weight_layers = [
+            nn.Conv2d(
+                in_channels=in_channels,
+                out_channels=in_channels,
+                kernel_size=kernel_size,
+                stride=2,
+            )
+        ]
+        weight_layers.append(nn.GELU())
+        weight_layers.append(
+            nn.Conv2d(
+                in_channels=in_channels,
+                out_channels=2,
+                kernel_size=kernel_size,
+            )
+        )
+        self.get_weight = nn.Sequential(*weight_layers)
+    
+    def forward(self, joint_feas):
+        # The shape of x1 and x2 is [B, C, H, W]
+        weight = self.get_weight(joint_feas)
+        weight = F.softmax(weight, dim=-1)
+        return weight
+    
+
+class CrossAttentionBlock(nn.Module):
+    def __init__(self, dim, num_heads, dropout=0.1):
+        super(CrossAttentionBlock, self).__init__()
+
+        self.dim = dim
+        self.num_heads = num_heads
+        self.head_dim = dim // num_heads
+        assert self.head_dim * num_heads == dim, "dim must be divisible by num_heads"
+        self.scale = self.head_dim**-0.5
+
+        self.query = nn.Linear(dim, dim)
+        self.key = nn.Linear(dim, dim)
+        self.value = nn.Linear(dim, dim)
+        self.out = nn.Linear(dim, dim)
+
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, query, key, value):
+        B, L, C = query.shape
+
+        # (B, num_heads, L, head_dim)
+        Q = self.query(query).view(B, L, self.num_heads, self.head_dim).transpose(1, 2)
+        K = self.query(key).view(B, L, self.num_heads, self.head_dim).transpose(1, 2)
+        V = self.value(value).view(B, L, self.num_heads, self.head_dim).transpose(1, 2)
+
+        # Scaled dot-product attention (B, num_heads, L, L)
+        scores = torch.matmul(Q, K.transpose(-2, -1)) * self.scale
+
+        attn_weight = F.softmax(scores, dim=-1)
+        attn_weight = self.dropout(attn_weight)
+
+        # (B, num_heads, L, head_dim)
+        context = torch.matmul(attn_weight, V)
+        # (B, L, dim)
+        context = context.transpose(1, 2).contiguous().view(B, L, self.dim)
+
+        return self.out(context)
+
+
+class FeatureInteraction(nn.Module):
+    def __init__(self, dim, num_heads, dropout=0.1):
+        super(FeatureInteraction, self).__init__()
+        self.cross_attention_1 = CrossAttentionBlock(dim, num_heads, dropout)
+        self.cross_attention_2 = CrossAttentionBlock(dim, num_heads, dropout)
+    
+    def forward(self, x1, x2):
+        inter_x1 = self.cross_attention_1(query=x1, key=x2, value=x2)
+        inter_x2 = self.cross_attention_2(query=x2, key=x1, value=x1)
+        
+        return inter_x1, inter_x2
+
+
+class FeatureFusionModule(nn.Module):
+    def __init__(self, dim, num_heads=None, norm_layer=nn.BatchNorm2d):
+        super().__init__()
+        self.upsample = nn.PixelShuffle(upscale_factor=2)
+        self.interact = FeatureInteraction(dim=dim//4, num_heads=num_heads)
+        self.downsample_1 = nn.Conv2d(
+            in_channels=dim // 4, out_channels=dim, kernel_size=1, stride=2
+        )
+        self.downsample_2 = nn.Conv2d(
+            in_channels=dim // 4, out_channels=dim, kernel_size=1, stride=2
+        )
+        self.fuse_weight = FeatureFusionWeight(
+            in_channels=dim // 2, out_channels=dim, kernel_size=1
+        )
+    
+    def fuse_feature_maps(self, weight_map, feature_map1, feature_map2):
+        # Split the weight map into two components, [B, 1, H, W]
+        weight1 = weight_map[:, 0:1, :, :]
+        weight2 = weight_map[:, 1:2, :, :]
+        
+        # Apply weights to the feature maps, [B, C, H, W] * [B, 1, H, W]
+        weighted_feature1 = feature_map1 * weight1
+        weighted_feature2 = feature_map2 * weight2
+
+        # Compute the fused feature map, [B, C, H, W]        
+        return weighted_feature1 + weighted_feature2
+
+    def forward(self, x1, x2, patch_grid_size):
+        assert x1.shape == x2.shape, "The shape of x1 and x2 does not match."
+        # [B, L, C] --> [B, C, H, W]
+        x1 = token2feature(x1, patch_grid_size)
+        x2 = token2feature(x2, patch_grid_size)
+
+        # [B, C, H, W] --> [B, C/4, H*2, W*2]
+        H, W = patch_grid_size
+        upsample_patch_grid_size = (H * 2, W * 2)
+        x1 = self.upsample(x1)
+        x2 = self.upsample(x2)
+        
+        # [B, C/4, H*2, W*2] --> [B, L*4, C/4]
+        x1 = feature2token(x1)
+        x2 = feature2token(x2)
+        x1, x2 = self.interact(x1, x2)
+        
+        # [B, L*4, C/4] --> [B, C/4, H*2, W*2]
+        x1 = token2feature(x1, upsample_patch_grid_size)
+        x2 = token2feature(x2, upsample_patch_grid_size)
+        
+        # [B, C/4, H*2, W*2] --> [B, C, H, W]
+        x1_down = self.downsample_1(x1)
+        x2_down = self.downsample_2(x2)
+        
+        # [B, C/4, H*2, W*2] * 2 --> [B, C/2, H*2, W*2]
+        joint_feas = torch.cat((x1, x2), dim=1)
+        weight = self.fuse_weight(joint_feas)
+        fused_feature_map = self.fuse_feature_maps(weight, x1_down, x2_down)
+        return feature2token(fused_feature_map)

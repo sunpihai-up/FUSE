@@ -36,14 +36,9 @@ class ConvBlock(nn.Module):
 
 
 class DPTHead(nn.Module):
-    def __init__(
-        self,
-        in_channels,
-        features=256,
-        use_bn=False,
-        out_channels=[256, 512, 1024, 1024],
-        use_clstoken=False,
-    ):
+    def __init__(self, in_channels, features=256, use_bn=False, out_channels=None, use_clstoken=False):
+        if out_channels is None:
+            out_channels = [256, 512, 1024, 1024]
         super(DPTHead, self).__init__()
 
         self.use_clstoken = use_clstoken

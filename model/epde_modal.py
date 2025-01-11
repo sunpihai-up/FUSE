@@ -80,6 +80,7 @@ class EPDEVisionTransformer(nn.Module):
         norm_layer=None,
         prompt_type=None,
         depth_anything_pretrained=None,
+        prompt_encoder_pretrained=None,
         return_feature=False,
     ):
         super(EPDEVisionTransformer, self).__init__()
@@ -94,6 +95,7 @@ class EPDEVisionTransformer(nn.Module):
         self.norm_layer = norm_layer or partial(nn.LayerNorm, eps=1e-6)
         self.prompt_type = prompt_type
         self.depth_anything_pretrained = depth_anything_pretrained
+        self.prompt_encoder_pretrained = prompt_encoder_pretrained
         self.dataset = dataset
         self.blocks_to_take = intermediate_layer_idx[encoder]
         self.depth_anything_config = depth_anything_model_configs[encoder]
@@ -136,39 +138,37 @@ class EPDEVisionTransformer(nn.Module):
     def init_weights(self):
         # Load pre-trained foundation model weights
         if self.depth_anything_pretrained is not None:
-            pretrained_weights = torch.load(
-                self.depth_anything_pretrained, map_location="cpu"
-            )
-            # Initialize self.image_encoder
-            self.image_encoder.load_state_dict(
-                {k: v for k, v in pretrained_weights.items() if "pretrained" in k},
-                strict=False,
-            )
-
-            # Initialize self.prompt_blocks with corresponding layers
-            for i, layer in enumerate(self.prompt_blocks):
-                if i in self.blocks_to_take:
-                    pretrained_layer_prefix = f"pretrained.blocks.{i}."
-                    layer_state_dict = {
-                        k: v
-                        for k, v in pretrained_weights.items()
-                        if k.startswith(pretrained_layer_prefix)
-                    }
-                    layer.load_state_dict(layer_state_dict, strict=False)
-
-            # Initialize self.prompt_patch using pretrained.patch_embed
-            patch_embed_state_dict = {
-                k: v for k, v in pretrained_weights.items() if "patch_embed" in k
-            }
-            self.patch_embed_prompt.load_state_dict(
-                patch_embed_state_dict, strict=False
-            )
-            print(f"Loaded pretrained weights from {self.depth_anything_pretrained}")
+            self.init_from_pretrained_weight()
         else:
             self.image_encoder.init_weights()
-            init_weights_vit_timm(self.patch_embed_prompt)
-            init_weights_vit_timm(self.prompt_blocks)
-            print(f"Initializing encoder parameters without pre-trained weights")
+            self.prompt_encoder.init_weights()
+            print("Initializing encoder parameters without pre-trained weights")
+
+    def init_from_pretrained_weight(self):
+        pretrained_weights = torch.load(
+            self.depth_anything_pretrained, map_location="cpu"
+        )
+        prompt_encoder_weights = torch.load(
+            self.prompt_encoder_pretrained, map_location="cpu"
+        )
+
+        # Initialize pretrained encoder
+        self.image_encoder.load_state_dict(
+            {k: v for k, v in pretrained_weights.items() if "pretrained" in k},
+            strict=False,
+        )
+        self.prompt_encoder.load_state_dict(
+            {k: v for k, v in prompt_encoder_weights.items() if "pretrained" in k},
+            strict=False,
+        )
+
+        # Initialize pretrained Decoder
+        self.depth_head.load_state_dict(
+            {k: v for k, v in pretrained_weights.items() if "pretrained" not in k},
+            strict=False,
+        )
+        print(f"Loaded pretrained image weights from {self.depth_anything_pretrained}")
+        print(f"Loaded pretrained prompt weights from {self.prompt_encoder_pretrained}")
 
     def _get_intermediate_layers_not_chunked(self, x, n=1):
         image = x[:, :3, :, :]
