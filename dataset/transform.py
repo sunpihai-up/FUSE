@@ -37,6 +37,11 @@ def apply_min_size(sample, size, image_interpolation_method=cv2.INTER_AREA):
     sample["image"] = cv2.resize(
         sample["image"], tuple(shape[::-1]), interpolation=image_interpolation_method
     )
+    
+    if "image_cor" in sample:
+        sample["image_cor"] = cv2.resize(
+            sample["image_cor"], tuple(shape[::-1]), interpolation=image_interpolation_method
+        )
 
     sample["disparity"] = cv2.resize(
         sample["disparity"], tuple(shape[::-1]), interpolation=cv2.INTER_NEAREST
@@ -176,9 +181,9 @@ class Resize(object):
             interpolation=self.__image_interpolation_method,
         )
 
-        if "bad_image" in sample:
-            sample["bad_image"] = cv2.resize(
-                sample["bad_image"],
+        if "image_cor" in sample:
+            sample["image_cor"] = cv2.resize(
+                sample["image_cor"],
                 (width, height),
                 interpolation=self.__image_interpolation_method,
             )
@@ -243,8 +248,8 @@ class NormalizeImage(object):
     def __call__(self, sample):
         sample["image"] = (sample["image"] - self.__mean) / self.__std
         
-        if "bad_image" in sample:
-            sample["bad_image"] = (sample["bad_image"] - self.__mean) / self.__std
+        if "image_cor" in sample:
+            sample["image_cor"] = (sample["image_cor"] - self.__mean) / self.__std
 
         if "event_voxel" in sample:
             sample["event_voxel"] = self.normalize_voxelgrid(sample["event_voxel"])
@@ -261,9 +266,9 @@ class PrepareForNet(object):
         image = np.transpose(sample["image"], (2, 0, 1))
         sample["image"] = np.ascontiguousarray(image).astype(np.float32)
 
-        if "bad_image" in sample:
-            bad_image = np.transpose(sample["bad_image"], (2, 0, 1))
-            sample["bad_image"] = np.ascontiguousarray(bad_image).astype(np.float32)
+        if "image_cor" in sample:
+            image_cor = np.transpose(sample["image_cor"], (2, 0, 1))
+            sample["image_cor"] = np.ascontiguousarray(image_cor).astype(np.float32)
             
         if "mask" in sample:
             sample["mask"] = sample["mask"].astype(np.float32)
@@ -305,8 +310,8 @@ class Crop(object):
 
         sample["image"] = sample["image"][:, h_start:h_end, w_start:w_end]
 
-        if "bad_image" in sample:
-            sample["bad_image"] = sample["bad_image"][:, h_start:h_end, w_start:w_end]
+        if "image_cor" in sample:
+            sample["image_cor"] = sample["image_cor"][:, h_start:h_end, w_start:w_end]
             
         if "event_voxel" in sample:
             sample["event_voxel"] = sample["event_voxel"][
@@ -398,7 +403,7 @@ class Image_Corruption(object):
         self.blur_size = blur_size
         self.blur_sigmaX = blur_sigmaX
         
-        self.cor_type = cor_types
+        self.cor_types = cor_types
 
     def generate_masks(self, image_shape, num_masks, width_ratio=0.2, height_ratio=0.2):
         assert width_ratio <= 1
@@ -438,10 +443,10 @@ class Image_Corruption(object):
         return np.where(mask[..., None] == 255, colored_mask, image)
 
     def __call__(self, image):
-        # if random.random() >= self.noise_pro:
-        #     image = self.add_noise(image)
+        if random.random() <= self.noise_pro:
+            image = self.add_noise(image)
 
-        if random.random() >= self.mask_pro:
+        if random.random() <= self.mask_pro:
             masks = self.generate_masks(
                 image_shape=image.shape,
                 num_masks=self.num_masks,

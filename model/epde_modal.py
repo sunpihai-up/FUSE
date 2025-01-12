@@ -78,7 +78,6 @@ class EPDEVisionTransformer(nn.Module):
         dataset="mvsec",
         max_depth=1,
         norm_layer=None,
-        prompt_type=None,
         depth_anything_pretrained=None,
         prompt_encoder_pretrained=None,
         return_feature=False,
@@ -93,7 +92,6 @@ class EPDEVisionTransformer(nn.Module):
         self.depth = depth
         self.max_depth = max_depth
         self.norm_layer = norm_layer or partial(nn.LayerNorm, eps=1e-6)
-        self.prompt_type = prompt_type
         self.depth_anything_pretrained = depth_anything_pretrained
         self.prompt_encoder_pretrained = prompt_encoder_pretrained
         self.dataset = dataset
@@ -175,30 +173,9 @@ class EPDEVisionTransformer(nn.Module):
         event = x[:, 3:, :, :]
         B, nc, w, h = image.shape
         patch_grid_size = (w // self.patch_size, h // self.patch_size)
-
-        # Compute event and image embedding
-        image_token = self.image_encoder.patch_embed(image)
-        prompt_token = self.prompt_encoder.patch_embed(event)
-
-        # Adding cls_token
-        image_token = torch.cat(
-            (
-                self.image_encoder.cls_token.expand(image_token.shape[0], -1, -1),
-                image_token,
-            ),
-            dim=1,
-        )
-        prompt_token = torch.cat(
-            (
-                self.prompt_encoder.cls_token.expand(prompt_token.shape[0], -1, -1),
-                prompt_token,
-            ),
-            dim=1,
-        )
-
-        # Add positional encoding
-        image_token += self.image_encoder.interpolate_pos_encoding(image_token, w, h)
-        prompt_token += self.prompt_encoder.interpolate_pos_encoding(prompt_token, w, h)
+        
+        image_token = self.image_encoder.prepare_tokens_with_masks(image)
+        prompt_token = self.prompt_encoder.prepare_tokens_with_masks(event)
 
         output, total_block_len = [], len(self.image_encoder.blocks)
         blocks_to_take = (
@@ -210,12 +187,10 @@ class EPDEVisionTransformer(nn.Module):
             prompt_token = self.prompt_encoder.blocks[i](prompt_token)
 
             if i in self.blocks_to_take:
-                # Feature Fuse
+                # Feature Fusion
                 img_read_out = self.img_read_out[i](image_token)
                 pro_read_out = self.prompt_read_out[i](prompt_token)
-                image_feat = token2feature(img_read_out, patch_grid_size)
-                prompt_feat = token2feature(pro_read_out, patch_grid_size)
-                fuse_token = feature2token(self.prompt_fuse[i](image_feat, prompt_feat))
+                fuse_token = self.prompt_fuse[i](img_read_out, pro_read_out, patch_grid_size)
                 cls_token = image_token[:, 0].unsqueeze(1)
                 output.append(torch.cat((cls_token, fuse_token), dim=1))
 
@@ -252,7 +227,7 @@ class EPDEVisionTransformer(nn.Module):
         )
 
         depth = self.depth_head(features, patch_h, patch_w)
-        depth = 1.0 / depth + 1e-3
+        # depth = 1.0 / (depth + 1e-3)
 
         if self.return_feature:
             fea_maps = []
@@ -359,10 +334,10 @@ def epde_giant2(patch_size=16, num_register_tokens=0, **kwargs):
 
 def EPDE(
     model_name,
-    prompt_type,
     dataset="dense",
     max_depth=1,
     depth_anything_pretrained=None,
+    prompt_encoder_pretrained=None,
     event_voxel_chans=5,
     norm_layer=None,
     return_feature=False,
@@ -381,7 +356,7 @@ def EPDE(
         dataset=dataset,
         max_depth=max_depth,
         depth_anything_pretrained=depth_anything_pretrained,
+        prompt_encoder_pretrained=prompt_encoder_pretrained,
         norm_layer=norm_layer,
-        prompt_type=prompt_type,
         return_feature=return_feature,
     )

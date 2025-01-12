@@ -53,8 +53,8 @@ class EventScape_Align(Dataset):
         
         sample = self.transform({"image": image, "event_voxel": event_voxel})
 
-        image = torch.from_numpy(sample["image"])
-        event_voxel = torch.from_numpy(sample["event_voxel"])
+        sample["image"] = torch.from_numpy(sample["image"])
+        sample["event_voxel"] = torch.from_numpy(sample["event_voxel"])
         sample["image_path"] = img_path
         
         return sample
