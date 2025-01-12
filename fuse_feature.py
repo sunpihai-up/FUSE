@@ -19,6 +19,7 @@ from dataset.dense import Dense
 from dataset.mvsec import MVSEC
 from dataset.eventscape import EventScape
 from dataset.eventscape_align import EventScape_Align
+from dataset.eventscape_fuse import EventScape_Fuse, EventScape_Fuse_Cor
 
 from model.depth_anything_v2.dpt_align import DepthAnythingV2
 from model.depth_anything_v2.dpt_align_lora import DepthAnythingV2_lora
@@ -60,13 +61,20 @@ parser.add_argument(
 )
 parser.add_argument(
     "--dataset",
-    choices=["mvsec", "eventscape", "eventscape_align"],
+    choices=[
+        "mvsec",
+        "eventscape",
+        "eventscape_align",
+        "eventscape_fuse",
+        "eventscape_fuse_cor",
+    ],
 )
 
 parser.add_argument("--img-size", default=518, type=int)
 parser.add_argument("--epochs", default=40, type=int)
 parser.add_argument("--bs", default=2, type=int)
 parser.add_argument("--lr", default=0.000005, type=float)
+parser.add_argument("--max-depth", type=int)
 
 parser.add_argument("--load-from", type=str)
 parser.add_argument("--prompt-encoder-pretrained", type=str)
@@ -81,9 +89,8 @@ parser.add_argument("--return-feature", action="store_true")
 
 def get_dataloader(args):
     size = (args.img_size, args.img_size)
-    if args.dataset == "dense":
-        trainset = Dense("dataset/splits/dense/train.txt", "train", size=size)
-    elif args.dataset == "mvsec":
+
+    if args.dataset == "mvsec":
         trainset = MVSEC(
             "dataset/splits/mvsec/train.txt",
             "train",
@@ -99,6 +106,18 @@ def get_dataloader(args):
         )
     elif args.dataset == "eventscape_align":
         trainset = EventScape_Align(
+            "dataset/splits/eventscape/train.txt",
+            "train",
+            size=size,
+        )
+    elif args.dataset == "eventscape_fuse":
+        trainset = EventScape_Fuse(
+            "dataset/splits/eventscape/train.txt",
+            "train",
+            size=size,
+        )
+    elif args.dataset == "eventscape_fuse_cor":
+        trainset = EventScape_Fuse_Cor(
             "dataset/splits/eventscape/train.txt",
             "train",
             size=size,
@@ -136,6 +155,18 @@ def get_dataloader(args):
         )
     elif args.dataset == "eventscape_align":
         valset = EventScape_Align(
+            "dataset/splits/eventscape/val_1k.txt",
+            "val",
+            size=size,
+        )
+    elif args.dataset == "eventscape_fuse":
+        valset = EventScape_Fuse(
+            "dataset/splits/eventscape/val_1k.txt",
+            "val",
+            size=size,
+        )
+    elif args.dataset == "eventscape_fuse_cor":
+        valset = EventScape_Fuse_Cor(
             "dataset/splits/eventscape/val_1k.txt",
             "val",
             size=size,
@@ -190,10 +221,11 @@ def main():
         dataset=args.dataset,
         max_depth=args.max_depth,
         event_voxel_chans=args.event_voxel_chans,
+        return_feature=args.return_feature,
         prompt_encoder_pretrained=args.prompt_encoder_pretrained,
         depth_anything_pretrained=args.depth_anything_pretrained,
     )
-    
+
     checkpoint = torch.load(args.load_from, map_location="cpu")
     if "model" in checkpoint.keys():
         checkpoint = checkpoint["model"]
@@ -214,21 +246,21 @@ def main():
         output_device=local_rank,
         find_unused_parameters=True,
     )
-    
+
     # Place teacher on the same device and set teacher to eval mode
     teacher_model = teacher_model.cuda(local_rank)
     teacher_model.eval()
-    
+
     for name, param in student_model.named_parameters():
         # Make module about feature fusion and read out trainable
         if "prompt_fuse" in name or "read_out" in name:
             param.requires_grad = True
         else:
             param.requires_grad = False
-    
+
     # criterion = SiLogLoss().cuda(local_rank)
     criterion = MixedLoss(log_normalize=True).cuda(local_rank)
-    feature_loss = FeatureCosLoss().cuda(local_rank)
+    feature_loss = FeatureCosLoss(alpha=1.0, beta=0).cuda(local_rank)
     l1_loss = F1_Loss(log_normalized=True).cuda(local_rank)
 
     # Configure optimizer to include only trainable parameters
@@ -238,7 +270,7 @@ def main():
                 "params": [
                     param
                     for name, param in student_model.named_parameters()
-                    if "pretrained" in name and "lora" not in name
+                    if "prompt_fuse" not in name and "read_out" not in name
                 ],
                 "lr": args.lr,
             },
@@ -246,15 +278,7 @@ def main():
                 "params": [
                     param
                     for name, param in student_model.named_parameters()
-                    if "pretrained" not in name
-                ],
-                "lr": args.lr * 10.0,
-            },
-            {
-                "params": [
-                    param
-                    for name, param in student_model.named_parameters()
-                    if "lora" in name
+                    if "prompt_fuse" in name or "read_out" in name
                 ],
                 "lr": args.lr * 10.0,
             },
@@ -321,35 +345,41 @@ def main():
         for i, sample in enumerate(trainloader):
             optimizer.zero_grad()
 
-            img, voxel = (
+            img, img_voxel = (
                 sample["image"].cuda(),
-                sample["event_voxel"].cuda(),
+                sample["input"].cuda(),
             )
 
             if random.random() < 0.5:
                 img = img.flip(-1)
-                voxel = voxel.flip(-1)
+                img_voxel = img_voxel.flip(-1)
 
             # img = img[0].cpu().numpy().transpose(1, 2, 0)
-            # voxel = voxel[0].cpu().numpy().transpose(1, 2, 0)
-            # print(img.shape, voxel.shape)
+            # img_cor = img_voxel[0][:3,].cpu().numpy().transpose(1, 2, 0)
+            # voxel = img_voxel[0][3:,].cpu().numpy().transpose(1, 2, 0)
+            # print(img.shape, voxel.shape, img_cor.shape)
+            
             # import cv2
             # img = (img - img.min()) / (img.max() - img.min()) * 255.0
             # img = img.astype(np.uint8)
             # cv2.imwrite(f"{i}_img.png", img)
             
+            # img_cor = (img_cor - img_cor.min()) / (img_cor.max() - img_cor.min()) * 255.0
+            # img_cor = img_cor.astype(np.uint8)
+            # cv2.imwrite(f"{i}_img_cor.png", img_cor)
+
             # voxel = (voxel - voxel.min()) / (voxel.max() - voxel.min()) * 255.0
             # voxel = voxel.astype(np.uint8)
             # cv2.imwrite(f"{i}_voxel.png", voxel)
-            
+
             # if i >= 5:
             #     exit()
             # continue
-            
+
             # Teacher output
             with torch.no_grad():
                 teacher_pred, teacher_features = teacher_model(img)
-            student_pred, student_features = student_model(voxel)
+            student_pred, student_features = student_model(img_voxel)
 
             # print(student_pred.shape, teacher_pred.shape)
             # print(student_pred.min(), teacher_pred.min())
@@ -357,19 +387,15 @@ def main():
             # print(student_features[0].shape, teacher_features[0].shape)
             # print("*****************************************************")
             # exit()
-            
+
             valid_mask = torch.ones_like(student_pred, dtype=torch.bool)
-            loss, si_loss, grad_loss = criterion(
-                student_pred,
-                teacher_pred,
-                valid_mask
-            )
+            loss, si_loss, grad_loss = criterion(student_pred, teacher_pred, valid_mask)
             fea_loss = feature_loss(student_features, teacher_features)
-            
-            l1  = l1_loss(student_pred, teacher_pred, valid_mask)
+            l1 = l1_loss(student_pred, teacher_pred, valid_mask)
             # total_loss = loss + fea_loss
             # total_loss = loss
-            total_loss = l1 + fea_loss
+            # total_loss = l1 + fea_loss
+            total_loss = l1
             total_loss.backward()
             optimizer.step()
 
@@ -379,7 +405,7 @@ def main():
 
             optimizer.param_groups[0]["lr"] = lr
             optimizer.param_groups[1]["lr"] = lr * 10.0
-            optimizer.param_groups[2]["lr"] = lr * 10.0
+            # optimizer.param_groups[2]["lr"] = lr * 10.0
 
             if rank == 0:
                 writer.add_scalar("train/loss", loss.item(), iters)
@@ -409,7 +435,9 @@ def main():
                     "previous_best": previous_best,
                 }
                 torch.save(checkpoint, os.path.join(args.save_path, "latest.pth"))
-            
+
+            if i >= 500:
+                break
         student_model.eval()
 
         results = {
@@ -429,13 +457,13 @@ def main():
 
         for i, sample in enumerate(valloader):
 
-            img, voxel = (
+            img, img_voxel = (
                 sample["image"].cuda(),
-                sample["event_voxel"].cuda(),
+                sample["input"].cuda(),
             )
 
             with torch.no_grad():
-                student_pred, _ = student_model(voxel)
+                student_pred, _ = student_model(img_voxel)
                 teacher_pred, _ = teacher_model(img)
 
             # print(student_pred.shape, teacher_pred.shape)
@@ -444,11 +472,11 @@ def main():
             # diff = abs(student_pred - teacher_pred)
             # print("*********** Diff **************")
             # print(diff.min(), diff.max(), diff.mean())
-            
+
             valid_mask = torch.ones_like(student_pred, dtype=bool)
             student_pred = student_pred[valid_mask]
             teacher_pred = teacher_pred[valid_mask]
-            
+
             cur_results = eval_disparity(student_pred, teacher_pred)
 
             for k in results.keys():

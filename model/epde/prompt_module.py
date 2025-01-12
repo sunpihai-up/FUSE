@@ -541,7 +541,7 @@ class FeatureFusionModule(nn.Module):
             in_channels=dim // 4, out_channels=dim, kernel_size=1, stride=2
         )
         self.fuse_weight = FeatureFusionWeight(
-            in_channels=dim // 2, out_channels=dim, kernel_size=1
+            in_channels=dim // 2, kernel_size=1
         )
     
     def fuse_feature_maps(self, weight_map, feature_map1, feature_map2):

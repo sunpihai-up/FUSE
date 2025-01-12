@@ -34,6 +34,7 @@ class EventScape_Fuse_Cor(Dataset):
         net_w, net_h = size
         self.image_cor_process = Image_Corruption(mask_pro=0.3)
         self.voxel_cor_process = Image_Corruption(
+            noise_pro=0.0,
             mask_pro=0.3, cor_types=["blur", "mask"]
         )
 
@@ -59,16 +60,19 @@ class EventScape_Fuse_Cor(Dataset):
         img_path = self.filelist[item].split(" ")[0]
         event_voxel_path = self.filelist[item].split(" ")[2]
 
-        image = cv2.imread(img_path).cvtColor(image, cv2.COLOR_BGR2RGB)
+        image = cv2.imread(img_path)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         image_cor = image
-        image_cor = self.image_cor_process(image_cor)
+        if self.mode == "train":
+            image_cor = self.image_cor_process(image_cor)
 
         image = image / 255.0
         image_cor = image_cor / 255.0
 
         event_voxel = np.load(event_voxel_path)
         event_voxel = event_voxel.transpose(1, 2, 0)
-        event_voxel = self.voxel_cor_process(event_voxel)
+        if self.mode == "train":
+            event_voxel = self.voxel_cor_process(event_voxel)
         event_voxel = event_voxel.transpose(2, 0, 1)
 
         sample = self.transform(
@@ -123,7 +127,8 @@ class EventScape_Fuse(Dataset):
         img_path = self.filelist[item].split(" ")[0]
         event_voxel_path = self.filelist[item].split(" ")[2]
 
-        image = cv2.imread(img_path).cvtColor(image, cv2.COLOR_BGR2RGB)
+        image = cv2.imread(img_path)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         image_cor = image
 
         image = image / 255.0

@@ -116,7 +116,7 @@ class EPDEVisionTransformer(nn.Module):
             if i in self.blocks_to_take:
                 prompt_fuse.append(
                     FeatureFusionModule(
-                        dim=embed_dim, num_heads=self.num_heads, reduction=1
+                        dim=embed_dim, num_heads=self.num_heads
                     )
                 )
                 img_read_out.append(READ_OUT(in_channels=embed_dim))
@@ -228,7 +228,6 @@ class EPDEVisionTransformer(nn.Module):
 
         depth = self.depth_head(features, patch_h, patch_w)
         # depth = 1.0 / (depth + 1e-3)
-
         if self.return_feature:
             fea_maps = []
             for i, fea in enumerate(features):
