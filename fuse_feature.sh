@@ -2,8 +2,8 @@
 now=$(date +"%Y%m%d_%H%M%S")
 
 epoch=5
-bs=2
-gpus=1
+bs=12
+gpus=2
 lr=0.000005
 encoder=vitl
 dataset=eventscape_fuse_cor
@@ -31,3 +31,4 @@ python3 -m torch.distributed.launch \
     --depth-anything-pretrained $depth_anything_pretrained \
     --return-feature \
     --port 20596 2>&1 | tee -a $save_path/$now.log
+    # --half \

@@ -2,7 +2,7 @@
 now=$(date +"%Y%m%d_%H%M%S")
 
 epoch=5
-bs=12
+bs=24
 gpus=2
 lr=0.000005
 encoder=vitl
@@ -10,7 +10,7 @@ dataset=eventscape_align
 img_size=350
 event_voxel_chans=3
 load_from=/data/coding/upload-data/checkpoints/depth_anything_v2_vitl.pth
-save_path=/data/coding/code/da2-prompt-tuning/exp/align_log_l1_${dataset}_${now}
+save_path=/data/coding/code/da2-prompt-tuning/exp/align_logl1_fea_${dataset}_${now}
 
 mkdir -p $save_path
 

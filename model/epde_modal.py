@@ -14,6 +14,7 @@ from model.depth_anything_v2.dinov2_lora import DINOv2_lora
 from model.epde.prompt_module import FeatureFusionModule
 from dataset.transform import Resize, NormalizeImage, PrepareForNet
 from model.epde.utils import token2feature, feature2token, init_weights_vit_timm
+from model.epde.utils import clean_pretrained_weight
 
 depth_anything_model_configs = {
     "vits": {
@@ -117,7 +118,9 @@ class EPDEVisionTransformer(nn.Module):
                 prompt_fuse.append(
                     FeatureFusionModule(
                         # dim=embed_dim, num_heads=self.num_heads
-                        dim=embed_dim, num_heads=self.num_heads, reduction=8,
+                        dim=embed_dim,
+                        num_heads=self.num_heads,
+                        reduction=8,
                         # norm_layer=nn.BatchNorm2d
                     )
                 )
@@ -151,21 +154,35 @@ class EPDEVisionTransformer(nn.Module):
         prompt_encoder_weights = torch.load(
             self.prompt_encoder_pretrained, map_location="cpu"
         )
+        pretrained_weights = clean_pretrained_weight(pretrained_weights)
+        prompt_encoder_weights = clean_pretrained_weight(prompt_encoder_weights)
 
         # Initialize pretrained encoder
         self.image_encoder.load_state_dict(
-            {k: v for k, v in pretrained_weights.items() if "pretrained" in k},
-            strict=False,
+            {
+                k.replace("pretrained.", ""): v
+                for k, v in pretrained_weights.items()
+                if "pretrained" in k
+            },
+            strict=True,
         )
         self.prompt_encoder.load_state_dict(
-            {k: v for k, v in prompt_encoder_weights.items() if "pretrained" in k},
-            strict=False,
+            {
+                k.replace("pretrained.", ""): v
+                for k, v in prompt_encoder_weights.items()
+                if "pretrained" in k
+            },
+            strict=True,
         )
 
         # Initialize pretrained Decoder
         self.depth_head.load_state_dict(
-            {k: v for k, v in pretrained_weights.items() if "pretrained" not in k},
-            strict=False,
+            {
+                k.replace("depth_head.", ""): v
+                for k, v in pretrained_weights.items()
+                if "depth_head" in k
+            },
+            strict=True,
         )
         print(f"Loaded pretrained image weights from {self.depth_anything_pretrained}")
         print(f"Loaded pretrained prompt weights from {self.prompt_encoder_pretrained}")
@@ -175,7 +192,7 @@ class EPDEVisionTransformer(nn.Module):
         event = x[:, 3:, :, :]
         B, nc, w, h = image.shape
         patch_grid_size = (w // self.patch_size, h // self.patch_size)
-        
+
         image_token = self.image_encoder.prepare_tokens_with_masks(image)
         prompt_token = self.prompt_encoder.prepare_tokens_with_masks(event)
 
@@ -192,7 +209,9 @@ class EPDEVisionTransformer(nn.Module):
                 # Feature Fusion
                 img_read_out = self.img_read_out[i](image_token)
                 pro_read_out = self.prompt_read_out[i](prompt_token)
-                fuse_token = self.prompt_fuse[i](img_read_out, pro_read_out, patch_grid_size)
+                fuse_token = self.prompt_fuse[i](
+                    img_read_out, pro_read_out, patch_grid_size
+                )
                 cls_token = image_token[:, 0].unsqueeze(1)
                 output.append(torch.cat((cls_token, fuse_token), dim=1))
 

@@ -1,6 +1,7 @@
 import torch.nn as nn
 from torch.nn.init import trunc_normal_
 
+
 def init_weights_vit_timm(module: nn.Module, name: str = ""):
     """ViT weight initialization, original timm impl (for reproducibility)"""
     if isinstance(module, nn.Linear):
@@ -26,3 +27,12 @@ def feature2token(feature):
     L = H * W
     # [B, C, H, W] --> [B, C, L] --> [B, L, C]
     return feature.view(B, C, L).permute(0, 2, 1).contiguous()
+
+
+def clean_pretrained_weight(pretrained_weights):
+    if "model" in pretrained_weights:
+        pretrained_weights = pretrained_weights["model"]
+        pretrained_weights = {
+            k.replace("module.", ""): v for k, v in pretrained_weights.items()
+        }
+    return pretrained_weights

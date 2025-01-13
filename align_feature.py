@@ -187,7 +187,7 @@ def main():
             "return_feature": args.return_feature,
         }
     )
-    
+
     checkpoint = torch.load(args.load_from, map_location="cpu")
     if "model" in checkpoint.keys():
         checkpoint = checkpoint["model"]
@@ -209,11 +209,11 @@ def main():
         output_device=local_rank,
         find_unused_parameters=True,
     )
-    
+
     # Place teacher on the same device and set teacher to eval mode
     teacher_model = teacher_model.cuda(local_rank)
     teacher_model.eval()
-    
+
     # Train student by LoRA
     lora.mark_only_lora_as_trainable(student_model, bias="all")
     # lora.mark_only_lora_as_trainable(student_model)
@@ -223,10 +223,10 @@ def main():
             param.requires_grad = True
         if "pretrained" not in name:
             param.requires_grad = False
-    
+
     # criterion = SiLogLoss().cuda(local_rank)
     criterion = MixedLoss(log_normalize=True).cuda(local_rank)
-    feature_loss = FeatureCosLoss().cuda(local_rank)
+    feature_loss = FeatureCosLoss(beta=0.0).cuda(local_rank)
     l1_loss = F1_Loss(log_normalized=True).cuda(local_rank)
 
     # Configure optimizer to include only trainable parameters
@@ -335,15 +335,15 @@ def main():
             # img = (img - img.min()) / (img.max() - img.min()) * 255.0
             # img = img.astype(np.uint8)
             # cv2.imwrite(f"{i}_img.png", img)
-            
+
             # voxel = (voxel - voxel.min()) / (voxel.max() - voxel.min()) * 255.0
             # voxel = voxel.astype(np.uint8)
             # cv2.imwrite(f"{i}_voxel.png", voxel)
-            
+
             # if i >= 5:
             #     exit()
             # continue
-            
+
             # Teacher output
             with torch.no_grad():
                 teacher_pred, teacher_features = teacher_model(img)
@@ -355,16 +355,12 @@ def main():
             # print(student_features[0].shape, teacher_features[0].shape)
             # print("*****************************************************")
             # exit()
-            
+
             valid_mask = torch.ones_like(student_pred, dtype=torch.bool)
-            loss, si_loss, grad_loss = criterion(
-                student_pred,
-                teacher_pred,
-                valid_mask
-            )
+            loss, si_loss, grad_loss = criterion(student_pred, teacher_pred, valid_mask)
             fea_loss = feature_loss(student_features, teacher_features)
-            
-            l1  = l1_loss(student_pred, teacher_pred, valid_mask)
+
+            l1 = l1_loss(student_pred, teacher_pred, valid_mask)
             # total_loss = loss + fea_loss
             # total_loss = loss
             total_loss = l1 + fea_loss
@@ -407,7 +403,7 @@ def main():
                     "previous_best": previous_best,
                 }
                 torch.save(checkpoint, os.path.join(args.save_path, "latest.pth"))
-            
+
         student_model.eval()
 
         results = {
@@ -442,11 +438,11 @@ def main():
             # diff = abs(student_pred - teacher_pred)
             # print("*********** Diff **************")
             # print(diff.min(), diff.max(), diff.mean())
-            
+
             valid_mask = torch.ones_like(student_pred, dtype=bool)
             student_pred = student_pred[valid_mask]
             teacher_pred = teacher_pred[valid_mask]
-            
+
             cur_results = eval_disparity(student_pred, teacher_pred)
 
             for k in results.keys():
@@ -507,13 +503,8 @@ def main():
                     for file in os.listdir(args.save_path):
                         if file.startswith(k) and file.endswith(".pth"):
                             os.remove(os.path.join(args.save_path, file))
-                    checkpoint = {
-                        "model": student_model.state_dict(),
-                        "epoch": epoch,
-                        "previous_best": previous_best,
-                    }
                     torch.save(
-                        checkpoint,
+                        student_model.state_dict(),
                         os.path.join(
                             args.save_path, f"{k}-{cur_results[k]}-{epoch}.pth"
                         ),

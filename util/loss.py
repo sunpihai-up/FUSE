@@ -43,7 +43,6 @@ class F1_Loss(nn.Module):
         self.log_normalized = log_normalized
 
     def log_normalize_fun(self, depth_map, max_val=None):        
-        # Find the maximum value
         max_value = torch.max(depth_map) if max_val is None else max_val
         return torch.log1p(depth_map) / torch.log1p(max_value)
     

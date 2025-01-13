@@ -598,8 +598,10 @@ class FeatureFusionModule(nn.Module):
         self.interact = FeatureInteraction(dim=dim // reduction, num_heads=num_heads)
         self.channel_up_proj1 = nn.Linear(dim // reduction, dim)
         self.channel_up_proj2 = nn.Linear(dim // reduction, dim)
+        
         self.norm1 = norm_layer(dim)
         self.norm2 = norm_layer(dim)
+        
         # self.fuse_weight = SpatialWeights(dim=dim, reduction=reduction)
         self.fuse_weight = FeatureFusionWeight(dim=dim, reduction=reduction, kernel_size=1)
 
@@ -636,6 +638,9 @@ class FeatureFusionModule(nn.Module):
         
         y1 = x1 + self.norm1(y1)
         y2 = x2 + self.norm2(y2)
+        
+        # y1 = x1 + y1
+        # y2 = x2 + y2
         
         y1 = token2feature(y1, patch_grid_size)
         y2 = token2feature(y2, patch_grid_size)

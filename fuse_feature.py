@@ -85,6 +85,7 @@ parser.add_argument("--local-rank", default=0, type=int)
 parser.add_argument("--port", default=None, type=int)
 parser.add_argument("--event_voxel_chans", default=5, type=int)
 parser.add_argument("--return-feature", action="store_true")
+parser.add_argument("--half", action="store_true")
 
 
 def get_dataloader(args):
@@ -236,8 +237,10 @@ def main():
     teacher_model.load_state_dict(checkpoint, strict=False)
     print(f"Model weights load from {args.load_from} successfully!")
 
-    student_model = student_model.half()
-    teacher_model = teacher_model.half()
+    if args.half:
+        student_model = student_model.half()
+        teacher_model = teacher_model.half()
+
     # Train student models in parallel
     student_model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(student_model)
     student_model.cuda(local_rank)
@@ -260,7 +263,7 @@ def main():
     # criterion = SiLogLoss().cuda(local_rank)
     criterion = MixedLoss(log_normalize=True).cuda(local_rank)
     feature_loss = FeatureCosLoss(alpha=1.0, beta=0).cuda(local_rank)
-    l1_loss = F1_Loss(log_normalized=False).cuda(local_rank)
+    l1_loss = F1_Loss(log_normalized=True).cuda(local_rank)
 
     # Configure optimizer to include only trainable parameters
     optimizer = AdamW(
@@ -349,8 +352,9 @@ def main():
                 sample["input"].cuda(),
             )
 
-            img = img.half()
-            img_voxel = img_voxel.half()
+            if args.half:
+                img = img.half()
+                img_voxel = img_voxel.half()
             
             if random.random() < 0.5:
                 img = img.flip(-1)
@@ -389,8 +393,8 @@ def main():
             fea_loss = feature_loss(student_features, teacher_features)
             l1 = l1_loss(student_pred, teacher_pred, valid_mask)
             # print(student_pred.shape, teacher_pred.shape)
-            print(student_pred.min(), teacher_pred.min())
-            print(student_pred.max(), teacher_pred.max())
+            # print(student_pred.min(), teacher_pred.min())
+            # print(student_pred.max(), teacher_pred.max())
             # print(student_features[0].shape, teacher_features[0].shape)
             # print("*****************************************************")
             # print(f"l1: {l1}, fea_loss: {fea_loss}, si_loss: {si_loss}, grad_loss: {grad_loss}")
@@ -401,7 +405,7 @@ def main():
             # total_loss = si_loss
             # total_loss = l1 + fea_loss
             total_loss = l1
-            print(total_loss)
+            # print(total_loss)
             total_loss.backward()
             optimizer.step()
 
@@ -467,6 +471,10 @@ def main():
                 sample["image"].cuda(),
                 sample["input"].cuda(),
             )
+
+            if args.half:
+                img = img.half()
+                img_voxel = img_voxel.half()
 
             with torch.no_grad():
                 student_pred, _ = student_model(img_voxel)

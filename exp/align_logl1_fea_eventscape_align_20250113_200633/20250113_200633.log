@@ -1,0 +1,441 @@
+/data/miniconda/envs/torch/lib/python3.10/site-packages/torch/distributed/launch.py:183: FutureWarning: The module torch.distributed.launch is deprecated
+and will be removed in future. Use torchrun.
+Note that --use-env is set by default in torchrun.
+If your script expects `--local-rank` argument to be set, please
+change it to read from `os.environ['LOCAL_RANK']` instead. See 
+https://pytorch.org/docs/stable/distributed.html#launch-utility for 
+further instructions
+
+  warnings.warn(
+W0113 20:06:34.807000 140202108343360 torch/distributed/run.py:757] 
+W0113 20:06:34.807000 140202108343360 torch/distributed/run.py:757] *****************************************
+W0113 20:06:34.807000 140202108343360 torch/distributed/run.py:757] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0113 20:06:34.807000 140202108343360 torch/distributed/run.py:757] *****************************************
+[2025-01-13 20:06:37,708][    INFO] {'bs': 24,
+ 'dataset': 'eventscape_align',
+ 'encoder': 'vitl',
+ 'epochs': 5,
+ 'event_voxel_chans': 3,
+ 'img_size': 350,
+ 'load_from': '/data/coding/upload-data/checkpoints/depth_anything_v2_vitl.pth',
+ 'local_rank': 0,
+ 'lr': 5e-06,
+ 'ngpus': 2,
+ 'port': 20596,
+ 'return_feature': True,
+ 'save_path': '/data/coding/code/da2-prompt-tuning/exp/align_logl1_fea_eventscape_align_20250113_200633'}
+
+INFO:dinov2:using MLP layer as FFN
+INFO:dinov2:using MLP layer as FFN
+INFO:dinov2:using MLP layer as FFN
+INFO:dinov2:using MLP layer as FFN
+Model weights load from /data/coding/upload-data/checkpoints/depth_anything_v2_vitl.pth successfully!
+Model weights load from /data/coding/upload-data/checkpoints/depth_anything_v2_vitl.pth successfully!
+Setting up Multi Scale Gradient loss...
+Done
+Setting up Multi Scale Gradient loss...
+Done
+[2025-01-13 20:06:51,668][    INFO] Module: module.pretrained.cls_token, Trainable Parameters: 1024
+[2025-01-13 20:06:51,668][    INFO] Module: module.pretrained.pos_embed, Trainable Parameters: 1402880
+[2025-01-13 20:06:51,668][    INFO] Module: module.pretrained.mask_token, Trainable Parameters: 1024
+[2025-01-13 20:06:51,668][    INFO] Module: module.pretrained.patch_embed.proj.weight, Trainable Parameters: 602112
+[2025-01-13 20:06:51,668][    INFO] Module: module.pretrained.patch_embed.proj.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,668][    INFO] Module: module.pretrained.blocks.0.norm1.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,668][    INFO] Module: module.pretrained.blocks.0.attn.qkv.bias, Trainable Parameters: 3072
+[2025-01-13 20:06:51,668][    INFO] Module: module.pretrained.blocks.0.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-01-13 20:06:51,668][    INFO] Module: module.pretrained.blocks.0.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-01-13 20:06:51,668][    INFO] Module: module.pretrained.blocks.0.attn.proj.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,668][    INFO] Module: module.pretrained.blocks.0.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,668][    INFO] Module: module.pretrained.blocks.0.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.0.norm2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.0.mlp.fc1.bias, Trainable Parameters: 4096
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.0.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.0.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.0.mlp.fc2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.0.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.0.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.1.norm1.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.1.attn.qkv.bias, Trainable Parameters: 3072
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.1.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.1.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.1.attn.proj.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.1.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.1.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.1.norm2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.1.mlp.fc1.bias, Trainable Parameters: 4096
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.1.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.1.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.1.mlp.fc2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.1.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.1.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.2.norm1.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.2.attn.qkv.bias, Trainable Parameters: 3072
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.2.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.2.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.2.attn.proj.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.2.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.2.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.2.norm2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.2.mlp.fc1.bias, Trainable Parameters: 4096
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.2.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.2.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.2.mlp.fc2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.2.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.2.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.3.norm1.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.3.attn.qkv.bias, Trainable Parameters: 3072
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.3.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.3.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.3.attn.proj.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.3.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.3.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.3.norm2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,669][    INFO] Module: module.pretrained.blocks.3.mlp.fc1.bias, Trainable Parameters: 4096
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.3.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.3.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.3.mlp.fc2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.3.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.3.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.4.norm1.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.4.attn.qkv.bias, Trainable Parameters: 3072
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.4.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.4.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.4.attn.proj.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.4.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.4.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.4.norm2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.4.mlp.fc1.bias, Trainable Parameters: 4096
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.4.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.4.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.4.mlp.fc2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.4.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.4.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.5.norm1.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.5.attn.qkv.bias, Trainable Parameters: 3072
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.5.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.5.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.5.attn.proj.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.5.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.5.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.5.norm2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.5.mlp.fc1.bias, Trainable Parameters: 4096
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.5.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.5.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.5.mlp.fc2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.5.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.5.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.6.norm1.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.6.attn.qkv.bias, Trainable Parameters: 3072
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.6.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.6.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.6.attn.proj.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.6.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.6.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.6.norm2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.6.mlp.fc1.bias, Trainable Parameters: 4096
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.6.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,670][    INFO] Module: module.pretrained.blocks.6.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.6.mlp.fc2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.6.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.6.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.7.norm1.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.7.attn.qkv.bias, Trainable Parameters: 3072
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.7.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.7.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.7.attn.proj.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.7.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.7.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.7.norm2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.7.mlp.fc1.bias, Trainable Parameters: 4096
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.7.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.7.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.7.mlp.fc2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.7.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.7.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.8.norm1.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.8.attn.qkv.bias, Trainable Parameters: 3072
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.8.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.8.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.8.attn.proj.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.8.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.8.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.8.norm2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.8.mlp.fc1.bias, Trainable Parameters: 4096
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.8.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.8.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.8.mlp.fc2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.8.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.8.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.9.norm1.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.9.attn.qkv.bias, Trainable Parameters: 3072
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.9.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.9.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.9.attn.proj.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.9.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.9.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.9.norm2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.9.mlp.fc1.bias, Trainable Parameters: 4096
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.9.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.9.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.9.mlp.fc2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.9.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.9.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,671][    INFO] Module: module.pretrained.blocks.10.norm1.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.10.attn.qkv.bias, Trainable Parameters: 3072
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.10.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.10.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.10.attn.proj.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.10.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.10.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.10.norm2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.10.mlp.fc1.bias, Trainable Parameters: 4096
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.10.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.10.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.10.mlp.fc2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.10.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.10.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.11.norm1.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.11.attn.qkv.bias, Trainable Parameters: 3072
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.11.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.11.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.11.attn.proj.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.11.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.11.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.11.norm2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.11.mlp.fc1.bias, Trainable Parameters: 4096
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.11.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.11.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.11.mlp.fc2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.11.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.11.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.12.norm1.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.12.attn.qkv.bias, Trainable Parameters: 3072
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.12.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.12.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.12.attn.proj.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.12.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.12.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.12.norm2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.12.mlp.fc1.bias, Trainable Parameters: 4096
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.12.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.12.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.12.mlp.fc2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.12.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.12.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.13.norm1.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.13.attn.qkv.bias, Trainable Parameters: 3072
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.13.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-01-13 20:06:51,672][    INFO] Module: module.pretrained.blocks.13.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.13.attn.proj.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.13.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.13.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.13.norm2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.13.mlp.fc1.bias, Trainable Parameters: 4096
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.13.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.13.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.13.mlp.fc2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.13.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.13.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.14.norm1.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.14.attn.qkv.bias, Trainable Parameters: 3072
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.14.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.14.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.14.attn.proj.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.14.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.14.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.14.norm2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.14.mlp.fc1.bias, Trainable Parameters: 4096
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.14.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.14.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.14.mlp.fc2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.14.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.14.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.15.norm1.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.15.attn.qkv.bias, Trainable Parameters: 3072
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.15.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.15.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.15.attn.proj.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.15.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.15.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.15.norm2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.15.mlp.fc1.bias, Trainable Parameters: 4096
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.15.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.15.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.15.mlp.fc2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.15.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.15.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.16.norm1.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.16.attn.qkv.bias, Trainable Parameters: 3072
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.16.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.16.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.16.attn.proj.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.16.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,673][    INFO] Module: module.pretrained.blocks.16.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.16.norm2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.16.mlp.fc1.bias, Trainable Parameters: 4096
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.16.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.16.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.16.mlp.fc2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.16.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.16.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.17.norm1.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.17.attn.qkv.bias, Trainable Parameters: 3072
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.17.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.17.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.17.attn.proj.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.17.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.17.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.17.norm2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.17.mlp.fc1.bias, Trainable Parameters: 4096
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.17.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.17.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.17.mlp.fc2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.17.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.17.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.18.norm1.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.18.attn.qkv.bias, Trainable Parameters: 3072
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.18.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.18.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.18.attn.proj.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.18.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.18.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.18.norm2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.18.mlp.fc1.bias, Trainable Parameters: 4096
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.18.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.18.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.18.mlp.fc2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.18.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.18.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.19.norm1.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.19.attn.qkv.bias, Trainable Parameters: 3072
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.19.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.19.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.19.attn.proj.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.19.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.19.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.19.norm2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.19.mlp.fc1.bias, Trainable Parameters: 4096
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.19.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,674][    INFO] Module: module.pretrained.blocks.19.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.19.mlp.fc2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.19.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.19.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.20.norm1.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.20.attn.qkv.bias, Trainable Parameters: 3072
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.20.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.20.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.20.attn.proj.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.20.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.20.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.20.norm2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.20.mlp.fc1.bias, Trainable Parameters: 4096
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.20.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.20.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.20.mlp.fc2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.20.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.20.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.21.norm1.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.21.attn.qkv.bias, Trainable Parameters: 3072
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.21.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.21.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.21.attn.proj.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.21.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.21.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.21.norm2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.21.mlp.fc1.bias, Trainable Parameters: 4096
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.21.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.21.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.21.mlp.fc2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.21.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.21.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.22.norm1.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.22.attn.qkv.bias, Trainable Parameters: 3072
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.22.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.22.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.22.attn.proj.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.22.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.22.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.22.norm2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.22.mlp.fc1.bias, Trainable Parameters: 4096
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.22.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.22.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.22.mlp.fc2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.22.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-01-13 20:06:51,675][    INFO] Module: module.pretrained.blocks.22.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,676][    INFO] Module: module.pretrained.blocks.23.norm1.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,676][    INFO] Module: module.pretrained.blocks.23.attn.qkv.bias, Trainable Parameters: 3072
+[2025-01-13 20:06:51,676][    INFO] Module: module.pretrained.blocks.23.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-01-13 20:06:51,676][    INFO] Module: module.pretrained.blocks.23.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-01-13 20:06:51,676][    INFO] Module: module.pretrained.blocks.23.attn.proj.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,676][    INFO] Module: module.pretrained.blocks.23.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,676][    INFO] Module: module.pretrained.blocks.23.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,676][    INFO] Module: module.pretrained.blocks.23.norm2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,676][    INFO] Module: module.pretrained.blocks.23.mlp.fc1.bias, Trainable Parameters: 4096
+[2025-01-13 20:06:51,676][    INFO] Module: module.pretrained.blocks.23.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-01-13 20:06:51,676][    INFO] Module: module.pretrained.blocks.23.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-01-13 20:06:51,676][    INFO] Module: module.pretrained.blocks.23.mlp.fc2.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,676][    INFO] Module: module.pretrained.blocks.23.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-01-13 20:06:51,676][    INFO] Module: module.pretrained.blocks.23.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-01-13 20:06:51,676][    INFO] Module: module.pretrained.norm.weight, Trainable Parameters: 1024
+[2025-01-13 20:06:51,676][    INFO] Module: module.pretrained.norm.bias, Trainable Parameters: 1024
+[2025-01-13 20:06:51,677][    INFO] Total Trainable Parameters: 5819392
+[2025-01-13 20:06:51,677][    INFO] ===========> Epoch: 0/5, d1: 0.000, d2: 0.000, d3: 0.000
+[2025-01-13 20:06:51,677][    INFO] ===========> Epoch: 0/5, abs_rel: 100.000, sq_rel: 100.000, rmse: 100.000, rmse_log: 100.000, log10: 100.000, silog: 100.000
+[2025-01-13 20:07:01,337][    INFO] Iter: 0/2548, LR: 0.0000050, Loss: 0.563, si_loss: 0.176, grad_loss: 0.462, fea_loss: 0.387
+[2025-01-13 20:11:36,115][    INFO] Iter: 100/2548, LR: 0.0000050, Loss: 0.323, si_loss: 0.030, grad_loss: 0.314, fea_loss: 0.293
+[2025-01-13 20:16:11,487][    INFO] Iter: 200/2548, LR: 0.0000049, Loss: 0.270, si_loss: 0.025, grad_loss: 0.328, fea_loss: 0.245
+[2025-01-13 20:20:46,839][    INFO] Iter: 300/2548, LR: 0.0000049, Loss: 0.245, si_loss: 0.025, grad_loss: 0.324, fea_loss: 0.220
+[2025-01-13 20:25:22,687][    INFO] Iter: 400/2548, LR: 0.0000049, Loss: 0.231, si_loss: 0.026, grad_loss: 0.316, fea_loss: 0.206
+[2025-01-13 20:29:58,096][    INFO] Iter: 500/2548, LR: 0.0000048, Loss: 0.222, si_loss: 0.024, grad_loss: 0.286, fea_loss: 0.198
+[2025-01-13 20:34:33,471][    INFO] Iter: 600/2548, LR: 0.0000048, Loss: 0.223, si_loss: 0.026, grad_loss: 0.305, fea_loss: 0.197
+[2025-01-13 20:39:08,906][    INFO] Iter: 700/2548, LR: 0.0000048, Loss: 0.225, si_loss: 0.031, grad_loss: 0.303, fea_loss: 0.194
+[2025-01-13 20:43:44,317][    INFO] Iter: 800/2548, LR: 0.0000047, Loss: 0.211, si_loss: 0.024, grad_loss: 0.328, fea_loss: 0.187
+[2025-01-13 20:48:19,825][    INFO] Iter: 900/2548, LR: 0.0000047, Loss: 0.203, si_loss: 0.023, grad_loss: 0.297, fea_loss: 0.181
+[2025-01-13 20:52:55,484][    INFO] Iter: 1000/2548, LR: 0.0000046, Loss: 0.207, si_loss: 0.028, grad_loss: 0.289, fea_loss: 0.179
+[2025-01-13 20:57:31,063][    INFO] Iter: 1100/2548, LR: 0.0000046, Loss: 0.204, si_loss: 0.023, grad_loss: 0.325, fea_loss: 0.181
+[2025-01-13 21:02:07,291][    INFO] Iter: 1200/2548, LR: 0.0000046, Loss: 0.206, si_loss: 0.024, grad_loss: 0.355, fea_loss: 0.181
+[2025-01-13 21:06:43,873][    INFO] Iter: 1300/2548, LR: 0.0000045, Loss: 0.188, si_loss: 0.023, grad_loss: 0.335, fea_loss: 0.165
+[2025-01-13 21:11:20,395][    INFO] Iter: 1400/2548, LR: 0.0000045, Loss: 0.188, si_loss: 0.022, grad_loss: 0.321, fea_loss: 0.166
+[2025-01-13 21:15:57,084][    INFO] Iter: 1500/2548, LR: 0.0000045, Loss: 0.185, si_loss: 0.020, grad_loss: 0.285, fea_loss: 0.165
+[2025-01-13 21:20:33,758][    INFO] Iter: 1600/2548, LR: 0.0000044, Loss: 0.186, si_loss: 0.021, grad_loss: 0.275, fea_loss: 0.165
+[2025-01-13 21:25:10,553][    INFO] Iter: 1700/2548, LR: 0.0000044, Loss: 0.186, si_loss: 0.020, grad_loss: 0.287, fea_loss: 0.167
+[2025-01-13 21:29:47,377][    INFO] Iter: 1800/2548, LR: 0.0000044, Loss: 0.189, si_loss: 0.021, grad_loss: 0.291, fea_loss: 0.168
+[2025-01-13 21:34:24,280][    INFO] Iter: 1900/2548, LR: 0.0000043, Loss: 0.194, si_loss: 0.028, grad_loss: 0.339, fea_loss: 0.166
+[2025-01-13 21:39:01,257][    INFO] Iter: 2000/2548, LR: 0.0000043, Loss: 0.180, si_loss: 0.021, grad_loss: 0.278, fea_loss: 0.159
+[2025-01-13 21:43:39,076][    INFO] Iter: 2100/2548, LR: 0.0000043, Loss: 0.184, si_loss: 0.020, grad_loss: 0.304, fea_loss: 0.163
+[2025-01-13 21:48:15,536][    INFO] Iter: 2200/2548, LR: 0.0000042, Loss: 0.181, si_loss: 0.022, grad_loss: 0.299, fea_loss: 0.159
+[2025-01-13 21:52:51,888][    INFO] Iter: 2300/2548, LR: 0.0000042, Loss: 0.189, si_loss: 0.026, grad_loss: 0.319, fea_loss: 0.163
+[2025-01-13 21:57:28,188][    INFO] Iter: 2400/2548, LR: 0.0000041, Loss: 0.182, si_loss: 0.021, grad_loss: 0.300, fea_loss: 0.160
+[2025-01-13 22:02:04,516][    INFO] Iter: 2500/2548, LR: 0.0000041, Loss: 0.176, si_loss: 0.022, grad_loss: 0.308, fea_loss: 0.155
+[2025-01-13 22:05:30,998][    INFO] ==========================================================================================
+[2025-01-13 22:05:30,998][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-13 22:05:30,999][    INFO]    0.868,    0.945,    0.965, 8939.240, 89390944.000, 1260.355,    1.630,    0.151,    1.623
+[2025-01-13 22:05:30,999][    INFO] ==========================================================================================
+
+[2025-01-13 22:05:34,512][    INFO] ===========> Epoch: 1/5, d1: 0.868, d2: 0.945, d3: 0.965
+[2025-01-13 22:05:34,512][    INFO] ===========> Epoch: 1/5, abs_rel: 100.000, sq_rel: 100.000, rmse: 100.000, rmse_log: 1.630, log10: 0.151, silog: 1.623
+[2025-01-13 22:05:38,445][    INFO] Iter: 0/2548, LR: 0.0000041, Loss: 0.173, si_loss: 0.017, grad_loss: 0.257, fea_loss: 0.157
+[2025-01-13 22:10:15,272][    INFO] Iter: 100/2548, LR: 0.0000041, Loss: 0.178, si_loss: 0.018, grad_loss: 0.278, fea_loss: 0.159
+[2025-01-13 22:14:52,406][    INFO] Iter: 200/2548, LR: 0.0000040, Loss: 0.180, si_loss: 0.020, grad_loss: 0.286, fea_loss: 0.160
+[2025-01-13 22:19:29,553][    INFO] Iter: 300/2548, LR: 0.0000040, Loss: 0.175, si_loss: 0.021, grad_loss: 0.302, fea_loss: 0.153
+[2025-01-13 22:24:06,732][    INFO] Iter: 400/2548, LR: 0.0000039, Loss: 0.167, si_loss: 0.017, grad_loss: 0.259, fea_loss: 0.150
+[2025-01-13 22:28:43,935][    INFO] Iter: 500/2548, LR: 0.0000039, Loss: 0.170, si_loss: 0.019, grad_loss: 0.267, fea_loss: 0.151
+[2025-01-13 22:33:20,943][    INFO] Iter: 600/2548, LR: 0.0000039, Loss: 0.176, si_loss: 0.019, grad_loss: 0.294, fea_loss: 0.158
+[2025-01-13 22:37:58,048][    INFO] Iter: 700/2548, LR: 0.0000038, Loss: 0.170, si_loss: 0.018, grad_loss: 0.283, fea_loss: 0.152
+[2025-01-13 22:42:35,164][    INFO] Iter: 800/2548, LR: 0.0000038, Loss: 0.169, si_loss: 0.020, grad_loss: 0.302, fea_loss: 0.149
+[2025-01-13 22:47:11,939][    INFO] Iter: 900/2548, LR: 0.0000038, Loss: 0.170, si_loss: 0.019, grad_loss: 0.298, fea_loss: 0.151
+[2025-01-13 22:51:48,592][    INFO] Iter: 1000/2548, LR: 0.0000037, Loss: 0.163, si_loss: 0.018, grad_loss: 0.284, fea_loss: 0.145
+[2025-01-13 22:56:25,203][    INFO] Iter: 1100/2548, LR: 0.0000037, Loss: 0.181, si_loss: 0.022, grad_loss: 0.297, fea_loss: 0.159
+[2025-01-13 23:01:01,823][    INFO] Iter: 1200/2548, LR: 0.0000037, Loss: 0.170, si_loss: 0.017, grad_loss: 0.262, fea_loss: 0.153
+[2025-01-13 23:05:38,331][    INFO] Iter: 1300/2548, LR: 0.0000036, Loss: 0.164, si_loss: 0.017, grad_loss: 0.276, fea_loss: 0.148
+[2025-01-13 23:10:14,923][    INFO] Iter: 1400/2548, LR: 0.0000036, Loss: 0.171, si_loss: 0.019, grad_loss: 0.298, fea_loss: 0.153
+[2025-01-13 23:14:53,127][    INFO] Iter: 1500/2548, LR: 0.0000035, Loss: 0.170, si_loss: 0.020, grad_loss: 0.306, fea_loss: 0.150
+[2025-01-13 23:19:28,665][    INFO] Iter: 1600/2548, LR: 0.0000035, Loss: 0.175, si_loss: 0.019, grad_loss: 0.264, fea_loss: 0.156
+[2025-01-13 23:24:04,063][    INFO] Iter: 1700/2548, LR: 0.0000035, Loss: 0.165, si_loss: 0.015, grad_loss: 0.247, fea_loss: 0.150
+[2025-01-13 23:28:39,475][    INFO] Iter: 1800/2548, LR: 0.0000034, Loss: 0.173, si_loss: 0.022, grad_loss: 0.264, fea_loss: 0.151
+[2025-01-13 23:33:14,938][    INFO] Iter: 1900/2548, LR: 0.0000034, Loss: 0.166, si_loss: 0.017, grad_loss: 0.258, fea_loss: 0.149
+[2025-01-13 23:37:50,563][    INFO] Iter: 2000/2548, LR: 0.0000034, Loss: 0.177, si_loss: 0.020, grad_loss: 0.276, fea_loss: 0.157
+[2025-01-13 23:42:26,003][    INFO] Iter: 2100/2548, LR: 0.0000033, Loss: 0.173, si_loss: 0.019, grad_loss: 0.298, fea_loss: 0.154
+[2025-01-13 23:47:01,532][    INFO] Iter: 2200/2548, LR: 0.0000033, Loss: 0.164, si_loss: 0.018, grad_loss: 0.283, fea_loss: 0.146
+[2025-01-13 23:51:37,223][    INFO] Iter: 2300/2548, LR: 0.0000032, Loss: 0.167, si_loss: 0.018, grad_loss: 0.295, fea_loss: 0.148
+[2025-01-13 23:56:12,876][    INFO] Iter: 2400/2548, LR: 0.0000032, Loss: 0.161, si_loss: 0.016, grad_loss: 0.249, fea_loss: 0.145
