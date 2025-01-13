@@ -199,7 +199,7 @@ def main():
 
     if rank == 0:
         all_args = {**vars(args), "ngpus": world_size}
-        logger.info("{}\n".format(pprint.pformat(all_args)))
+        logger.info(f"{pprint.pformat(all_args)}\n")
         writer = SummaryWriter(args.save_path)
 
     cudnn.enabled = True
@@ -236,6 +236,8 @@ def main():
     teacher_model.load_state_dict(checkpoint, strict=False)
     print(f"Model weights load from {args.load_from} successfully!")
 
+    student_model = student_model.half()
+    teacher_model = teacher_model.half()
     # Train student models in parallel
     student_model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(student_model)
     student_model.cuda(local_rank)
@@ -253,15 +255,12 @@ def main():
 
     for name, param in student_model.named_parameters():
         # Make module about feature fusion and read out trainable
-        if "prompt_fuse" in name or "read_out" in name:
-            param.requires_grad = True
-        else:
-            param.requires_grad = False
+        param.requires_grad = "prompt_fuse" in name or "read_out" in name
 
     # criterion = SiLogLoss().cuda(local_rank)
     criterion = MixedLoss(log_normalize=True).cuda(local_rank)
     feature_loss = FeatureCosLoss(alpha=1.0, beta=0).cuda(local_rank)
-    l1_loss = F1_Loss(log_normalized=True).cuda(local_rank)
+    l1_loss = F1_Loss(log_normalized=False).cuda(local_rank)
 
     # Configure optimizer to include only trainable parameters
     optimizer = AdamW(
@@ -270,7 +269,7 @@ def main():
                 "params": [
                     param
                     for name, param in student_model.named_parameters()
-                    if "prompt_fuse" not in name and "read_out" not in name
+                    if "encoder" in name and param.requires_grad
                 ],
                 "lr": args.lr,
             },
@@ -278,7 +277,7 @@ def main():
                 "params": [
                     param
                     for name, param in student_model.named_parameters()
-                    if "prompt_fuse" in name or "read_out" in name
+                    if "encoder" not in name and param.requires_grad
                 ],
                 "lr": args.lr * 10.0,
             },
@@ -350,6 +349,9 @@ def main():
                 sample["input"].cuda(),
             )
 
+            img = img.half()
+            img_voxel = img_voxel.half()
+            
             if random.random() < 0.5:
                 img = img.flip(-1)
                 img_voxel = img_voxel.flip(-1)
@@ -358,12 +360,12 @@ def main():
             # img_cor = img_voxel[0][:3,].cpu().numpy().transpose(1, 2, 0)
             # voxel = img_voxel[0][3:,].cpu().numpy().transpose(1, 2, 0)
             # print(img.shape, voxel.shape, img_cor.shape)
-            
+
             # import cv2
             # img = (img - img.min()) / (img.max() - img.min()) * 255.0
             # img = img.astype(np.uint8)
             # cv2.imwrite(f"{i}_img.png", img)
-            
+
             # img_cor = (img_cor - img_cor.min()) / (img_cor.max() - img_cor.min()) * 255.0
             # img_cor = img_cor.astype(np.uint8)
             # cv2.imwrite(f"{i}_img_cor.png", img_cor)
@@ -381,21 +383,25 @@ def main():
                 teacher_pred, teacher_features = teacher_model(img)
             student_pred, student_features = student_model(img_voxel)
 
-            # print(student_pred.shape, teacher_pred.shape)
-            # print(student_pred.min(), teacher_pred.min())
-            # print(student_pred.max(), teacher_pred.max())
-            # print(student_features[0].shape, teacher_features[0].shape)
-            # print("*****************************************************")
-            # exit()
 
             valid_mask = torch.ones_like(student_pred, dtype=torch.bool)
             loss, si_loss, grad_loss = criterion(student_pred, teacher_pred, valid_mask)
             fea_loss = feature_loss(student_features, teacher_features)
             l1 = l1_loss(student_pred, teacher_pred, valid_mask)
+            # print(student_pred.shape, teacher_pred.shape)
+            print(student_pred.min(), teacher_pred.min())
+            print(student_pred.max(), teacher_pred.max())
+            # print(student_features[0].shape, teacher_features[0].shape)
+            # print("*****************************************************")
+            # print(f"l1: {l1}, fea_loss: {fea_loss}, si_loss: {si_loss}, grad_loss: {grad_loss}")
+            # if i >= 5:
+            #     exit()
+            
             # total_loss = loss + fea_loss
-            # total_loss = loss
+            # total_loss = si_loss
             # total_loss = l1 + fea_loss
             total_loss = l1
+            print(total_loss)
             total_loss.backward()
             optimizer.step()
 

@@ -44,22 +44,16 @@ class F1_Loss(nn.Module):
 
     def log_normalize_fun(self, depth_map, max_val=None):        
         # Find the maximum value
-        if max_val != None:
-            max_value = torch.max(depth_map)
-        else:
-            max_value = max_val
-        # Apply log normalization
-        normalized_depth_map = torch.log1p(depth_map) / torch.log1p(max_value)
-        return normalized_depth_map
+        max_value = torch.max(depth_map) if max_val is None else max_val
+        return torch.log1p(depth_map) / torch.log1p(max_value)
     
     def forward(self, pred, target, valid_mask):
         pred = pred[valid_mask]
         target = target[valid_mask]
         
         if self.log_normalized:
-            max_val = torch.max(target)
-            pred = self.log_normalize_fun(pred, max_val=max_val)
-            target = self.log_normalize_fun(target, max_val=max_val)
+            pred = self.log_normalize_fun(pred)
+            target = self.log_normalize_fun(target)
         diff = torch.abs(pred - target)
         return diff.mean()
 
@@ -201,19 +195,13 @@ class MixedLoss(nn.Module):
 
     def log_normalize_fun(self, depth_map, max_val=None):        
         # Find the maximum value
-        if max_val != None:
-            max_value = torch.max(depth_map)
-        else:
-            max_value = max_val
-        # Apply log normalization
-        normalized_depth_map = torch.log1p(depth_map) / torch.log1p(max_value)
-        return normalized_depth_map
+        max_value = torch.max(depth_map) if max_val is None else max_val
+        return torch.log1p(depth_map) / torch.log1p(max_value)
     
     def forward(self, pred, target, valid_mask, eps=1e-8):
         if self.log_normalize:
-            max_val = torch.max(target)
-            pred = self.log_normalize_fun(pred, max_val=max_val)
-            target = self.log_normalize_fun(target, max_val=max_val)
+            pred = self.log_normalize_fun(pred)
+            target = self.log_normalize_fun(target)
         
         si_loss_value = self.si_loss(pred, target, valid_mask)
         grad_loss_value = self.grad_loss(pred, target)

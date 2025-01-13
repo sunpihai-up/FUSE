@@ -3,7 +3,7 @@ now=$(date +"%Y%m%d_%H%M%S")
 
 epoch=5
 bs=2
-gpus=2
+gpus=1
 lr=0.000005
 encoder=vitl
 dataset=eventscape_fuse_cor

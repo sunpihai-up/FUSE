@@ -116,7 +116,9 @@ class EPDEVisionTransformer(nn.Module):
             if i in self.blocks_to_take:
                 prompt_fuse.append(
                     FeatureFusionModule(
-                        dim=embed_dim, num_heads=self.num_heads
+                        # dim=embed_dim, num_heads=self.num_heads
+                        dim=embed_dim, num_heads=self.num_heads, reduction=8,
+                        # norm_layer=nn.BatchNorm2d
                     )
                 )
                 img_read_out.append(READ_OUT(in_channels=embed_dim))
@@ -229,9 +231,7 @@ class EPDEVisionTransformer(nn.Module):
         depth = self.depth_head(features, patch_h, patch_w)
         # depth = 1.0 / (depth + 1e-3)
         if self.return_feature:
-            fea_maps = []
-            for i, fea in enumerate(features):
-                fea_maps.append(fea[0])
+            fea_maps = [fea[0] for fea in features]
             return depth.squeeze(1), fea_maps
         else:
             return depth.squeeze(1)
@@ -285,50 +285,43 @@ class EPDEVisionTransformer(nn.Module):
 
 
 def epde_small(patch_size=16, num_register_tokens=0, **kwargs):
-    model = EPDEVisionTransformer(
+    return EPDEVisionTransformer(
         patch_size=patch_size,
         embed_dim=384,
         depth=12,
         encoder="vits",
         **kwargs,
     )
-    return model
 
 
 def epde_base(patch_size=16, num_register_tokens=0, **kwargs):
-    model = EPDEVisionTransformer(
+    return EPDEVisionTransformer(
         patch_size=patch_size,
         embed_dim=768,
         depth=12,
         encoder="vitb",
         **kwargs,
     )
-    return model
 
 
 def epde_large(patch_size=16, num_register_tokens=0, **kwargs):
-    model = EPDEVisionTransformer(
+    return EPDEVisionTransformer(
         patch_size=patch_size,
         embed_dim=1024,
         depth=24,
         encoder="vitl",
         **kwargs,
     )
-    return model
 
 
 def epde_giant2(patch_size=16, num_register_tokens=0, **kwargs):
-    """
-    Close to ViT-giant, with embed-dim 1536 and 24 heads => embed-dim per head 64
-    """
-    model = EPDEVisionTransformer(
+    return EPDEVisionTransformer(
         patch_size=patch_size,
         embed_dim=1536,
         depth=40,
         encoder="vitg",
         **kwargs,
     )
-    return model
 
 
 def EPDE(
