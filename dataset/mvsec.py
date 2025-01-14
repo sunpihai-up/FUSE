@@ -34,8 +34,8 @@ class MVSEC(Dataset):
                     resize_method="lower_bound",
                     image_interpolation_method=cv2.INTER_CUBIC,
                 ),
-                NormalizeImage(mean=mean, std=std),
-                # NormalizeImage(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+                # NormalizeImage(mean=mean, std=std),
+                NormalizeImage(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
                 PrepareForNet(),
             ]
             + ([Crop(size[0])] if self.mode == "train" else [])
@@ -50,10 +50,10 @@ class MVSEC(Dataset):
         return depth
 
     def __getitem__(self, item):
-        if self.mode == "train":
-            reg_factor, d_max = 3.70378, 100
-        else:
-            reg_factor, d_max = 3.70378, 80
+        # if self.mode == "train":
+        #     reg_factor, d_max = 3.70378, 100
+        # else:
+        reg_factor, d_max = 3.70378, 80
 
         img_path = self.filelist[item].split(" ")[0]
         depth_path = self.filelist[item].split(" ")[1]

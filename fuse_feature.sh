@@ -2,7 +2,7 @@
 now=$(date +"%Y%m%d_%H%M%S")
 
 epoch=5
-bs=12
+bs=24
 gpus=2
 lr=0.000005
 encoder=vitl
@@ -11,7 +11,7 @@ img_size=350
 event_voxel_chans=3
 load_from=/data/coding/upload-data/checkpoints/depth_anything_v2_vitl.pth
 depth_anything_pretrained=$load_from
-prompt_encoder_pretrained=/data/coding/code/da2-prompt-tuning/exp/align_log_l1_eventscape_align_20250108_205824/d1-0.8810270428657532-1.pth
+prompt_encoder_pretrained=/data/coding/code/da2-prompt-tuning/exp/align_logl1_fea_eventscape_align_20250113_200633/latest.pth
 save_path=/data/coding/code/da2-prompt-tuning/exp/fuse_log_l1_${dataset}_${now}
 
 mkdir -p $save_path

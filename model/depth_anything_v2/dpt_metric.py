@@ -125,8 +125,7 @@ class DPTHead(nn.Module):
             ),
             nn.ReLU(True),
             nn.Conv2d(head_features_2, 1, kernel_size=1, stride=1, padding=0),
-            nn.ReLU(True),
-            nn.Identity(),
+            nn.Sigmoid(),
         )
 
     def forward(self, out_features, patch_h, patch_w):

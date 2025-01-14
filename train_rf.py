@@ -20,9 +20,12 @@ from dataset.mvsec import MVSEC
 from dataset.eventscape import EventScape
 
 # from model.epde.epde_rf_encoder_n import EPDE
-from model.epde.epde_rf_var import EPDE
+# from model.epde.epde_rf_var import EPDE
 # from model.epde.epde_rf import EPDE
 # from model.epde.epde_rf_encoder import EPDE
+# from model.epde_modal import EPDE
+from model.epde_modal_metric import EPDE
+from model.epde.utils import clean_pretrained_weight
 from util.dist_helper import setup_distributed
 from util.loss import SiLogLoss, MixedLoss
 from util.metric import eval_depth, eval_depth_ori
@@ -39,7 +42,7 @@ parser.add_argument(
 parser.add_argument(
     "--dataset",
     default="mvsec",
-    choices=["mvsec", "eventscape"],
+    choices=["mvsec", "eventscape", "mvsec_2"],
 )
 parser.add_argument("--min-depth", default=0.001, type=float)
 parser.add_argument("--max-depth", default=1, type=float)
@@ -53,14 +56,9 @@ parser.add_argument("--save-path", type=str, required=True)
 parser.add_argument("--local-rank", default=0, type=int)
 parser.add_argument("--port", default=None, type=int)
 parser.add_argument("--event_voxel_chans", default=5, type=int)
-parser.add_argument(
-    "--normalized_depth", action="store_true", help="Enable normalized depth."
-)
-parser.add_argument(
-    "--prompt_type",
-    choices=["epde_deep", "epde_shaw", "add", "none"],
-    type=str,
-)
+parser.add_argument("--normalized_depth", action="store_true")
+parser.add_argument("--disparity", action="store_true")
+parser.add_argument("--return-feature", action="store_true")
 parser.add_argument(
     "--finetune-mode",
     choices=["prompt", "decoder", "bias", "bias_and_decoder", "overall"],
@@ -96,6 +94,13 @@ def main():
             normalized_d=args.normalized_depth,
             size=size,
         )
+    elif args.dataset == "mvsec_2":
+        trainset = MVSEC(
+            "dataset/splits/mvsec/train_2.txt",
+            "train",
+            normalized_d=args.normalized_depth,
+            size=size,
+        )
     elif args.dataset == "eventscape":
         trainset = EventScape(
             "dataset/splits/eventscape/train.txt",
@@ -127,6 +132,13 @@ def main():
             normalized_d=args.normalized_depth,
             size=size,
         )
+    elif args.dataset == "mvsec_2":
+        valset = MVSEC(
+            "./dataset/splits/mvsec/outdoor_night1_val.txt",
+            "val",
+            normalized_d=args.normalized_depth,
+            size=size,
+        )
     elif args.dataset == "eventscape":
         valset = EventScape(
             "./dataset/splits/eventscape/val_1k.txt",
@@ -152,22 +164,16 @@ def main():
     # Instantiate Model
     model = EPDE(
         model_name=args.encoder,
-        dataset=args.dataset,
         max_depth=args.max_depth,
         event_voxel_chans=args.event_voxel_chans,
-        prompt_type=args.prompt_type,
-        depth_anything_pretrained=args.depth_anything_pretrained,
+        return_feature=args.return_feature,
     )
 
     if args.pretrained_from:
-        checkpoint = torch.load(args.pretrained_from, map_location='cpu')
-        if 'model' in checkpoint.keys():
-            checkpoint = checkpoint['model']
-            checkpoint = {
-                (key[7:] if key.startswith("module.") else key): value
-                for key, value in checkpoint.items()
-            }
-        model.load_state_dict(checkpoint)
+        checkpoint = torch.load(args.pretrained_from, map_location="cpu")
+        checkpoint = clean_pretrained_weight(checkpoint)
+        checkpoint = {k:v for k, v in checkpoint.items() if "depth_head" not in k}
+        model.load_state_dict(checkpoint, strict=False)
         print(f"Model weights load from {args.pretrained_from} successfully!")
 
     model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
@@ -184,22 +190,11 @@ def main():
     # criterion = MixedLoss().cuda(local_rank)
 
     # Handling frozen parameters
-    if args.finetune_mode == "prompt":
+    if args.finetune_mode == "decoder":
         for name, param in model.named_parameters():
-            if "foundation" in name or "image_encoder" in name:
+            if "depth_head" not in name:
                 param.requires_grad = False
-    elif args.finetune_mode == "decoder":
-        for name, param in model.named_parameters():
-            if "foundation.pretrained" in name or "image_encoder" in name:
-                param.requires_grad = False
-    elif args.finetune_mode == "bias":
-        for name, param in model.named_parameters():
-            if "bias" not in name and "foundation" in name:
-                param.requires_grad = False
-    elif args.finetune_mode == "bias_and_decoder":
-        for name, param in model.named_parameters():
-            if "bias" not in name and "foundation.pretrained" in name:
-                param.requires_grad = False
+
     print(f"The freezing mode of weights is: {args.finetune_mode}")
 
     # Configure optimizer to include only trainable parameters
@@ -209,7 +204,7 @@ def main():
                 "params": [
                     param
                     for name, param in model.named_parameters()
-                    if "pretrained" in name and param.requires_grad
+                    if "encoder" in name and param.requires_grad
                 ],
                 "lr": args.lr,
             },
@@ -217,7 +212,7 @@ def main():
                 "params": [
                     param
                     for name, param in model.named_parameters()
-                    if "pretrained" not in name and param.requires_grad
+                    if "encoder" not in name and param.requires_grad
                 ],
                 "lr": args.lr * 10.0,
             },
@@ -305,6 +300,8 @@ def main():
             #     depth,
             #     valid_mask,
             # )
+            if args.disparity:
+                pred = 1.0 / (pred + 1e-4)
             loss = criterion(
                 pred,
                 depth,
@@ -337,8 +334,8 @@ def main():
                         loss.item(),
                     )
                 )
-            
-            if iters % 2000 == 0 and rank == 0:
+
+            if iters % 2000 == 0 and iters >= 2000 and rank == 0:
                 checkpoint = {
                     "model": model.state_dict(),
                     "optimizer": optimizer.state_dict(),
@@ -375,6 +372,8 @@ def main():
 
             with torch.no_grad():
                 pred = model(img)
+                if args.disparity:
+                    pred = 1.0 / (pred + 1e-4)
                 pred = F.interpolate(
                     pred[:, None], depth.shape[-2:], mode="bilinear", align_corners=True
                 )[0, 0]

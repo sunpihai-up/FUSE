@@ -125,8 +125,8 @@ class DPTHead(nn.Module):
             ),
             nn.ReLU(True),
             nn.Conv2d(head_features_2, 1, kernel_size=1, stride=1, padding=0),
-            nn.Sigmoid(),
-            # nn.ReLU(True),
+            nn.ReLU(True),
+            nn.Identity(),
         )
 
     def forward(self, out_features, patch_h, patch_w):
@@ -143,8 +143,7 @@ class DPTHead(nn.Module):
 
             x = self.projects[i](x)
             x = self.resize_layers[i](x)
-            # if torch.isnan(x).any().item():
-            #     print(f"x have nan {i}")
+
             out.append(x)
 
         layer_1, layer_2, layer_3, layer_4 = out
@@ -193,7 +192,7 @@ class DepthAnythingV2(nn.Module):
 
         self.max_depth = max_depth
         self.return_feature = return_feature
-        
+
         self.encoder = encoder
         self.pretrained = DINOv2(model_name=encoder)
 

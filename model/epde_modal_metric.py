@@ -8,12 +8,11 @@ import torch.nn.functional as F
 from torchvision.transforms import Compose
 
 from typing import Sequence, Tuple, Union
-from model.depth_anything_v2.dpt_align import DPTHead
+from model.depth_anything_v2.dpt_metric import DPTHead
 from model.depth_anything_v2.dinov2 import DINOv2
 from model.depth_anything_v2.dinov2_lora import DINOv2_lora
 from model.epde.prompt_module import FeatureFusionModule
 from dataset.transform import Resize, NormalizeImage, PrepareForNet
-from model.epde.utils import token2feature, feature2token, init_weights_vit_timm
 from model.epde.utils import clean_pretrained_weight
 
 depth_anything_model_configs = {
@@ -115,7 +114,6 @@ class EPDEVisionTransformer(nn.Module):
             if i in self.blocks_to_take:
                 prompt_fuse.append(
                     FeatureFusionModule(
-                        # dim=embed_dim, num_heads=self.num_heads
                         dim=embed_dim,
                         num_heads=self.num_heads,
                         reduction=8,
@@ -245,8 +243,8 @@ class EPDEVisionTransformer(nn.Module):
             return_class_token=True,
         )
 
-        depth = self.depth_head(features, patch_h, patch_w)
-        # depth = 1.0 / (depth + 1e-3)
+        depth = self.depth_head(features, patch_h, patch_w) * self.max_depth
+
         if self.return_feature:
             fea_maps = [fea[0] for fea in features]
             return depth.squeeze(1), fea_maps

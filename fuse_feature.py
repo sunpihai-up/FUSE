@@ -262,7 +262,7 @@ def main():
 
     # criterion = SiLogLoss().cuda(local_rank)
     criterion = MixedLoss(log_normalize=True).cuda(local_rank)
-    feature_loss = FeatureCosLoss(alpha=1.0, beta=0).cuda(local_rank)
+    feature_loss = FeatureCosLoss(beta=0).cuda(local_rank)
     l1_loss = F1_Loss(log_normalized=True).cuda(local_rank)
 
     # Configure optimizer to include only trainable parameters
@@ -403,8 +403,8 @@ def main():
             
             # total_loss = loss + fea_loss
             # total_loss = si_loss
-            # total_loss = l1 + fea_loss
-            total_loss = l1
+            total_loss = l1 + fea_loss
+            # total_loss = l1
             # print(total_loss)
             total_loss.backward()
             optimizer.step()
@@ -446,8 +446,8 @@ def main():
                 }
                 torch.save(checkpoint, os.path.join(args.save_path, "latest.pth"))
 
-            if i >= 500:
-                break
+            # if i >= 500:
+            #     break
         student_model.eval()
 
         results = {
@@ -551,13 +551,8 @@ def main():
                     for file in os.listdir(args.save_path):
                         if file.startswith(k) and file.endswith(".pth"):
                             os.remove(os.path.join(args.save_path, file))
-                    checkpoint = {
-                        "model": student_model.state_dict(),
-                        "epoch": epoch,
-                        "previous_best": previous_best,
-                    }
                     torch.save(
-                        checkpoint,
+                        student_model.state_dict(),
                         os.path.join(
                             args.save_path, f"{k}-{cur_results[k]}-{epoch}.pth"
                         ),

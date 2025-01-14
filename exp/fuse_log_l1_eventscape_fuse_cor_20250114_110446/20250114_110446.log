@@ -1,0 +1,253 @@
+/data/miniconda/envs/torch/lib/python3.10/site-packages/torch/distributed/launch.py:183: FutureWarning: The module torch.distributed.launch is deprecated
+and will be removed in future. Use torchrun.
+Note that --use-env is set by default in torchrun.
+If your script expects `--local-rank` argument to be set, please
+change it to read from `os.environ['LOCAL_RANK']` instead. See 
+https://pytorch.org/docs/stable/distributed.html#launch-utility for 
+further instructions
+
+  warnings.warn(
+W0114 11:04:47.978000 140101205861440 torch/distributed/run.py:757] 
+W0114 11:04:47.978000 140101205861440 torch/distributed/run.py:757] *****************************************
+W0114 11:04:47.978000 140101205861440 torch/distributed/run.py:757] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0114 11:04:47.978000 140101205861440 torch/distributed/run.py:757] *****************************************
+/data/miniconda/envs/torch/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/data/miniconda/envs/torch/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[2025-01-14 11:04:51,104][    INFO] {'bs': 24,
+ 'dataset': 'eventscape_fuse_cor',
+ 'depth_anything_pretrained': '/data/coding/upload-data/checkpoints/depth_anything_v2_vitl.pth',
+ 'encoder': 'vitl',
+ 'epochs': 5,
+ 'event_voxel_chans': 3,
+ 'half': False,
+ 'img_size': 350,
+ 'load_from': '/data/coding/upload-data/checkpoints/depth_anything_v2_vitl.pth',
+ 'local_rank': 0,
+ 'lr': 5e-06,
+ 'max_depth': 1,
+ 'ngpus': 2,
+ 'port': 20596,
+ 'prompt_encoder_pretrained': '/data/coding/code/da2-prompt-tuning/exp/align_logl1_fea_eventscape_align_20250113_200633/latest.pth',
+ 'return_feature': True,
+ 'save_path': '/data/coding/code/da2-prompt-tuning/exp/fuse_log_l1_eventscape_fuse_cor_20250114_110446'}
+
+INFO:dinov2:using MLP layer as FFN
+INFO:dinov2:using MLP layer as FFN
+INFO:dinov2:using MLP layer as FFN
+INFO:dinov2:using MLP layer as FFN
+INFO:dinov2:using MLP layer as FFN
+INFO:dinov2:using MLP layer as FFN
+Loaded pretrained image weights from /data/coding/upload-data/checkpoints/depth_anything_v2_vitl.pth
+Loaded pretrained prompt weights from /data/coding/code/da2-prompt-tuning/exp/align_logl1_fea_eventscape_align_20250113_200633/latest.pth
+Loaded pretrained image weights from /data/coding/upload-data/checkpoints/depth_anything_v2_vitl.pth
+Loaded pretrained prompt weights from /data/coding/code/da2-prompt-tuning/exp/align_logl1_fea_eventscape_align_20250113_200633/latest.pth
+Model weights load from /data/coding/upload-data/checkpoints/depth_anything_v2_vitl.pth successfully!
+Model weights load from /data/coding/upload-data/checkpoints/depth_anything_v2_vitl.pth successfully!
+Setting up Multi Scale Gradient loss...
+Done
+Setting up Multi Scale Gradient loss...
+Done
+[2025-01-14 11:05:09,898][    INFO] Module: module.prompt_fuse.4.channel_down_proj1.weight, Trainable Parameters: 131072
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.channel_down_proj1.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.channel_down_proj2.weight, Trainable Parameters: 131072
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.channel_down_proj2.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.interact.cross_attention_1.query.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.interact.cross_attention_1.query.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.interact.cross_attention_1.key.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.interact.cross_attention_1.key.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.interact.cross_attention_1.value.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.interact.cross_attention_1.value.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.interact.cross_attention_1.out.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.interact.cross_attention_1.out.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.interact.cross_attention_2.query.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.interact.cross_attention_2.query.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.interact.cross_attention_2.key.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.interact.cross_attention_2.key.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.interact.cross_attention_2.value.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.interact.cross_attention_2.value.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.interact.cross_attention_2.out.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.interact.cross_attention_2.out.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.channel_up_proj1.weight, Trainable Parameters: 131072
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.channel_up_proj1.bias, Trainable Parameters: 1024
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.channel_up_proj2.weight, Trainable Parameters: 131072
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.channel_up_proj2.bias, Trainable Parameters: 1024
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.norm1.weight, Trainable Parameters: 1024
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.norm1.bias, Trainable Parameters: 1024
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.norm2.weight, Trainable Parameters: 1024
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.norm2.bias, Trainable Parameters: 1024
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.fuse_weight.get_weight.0.weight, Trainable Parameters: 262144
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.fuse_weight.get_weight.0.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.fuse_weight.get_weight.2.weight, Trainable Parameters: 256
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.4.fuse_weight.get_weight.2.bias, Trainable Parameters: 2
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.11.channel_down_proj1.weight, Trainable Parameters: 131072
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.11.channel_down_proj1.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.11.channel_down_proj2.weight, Trainable Parameters: 131072
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.11.channel_down_proj2.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.11.interact.cross_attention_1.query.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.11.interact.cross_attention_1.query.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.11.interact.cross_attention_1.key.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.11.interact.cross_attention_1.key.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.11.interact.cross_attention_1.value.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.11.interact.cross_attention_1.value.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.11.interact.cross_attention_1.out.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.11.interact.cross_attention_1.out.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.11.interact.cross_attention_2.query.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,899][    INFO] Module: module.prompt_fuse.11.interact.cross_attention_2.query.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.11.interact.cross_attention_2.key.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.11.interact.cross_attention_2.key.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.11.interact.cross_attention_2.value.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.11.interact.cross_attention_2.value.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.11.interact.cross_attention_2.out.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.11.interact.cross_attention_2.out.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.11.channel_up_proj1.weight, Trainable Parameters: 131072
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.11.channel_up_proj1.bias, Trainable Parameters: 1024
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.11.channel_up_proj2.weight, Trainable Parameters: 131072
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.11.channel_up_proj2.bias, Trainable Parameters: 1024
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.11.norm1.weight, Trainable Parameters: 1024
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.11.norm1.bias, Trainable Parameters: 1024
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.11.norm2.weight, Trainable Parameters: 1024
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.11.norm2.bias, Trainable Parameters: 1024
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.11.fuse_weight.get_weight.0.weight, Trainable Parameters: 262144
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.11.fuse_weight.get_weight.0.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.11.fuse_weight.get_weight.2.weight, Trainable Parameters: 256
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.11.fuse_weight.get_weight.2.bias, Trainable Parameters: 2
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.channel_down_proj1.weight, Trainable Parameters: 131072
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.channel_down_proj1.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.channel_down_proj2.weight, Trainable Parameters: 131072
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.channel_down_proj2.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.interact.cross_attention_1.query.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.interact.cross_attention_1.query.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.interact.cross_attention_1.key.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.interact.cross_attention_1.key.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.interact.cross_attention_1.value.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.interact.cross_attention_1.value.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.interact.cross_attention_1.out.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.interact.cross_attention_1.out.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.interact.cross_attention_2.query.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.interact.cross_attention_2.query.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.interact.cross_attention_2.key.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.interact.cross_attention_2.key.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.interact.cross_attention_2.value.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.interact.cross_attention_2.value.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.interact.cross_attention_2.out.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.interact.cross_attention_2.out.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.channel_up_proj1.weight, Trainable Parameters: 131072
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.channel_up_proj1.bias, Trainable Parameters: 1024
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.channel_up_proj2.weight, Trainable Parameters: 131072
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.channel_up_proj2.bias, Trainable Parameters: 1024
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.norm1.weight, Trainable Parameters: 1024
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.norm1.bias, Trainable Parameters: 1024
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.norm2.weight, Trainable Parameters: 1024
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.norm2.bias, Trainable Parameters: 1024
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.fuse_weight.get_weight.0.weight, Trainable Parameters: 262144
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.fuse_weight.get_weight.0.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,900][    INFO] Module: module.prompt_fuse.17.fuse_weight.get_weight.2.weight, Trainable Parameters: 256
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.17.fuse_weight.get_weight.2.bias, Trainable Parameters: 2
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.channel_down_proj1.weight, Trainable Parameters: 131072
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.channel_down_proj1.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.channel_down_proj2.weight, Trainable Parameters: 131072
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.channel_down_proj2.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.interact.cross_attention_1.query.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.interact.cross_attention_1.query.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.interact.cross_attention_1.key.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.interact.cross_attention_1.key.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.interact.cross_attention_1.value.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.interact.cross_attention_1.value.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.interact.cross_attention_1.out.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.interact.cross_attention_1.out.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.interact.cross_attention_2.query.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.interact.cross_attention_2.query.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.interact.cross_attention_2.key.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.interact.cross_attention_2.key.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.interact.cross_attention_2.value.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.interact.cross_attention_2.value.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.interact.cross_attention_2.out.weight, Trainable Parameters: 16384
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.interact.cross_attention_2.out.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.channel_up_proj1.weight, Trainable Parameters: 131072
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.channel_up_proj1.bias, Trainable Parameters: 1024
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.channel_up_proj2.weight, Trainable Parameters: 131072
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.channel_up_proj2.bias, Trainable Parameters: 1024
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.norm1.weight, Trainable Parameters: 1024
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.norm1.bias, Trainable Parameters: 1024
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.norm2.weight, Trainable Parameters: 1024
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.norm2.bias, Trainable Parameters: 1024
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.fuse_weight.get_weight.0.weight, Trainable Parameters: 262144
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.fuse_weight.get_weight.0.bias, Trainable Parameters: 128
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.fuse_weight.get_weight.2.weight, Trainable Parameters: 256
+[2025-01-14 11:05:09,901][    INFO] Module: module.prompt_fuse.23.fuse_weight.get_weight.2.bias, Trainable Parameters: 2
+[2025-01-14 11:05:09,903][    INFO] Total Trainable Parameters: 3701256
+[2025-01-14 11:05:09,903][    INFO] ===========> Epoch: 0/5, d1: 0.000, d2: 0.000, d3: 0.000
+[2025-01-14 11:05:09,903][    INFO] ===========> Epoch: 0/5, abs_rel: 100.000, sq_rel: 100.000, rmse: 100.000, rmse_log: 100.000, log10: 100.000, silog: 100.000
+[2025-01-14 11:05:19,407][    INFO] Iter: 0/2548, LR: 0.0000050, Loss: 0.821, si_loss: 0.227, grad_loss: 0.422, fea_loss: 0.594
+[2025-01-14 11:09:23,025][    INFO] Iter: 100/2548, LR: 0.0000050, Loss: 0.320, si_loss: 0.019, grad_loss: 0.267, fea_loss: 0.301
+[2025-01-14 11:13:27,613][    INFO] Iter: 200/2548, LR: 0.0000049, Loss: 0.161, si_loss: 0.014, grad_loss: 0.164, fea_loss: 0.147
+[2025-01-14 11:17:32,361][    INFO] Iter: 300/2548, LR: 0.0000049, Loss: 0.102, si_loss: 0.010, grad_loss: 0.121, fea_loss: 0.092
+[2025-01-14 11:21:37,030][    INFO] Iter: 400/2548, LR: 0.0000049, Loss: 0.132, si_loss: 0.015, grad_loss: 0.153, fea_loss: 0.117
+[2025-01-14 11:25:41,724][    INFO] Iter: 500/2548, LR: 0.0000048, Loss: 0.127, si_loss: 0.012, grad_loss: 0.143, fea_loss: 0.115
+[2025-01-14 11:29:46,366][    INFO] Iter: 600/2548, LR: 0.0000048, Loss: 0.105, si_loss: 0.008, grad_loss: 0.107, fea_loss: 0.098
+[2025-01-14 11:33:50,961][    INFO] Iter: 700/2548, LR: 0.0000048, Loss: 0.125, si_loss: 0.011, grad_loss: 0.123, fea_loss: 0.114
+[2025-01-14 11:37:55,485][    INFO] Iter: 800/2548, LR: 0.0000047, Loss: 0.099, si_loss: 0.009, grad_loss: 0.121, fea_loss: 0.090
+[2025-01-14 11:41:59,978][    INFO] Iter: 900/2548, LR: 0.0000047, Loss: 0.101, si_loss: 0.010, grad_loss: 0.101, fea_loss: 0.091
+[2025-01-14 11:46:04,511][    INFO] Iter: 1000/2548, LR: 0.0000046, Loss: 0.123, si_loss: 0.010, grad_loss: 0.136, fea_loss: 0.113
+[2025-01-14 11:50:09,181][    INFO] Iter: 1100/2548, LR: 0.0000046, Loss: 0.078, si_loss: 0.008, grad_loss: 0.098, fea_loss: 0.070
+[2025-01-14 11:54:13,883][    INFO] Iter: 1200/2548, LR: 0.0000046, Loss: 0.094, si_loss: 0.011, grad_loss: 0.125, fea_loss: 0.083
+[2025-01-14 11:58:18,508][    INFO] Iter: 1300/2548, LR: 0.0000045, Loss: 0.096, si_loss: 0.008, grad_loss: 0.135, fea_loss: 0.087
+[2025-01-14 12:02:23,227][    INFO] Iter: 1400/2548, LR: 0.0000045, Loss: 0.083, si_loss: 0.008, grad_loss: 0.119, fea_loss: 0.075
+[2025-01-14 12:06:27,875][    INFO] Iter: 1500/2548, LR: 0.0000045, Loss: 0.104, si_loss: 0.012, grad_loss: 0.133, fea_loss: 0.092
+[2025-01-14 12:10:32,418][    INFO] Iter: 1600/2548, LR: 0.0000044, Loss: 0.065, si_loss: 0.006, grad_loss: 0.088, fea_loss: 0.060
+[2025-01-14 12:14:36,954][    INFO] Iter: 1700/2548, LR: 0.0000044, Loss: 0.097, si_loss: 0.010, grad_loss: 0.111, fea_loss: 0.087
+[2025-01-14 12:18:41,580][    INFO] Iter: 1800/2548, LR: 0.0000044, Loss: 0.074, si_loss: 0.007, grad_loss: 0.101, fea_loss: 0.067
+[2025-01-14 12:22:46,194][    INFO] Iter: 1900/2548, LR: 0.0000043, Loss: 0.089, si_loss: 0.009, grad_loss: 0.128, fea_loss: 0.080
+[2025-01-14 12:26:50,870][    INFO] Iter: 2000/2548, LR: 0.0000043, Loss: 0.088, si_loss: 0.010, grad_loss: 0.107, fea_loss: 0.078
+[2025-01-14 12:30:58,491][    INFO] Iter: 2100/2548, LR: 0.0000043, Loss: 0.089, si_loss: 0.008, grad_loss: 0.103, fea_loss: 0.081
+[2025-01-14 12:35:03,180][    INFO] Iter: 2200/2548, LR: 0.0000042, Loss: 0.082, si_loss: 0.008, grad_loss: 0.108, fea_loss: 0.074
+[2025-01-14 12:39:07,973][    INFO] Iter: 2300/2548, LR: 0.0000042, Loss: 0.083, si_loss: 0.013, grad_loss: 0.116, fea_loss: 0.069
+[2025-01-14 12:43:12,677][    INFO] Iter: 2400/2548, LR: 0.0000041, Loss: 0.069, si_loss: 0.010, grad_loss: 0.131, fea_loss: 0.060
+[2025-01-14 12:47:17,457][    INFO] Iter: 2500/2548, LR: 0.0000041, Loss: 0.075, si_loss: 0.007, grad_loss: 0.101, fea_loss: 0.069
+[2025-01-14 12:51:07,226][    INFO] ==========================================================================================
+[2025-01-14 12:51:07,227][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-14 12:51:07,227][    INFO]    0.992,    0.996,    0.997,  467.334, 4672623.500,  376.116,    0.469,    0.035,    0.466
+[2025-01-14 12:51:07,227][    INFO] ==========================================================================================
+
+[2025-01-14 12:51:13,058][    INFO] ===========> Epoch: 1/5, d1: 0.992, d2: 0.996, d3: 0.997
+[2025-01-14 12:51:13,058][    INFO] ===========> Epoch: 1/5, abs_rel: 100.000, sq_rel: 100.000, rmse: 100.000, rmse_log: 0.469, log10: 0.035, silog: 0.466
+[2025-01-14 12:51:17,309][    INFO] Iter: 0/2548, LR: 0.0000041, Loss: 0.097, si_loss: 0.010, grad_loss: 0.123, fea_loss: 0.087
+[2025-01-14 12:55:21,728][    INFO] Iter: 100/2548, LR: 0.0000041, Loss: 0.066, si_loss: 0.007, grad_loss: 0.095, fea_loss: 0.059
+[2025-01-14 12:59:26,479][    INFO] Iter: 200/2548, LR: 0.0000040, Loss: 0.058, si_loss: 0.006, grad_loss: 0.079, fea_loss: 0.052
+[2025-01-14 13:03:31,403][    INFO] Iter: 300/2548, LR: 0.0000040, Loss: 0.080, si_loss: 0.008, grad_loss: 0.105, fea_loss: 0.072
+[2025-01-14 13:07:36,032][    INFO] Iter: 400/2548, LR: 0.0000039, Loss: 0.085, si_loss: 0.007, grad_loss: 0.100, fea_loss: 0.078
+[2025-01-14 13:11:40,843][    INFO] Iter: 500/2548, LR: 0.0000039, Loss: 0.080, si_loss: 0.008, grad_loss: 0.110, fea_loss: 0.072
+[2025-01-14 13:15:45,638][    INFO] Iter: 600/2548, LR: 0.0000039, Loss: 0.082, si_loss: 0.008, grad_loss: 0.117, fea_loss: 0.074
+[2025-01-14 13:19:50,581][    INFO] Iter: 700/2548, LR: 0.0000038, Loss: 0.070, si_loss: 0.007, grad_loss: 0.095, fea_loss: 0.063
+[2025-01-14 13:23:55,417][    INFO] Iter: 800/2548, LR: 0.0000038, Loss: 0.062, si_loss: 0.005, grad_loss: 0.084, fea_loss: 0.057
+[2025-01-14 13:28:00,218][    INFO] Iter: 900/2548, LR: 0.0000038, Loss: 0.076, si_loss: 0.008, grad_loss: 0.125, fea_loss: 0.068
+[2025-01-14 13:32:05,138][    INFO] Iter: 1000/2548, LR: 0.0000037, Loss: 0.058, si_loss: 0.005, grad_loss: 0.093, fea_loss: 0.053
+[2025-01-14 13:36:09,960][    INFO] Iter: 1100/2548, LR: 0.0000037, Loss: 0.068, si_loss: 0.008, grad_loss: 0.101, fea_loss: 0.060
+[2025-01-14 13:40:14,914][    INFO] Iter: 1200/2548, LR: 0.0000037, Loss: 0.064, si_loss: 0.007, grad_loss: 0.075, fea_loss: 0.057
+[2025-01-14 13:44:19,800][    INFO] Iter: 1300/2548, LR: 0.0000036, Loss: 0.060, si_loss: 0.006, grad_loss: 0.087, fea_loss: 0.053
+[2025-01-14 13:48:24,690][    INFO] Iter: 1400/2548, LR: 0.0000036, Loss: 0.071, si_loss: 0.007, grad_loss: 0.098, fea_loss: 0.064
+[2025-01-14 13:52:32,461][    INFO] Iter: 1500/2548, LR: 0.0000035, Loss: 0.077, si_loss: 0.008, grad_loss: 0.109, fea_loss: 0.069
+[2025-01-14 13:56:37,347][    INFO] Iter: 1600/2548, LR: 0.0000035, Loss: 0.087, si_loss: 0.009, grad_loss: 0.114, fea_loss: 0.078
+[2025-01-14 14:00:42,269][    INFO] Iter: 1700/2548, LR: 0.0000035, Loss: 0.064, si_loss: 0.006, grad_loss: 0.100, fea_loss: 0.058
+[2025-01-14 14:04:47,385][    INFO] Iter: 1800/2548, LR: 0.0000034, Loss: 0.053, si_loss: 0.004, grad_loss: 0.070, fea_loss: 0.049
+[2025-01-14 14:08:52,458][    INFO] Iter: 1900/2548, LR: 0.0000034, Loss: 0.061, si_loss: 0.006, grad_loss: 0.088, fea_loss: 0.055
+[2025-01-14 14:12:57,529][    INFO] Iter: 2000/2548, LR: 0.0000034, Loss: 0.059, si_loss: 0.006, grad_loss: 0.084, fea_loss: 0.053
+[2025-01-14 14:17:02,799][    INFO] Iter: 2100/2548, LR: 0.0000033, Loss: 0.090, si_loss: 0.010, grad_loss: 0.121, fea_loss: 0.080
+[2025-01-14 14:21:07,831][    INFO] Iter: 2200/2548, LR: 0.0000033, Loss: 0.074, si_loss: 0.008, grad_loss: 0.119, fea_loss: 0.066
+[2025-01-14 14:25:12,867][    INFO] Iter: 2300/2548, LR: 0.0000032, Loss: 0.071, si_loss: 0.006, grad_loss: 0.091, fea_loss: 0.064
+[2025-01-14 14:29:18,094][    INFO] Iter: 2400/2548, LR: 0.0000032, Loss: 0.069, si_loss: 0.006, grad_loss: 0.091, fea_loss: 0.063
+[2025-01-14 14:33:23,287][    INFO] Iter: 2500/2548, LR: 0.0000032, Loss: 0.068, si_loss: 0.007, grad_loss: 0.102, fea_loss: 0.061
+[2025-01-14 14:37:13,094][    INFO] ==========================================================================================
+[2025-01-14 14:37:13,095][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-14 14:37:13,096][    INFO]    0.991,    0.997,    0.997,  438.224, 4381466.000,  362.858,    0.452,    0.036,    0.449
+[2025-01-14 14:37:13,096][    INFO] ==========================================================================================
+
+[2025-01-14 14:37:17,092][    INFO] ===========> Epoch: 2/5, d1: 0.992, d2: 0.997, d3: 0.997
+[2025-01-14 14:37:17,092][    INFO] ===========> Epoch: 2/5, abs_rel: 100.000, sq_rel: 100.000, rmse: 100.000, rmse_log: 0.452, log10: 0.035, silog: 0.449
+[2025-01-14 14:37:21,202][    INFO] Iter: 0/2548, LR: 0.0000032, Loss: 0.088, si_loss: 0.009, grad_loss: 0.110, fea_loss: 0.079
+[2025-01-14 14:41:25,869][    INFO] Iter: 100/2548, LR: 0.0000031, Loss: 0.083, si_loss: 0.009, grad_loss: 0.100, fea_loss: 0.075
+[2025-01-14 14:45:31,042][    INFO] Iter: 200/2548, LR: 0.0000031, Loss: 0.089, si_loss: 0.009, grad_loss: 0.128, fea_loss: 0.080
+[2025-01-14 14:49:36,230][    INFO] Iter: 300/2548, LR: 0.0000030, Loss: 0.063, si_loss: 0.007, grad_loss: 0.097, fea_loss: 0.056
+[2025-01-14 14:53:41,340][    INFO] Iter: 400/2548, LR: 0.0000030, Loss: 0.065, si_loss: 0.005, grad_loss: 0.081, fea_loss: 0.060
