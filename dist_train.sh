@@ -7,13 +7,13 @@ gpus=2
 lr=0.000005
 encoder=vitl
 dataset=mvsec_2
-img_size=350
+img_size=266
 min_depth=0
 max_depth=80
 event_voxel_chans=3
 finetune_mode=decoder # choices=["prompt", "decoder", "bias", "bias_and_decoder", "overall"], 
 pretrained_from=/data/coding/code/da2-prompt-tuning/exp/fuse_log_l1_eventscape_fuse_cor_20250114_110446/latest.pth
-save_path=/data/coding/code/da2-prompt-tuning/exp/epde_metric_${dataset}_${finetune_mode}_nl_${now}
+save_path=/data/coding/code/da2-prompt-tuning/exp/epde_metric_nocrop_${dataset}_${finetune_mode}_nl_${now}
 
 mkdir -p $save_path
 

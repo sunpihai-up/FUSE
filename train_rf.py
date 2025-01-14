@@ -61,7 +61,7 @@ parser.add_argument("--disparity", action="store_true")
 parser.add_argument("--return-feature", action="store_true")
 parser.add_argument(
     "--finetune-mode",
-    choices=["prompt", "decoder", "bias", "bias_and_decoder", "overall"],
+    choices=["prompt_fuse", "decoder", "bias", "bias_and_decoder", "overall"],
     type=str,
 )
 
@@ -194,6 +194,10 @@ def main():
         for name, param in model.named_parameters():
             if "depth_head" not in name:
                 param.requires_grad = False
+    elif args.finetune_mode == "prompt_fuse":
+        for name, param in model.named_parameters():
+            if "depth_head" not in name and "prompt_fuse" not in name:
+                param.requires_grad = False
 
     print(f"The freezing mode of weights is: {args.finetune_mode}")
 
@@ -204,7 +208,7 @@ def main():
                 "params": [
                     param
                     for name, param in model.named_parameters()
-                    if "encoder" in name and param.requires_grad
+                    if "depth_head" not in name and param.requires_grad
                 ],
                 "lr": args.lr,
             },
@@ -212,7 +216,7 @@ def main():
                 "params": [
                     param
                     for name, param in model.named_parameters()
-                    if "encoder" not in name and param.requires_grad
+                    if "depth_head" in name and param.requires_grad
                 ],
                 "lr": args.lr * 10.0,
             },

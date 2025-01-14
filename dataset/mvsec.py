@@ -38,7 +38,7 @@ class MVSEC(Dataset):
                 NormalizeImage(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
                 PrepareForNet(),
             ]
-            + ([Crop(size[0])] if self.mode == "train" else [])
+            + ([Crop(size[0])] if self.mode == "trains" else [])
         )
 
     def prepare_depth(self, depth, reg_factor, d_max):

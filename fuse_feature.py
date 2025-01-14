@@ -219,7 +219,6 @@ def main():
     )
     student_model = EPDE(
         model_name=args.encoder,
-        dataset=args.dataset,
         max_depth=args.max_depth,
         event_voxel_chans=args.event_voxel_chans,
         return_feature=args.return_feature,
