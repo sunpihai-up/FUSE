@@ -225,18 +225,20 @@ def gen_split(scene, data_dir, output_dir="./dataset/splits/mvsec/"):
         lines.append(line)
     
     os.makedirs(output_dir, exist_ok=True)
-    if scene == "outdoor_day2": # Train DataSet
-        with open(output_dir + "train.txt", 'w') as f:
+    with open(output_dir + f"{scene}.txt", 'w') as f:
             f.writelines(lines)
-    else:
-        # Test & Val DataSet
-        # TODO: 
-        with open(output_dir + scene + "_test.txt", 'a') as f:
-            f.writelines(lines)
+    # if scene == "outdoor_day2": # Train DataSet
+    #     with open(output_dir + "train.txt", 'w') as f:
+    #         f.writelines(lines)
+    # else:
+    #     # Test & Val DataSet
+    #     # TODO: 
+    #     with open(output_dir + scene + "_test.txt", 'a') as f:
+    #         f.writelines(lines)
         
-        lines = random.sample(lines, 100)
-        with open(output_dir + scene + "_val.txt", 'a') as f:
-            f.writelines(lines)
+    #     lines = random.sample(lines, 100)
+    #     with open(output_dir + scene + "_val.txt", 'a') as f:
+    #         f.writelines(lines)
     print(f"Saved split file to {output_dir}")
 
 def main(data_hdf5_path, gt_hdf5_path, scene, output_dir, numbins, width, height):
@@ -329,8 +331,8 @@ if __name__ == "__main__":
         ("outdoor_day1_data.hdf5", "outdoor_day1_gt.hdf5"),
         ("outdoor_day2_data.hdf5", "outdoor_day2_gt.hdf5"),
         ("outdoor_night1_data.hdf5", "outdoor_night1_gt.hdf5"),
-        # ("outdoor_night2_data.hdf5", "outdoor_night2_gt.hdf5"),
-        # ("outdoor_night3_data.hdf5", "outdoor_night3_gt.hdf5"),
+        ("outdoor_night2_data.hdf5", "outdoor_night2_gt.hdf5"),
+        ("outdoor_night3_data.hdf5", "outdoor_night3_gt.hdf5"),
     ]
     width, height = 346, 260
 

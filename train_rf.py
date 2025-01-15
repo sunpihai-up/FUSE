@@ -19,12 +19,8 @@ from dataset.dense import Dense
 from dataset.mvsec import MVSEC
 from dataset.eventscape import EventScape
 
-# from model.epde.epde_rf_encoder_n import EPDE
-# from model.epde.epde_rf_var import EPDE
-# from model.epde.epde_rf import EPDE
-# from model.epde.epde_rf_encoder import EPDE
-# from model.epde_modal import EPDE
-from model.epde_modal_metric import EPDE
+from model.epde_modal import EPDE
+# from model.epde_modal_metric import EPDE
 from model.epde.utils import clean_pretrained_weight
 from util.dist_helper import setup_distributed
 from util.loss import SiLogLoss, MixedLoss
@@ -57,7 +53,7 @@ parser.add_argument("--local-rank", default=0, type=int)
 parser.add_argument("--port", default=None, type=int)
 parser.add_argument("--event_voxel_chans", default=5, type=int)
 parser.add_argument("--normalized_depth", action="store_true")
-parser.add_argument("--disparity", action="store_true")
+parser.add_argument("--inv", action="store_true")
 parser.add_argument("--return-feature", action="store_true")
 parser.add_argument(
     "--finetune-mode",
@@ -127,14 +123,14 @@ def main():
         valset = Dense("dataset/splits/dense/val.txt", "val", size=size)
     elif args.dataset == "mvsec":
         valset = MVSEC(
-            "./dataset/splits/mvsec/outdoor_night1_val.txt",
+            "./dataset/splits/mvsec/outdoor_night1.txt",
             "val",
             normalized_d=args.normalized_depth,
             size=size,
         )
     elif args.dataset == "mvsec_2":
         valset = MVSEC(
-            "./dataset/splits/mvsec/outdoor_night1_val.txt",
+            "./dataset/splits/mvsec/outdoor_night1.txt",
             "val",
             normalized_d=args.normalized_depth,
             size=size,
@@ -167,6 +163,7 @@ def main():
         max_depth=args.max_depth,
         event_voxel_chans=args.event_voxel_chans,
         return_feature=args.return_feature,
+        inv=args.inv,
     )
 
     if args.pretrained_from:
@@ -304,8 +301,7 @@ def main():
             #     depth,
             #     valid_mask,
             # )
-            if args.disparity:
-                pred = 1.0 / (pred + 1e-4)
+
             loss = criterion(
                 pred,
                 depth,
@@ -347,6 +343,9 @@ def main():
                     "previous_best": previous_best,
                 }
                 torch.save(checkpoint, os.path.join(args.save_path, "latest.pth"))
+            
+            if i >= 100:
+                break
 
         model.eval()
 
@@ -376,8 +375,6 @@ def main():
 
             with torch.no_grad():
                 pred = model(img)
-                if args.disparity:
-                    pred = 1.0 / (pred + 1e-4)
                 pred = F.interpolate(
                     pred[:, None], depth.shape[-2:], mode="bilinear", align_corners=True
                 )[0, 0]
@@ -391,8 +388,11 @@ def main():
                 )
             else:
                 cur_results = eval_depth_ori(
-                    pred[valid_mask], depth[valid_mask], dataset=args.dataset
+                    pred, depth, dataset=args.dataset
                 )
+                # cur_results = eval_depth_ori(
+                #     pred[valid_mask], depth[valid_mask], dataset=args.dataset
+                # )
 
             for k in results.keys():
                 results[k] += cur_results[k]

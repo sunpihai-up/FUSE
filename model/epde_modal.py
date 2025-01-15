@@ -81,6 +81,7 @@ class EPDEVisionTransformer(nn.Module):
         depth_anything_pretrained=None,
         prompt_encoder_pretrained=None,
         return_feature=False,
+        inv=False,
     ):
         super(EPDEVisionTransformer, self).__init__()
 
@@ -97,6 +98,7 @@ class EPDEVisionTransformer(nn.Module):
         self.blocks_to_take = intermediate_layer_idx[encoder]
         self.depth_anything_config = depth_anything_model_configs[encoder]
         self.return_feature = return_feature
+        self.inv = inv
 
         self.image_encoder = DINOv2(model_name=encoder)
         self.prompt_encoder = DINOv2_lora(model_name=encoder)
@@ -246,7 +248,10 @@ class EPDEVisionTransformer(nn.Module):
         )
 
         depth = self.depth_head(features, patch_h, patch_w)
-        # depth = 1.0 / (depth + 1e-3)
+        if self.inv:
+            depth[depth < 1e-3] = 1e-3
+            depth = 1.0 / depth
+        
         if self.return_feature:
             fea_maps = [fea[0] for fea in features]
             return depth.squeeze(1), fea_maps
@@ -349,6 +354,7 @@ def EPDE(
     event_voxel_chans=5,
     norm_layer=None,
     return_feature=False,
+    inv=False,
 ):
     model_zoo = {
         "vits": epde_small,
@@ -366,4 +372,5 @@ def EPDE(
         prompt_encoder_pretrained=prompt_encoder_pretrained,
         norm_layer=norm_layer,
         return_feature=return_feature,
+        inv=inv,
     )
