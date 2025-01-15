@@ -7,57 +7,34 @@ import os
 import torch
 import torch.nn.functional as F
 
-from model.epde.epde_rf import EPDE
+# from model.epde_modal import EPDE
+from model.epde_modal_metric import EPDE
 from util.metric import convert_nl2abs_depth, dataset2params
+from model.epde.utils import clean_pretrained_weight
 
 from dataset.mvsec import MVSEC
 from dataset.eventscape import EventScape
 from torch.utils.data import DataLoader
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Depth Anything V2 Metric Depth Estimation"
-    )
-    parser.add_argument("--input-size", type=int, default=518)
-    parser.add_argument("--outdir", type=str, default="./vis_depth")
-
+    parser = argparse.ArgumentParser(description="EPDE")
+    
+    parser.add_argument("--input-size", type=int)
+    parser.add_argument("--encoder", type=str, choices=["vits", "vitb", "vitl", "vitg"])
+    parser.add_argument("--max-depth", type=float, default=20)
+    parser.add_argument("--event-voxel-chans", type=int)
+    parser.add_argument("--outdir", type=str)
     parser.add_argument("--dataset", choices=["mvsec", "eventscape"])
+    parser.add_argument("--save-numpy", action="store_true")
+    parser.add_argument("--pred-only", action="store_true")
+    parser.add_argument("--grayscale", action="store_true")
+    parser.add_argument("--normalized-depth", action="store_true")
+    parser.add_argument("--return-feature", action="store_true")
+    parser.add_argument("--load-from", type=str)
     parser.add_argument(
         "--scene",
         choices=["day1", "night1", "train", "test", "test_1k", "night1_2b", "day1_2b"],
     )
-    parser.add_argument(
-        "--encoder", type=str, default="vitl", choices=["vits", "vitb", "vitl", "vitg"]
-    )
-    parser.add_argument(
-        "--load-from",
-        type=str,
-        default="checkpoints/depth_anything_v2_metric_hypersim_vitl.pth",
-    )
-    parser.add_argument("--max-depth", type=float, default=20)
-
-    parser.add_argument(
-        "--save-numpy",
-        dest="save_numpy",
-        action="store_true",
-        help="save the model raw output",
-    )
-    parser.add_argument(
-        "--pred-only",
-        dest="pred_only",
-        action="store_true",
-        help="only display the prediction",
-    )
-    parser.add_argument(
-        "--grayscale",
-        dest="grayscale",
-        action="store_true",
-        help="do not apply colorful palette",
-    )
-    parser.add_argument(
-        "--normalized-depth", action="store_true", help="Enable normalized depth."
-    )
-    parser.add_argument("--event-voxel-chans", type=int)
 
     args = parser.parse_args()
 
@@ -131,19 +108,13 @@ if __name__ == "__main__":
     # Instantiate Model and Load Pretrained Weight
     model = EPDE(
         model_name=args.encoder,
-        dataset=args.dataset,
         max_depth=args.max_depth,
-        prompt_type="epde_deep",
         event_voxel_chans=args.event_voxel_chans,
+        return_feature=args.return_feature,
     )
 
     checkpoint = torch.load(args.load_from, map_location="cpu")
-    if "model" in checkpoint.keys():
-        checkpoint = checkpoint["model"]
-        checkpoint = {
-            (key[7:] if key.startswith("module.") else key): value
-            for key, value in checkpoint.items()
-        }
+    checkpoint = clean_pretrained_weight(checkpoint)
     model.load_state_dict(checkpoint)
     print(f"Model weights load from {args.load_from} successfully!")
     model = model.to(DEVICE).eval()
