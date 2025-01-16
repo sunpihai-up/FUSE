@@ -1,0 +1,21 @@
+epde_metric_80_mvsec_2_decoder_20250116_131204：
+* 标签最大深度clip为80；
+* 训练时没有crop；
+* 损失函数为SiLoss（带有sqrt）；
+* 解码头最后为ReLu，输出绝对深度；
+* abs_rel-0.2818499207496643-6.pth
+
+epde_metric_nocrop_clip_mvsec_2_decoder_20250115_223554：
+* 标签没有处理（clip和normalization均没有）；
+* 训练时没有crop；
+* 损失函数为SiLoss（带有sqrt）；
+* 解码头最后为ReLu，输出绝对深度；
+* abs_rel-0.2779026925563812-5.pth
+
+epde_metric_clip_mvsec_2_decoder_20250116_095723：
+* 标签没有处理（clip和normalization均没有）；
+* 训练时，crop；
+* 损失函数为SiLoss（带有sqrt）；
+* 解码头最后为ReLu，输出绝对深度；
+* abs_rel-0.2919783294200897-5
+

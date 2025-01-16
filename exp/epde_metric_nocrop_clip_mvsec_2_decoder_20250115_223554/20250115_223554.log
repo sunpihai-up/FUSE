@@ -1,0 +1,320 @@
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/distributed/launch.py:183: FutureWarning: The module torch.distributed.launch is deprecated
+and will be removed in future. Use torchrun.
+Note that --use-env is set by default in torchrun.
+If your script expects `--local-rank` argument to be set, please
+change it to read from `os.environ['LOCAL_RANK']` instead. See 
+https://pytorch.org/docs/stable/distributed.html#launch-utility for 
+further instructions
+
+  warnings.warn(
+[2025-01-15 22:35:55,469] torch.distributed.run: [WARNING] 
+[2025-01-15 22:35:55,469] torch.distributed.run: [WARNING] *****************************************
+[2025-01-15 22:35:55,469] torch.distributed.run: [WARNING] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+[2025-01-15 22:35:55,469] torch.distributed.run: [WARNING] *****************************************
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[2025-01-15 22:35:58,020][    INFO] {'bs': 24,
+ 'dataset': 'mvsec_2',
+ 'depth_anything_pretrained': None,
+ 'encoder': 'vitl',
+ 'epochs': 20,
+ 'event_voxel_chans': 3,
+ 'finetune_mode': 'decoder',
+ 'img_size': 266,
+ 'inv': False,
+ 'local_rank': 0,
+ 'lr': 5e-06,
+ 'max_depth': 80.0,
+ 'min_depth': 0.0,
+ 'ngpus': 2,
+ 'normalized_depth': False,
+ 'port': 20596,
+ 'pretrained_from': '/home/sph/event/da2-prompt-tuning/exp/fuse_log_l1_eventscape_fuse_cor_20250114_110446/latest.pth',
+ 'return_feature': False,
+ 'save_path': '/home/sph/event/da2-prompt-tuning/exp/epde_metric_nocrop_clip_mvsec_2_decoder_20250115_223554'}
+
+INFO:dinov2:using MLP layer as FFN
+INFO:dinov2:using MLP layer as FFN
+INFO:dinov2:using MLP layer as FFN
+INFO:dinov2:using MLP layer as FFN
+Initializing encoder parameters without pre-trained weights
+Initializing encoder parameters without pre-trained weights
+Model weights load from /home/sph/event/da2-prompt-tuning/exp/fuse_log_l1_eventscape_fuse_cor_20250114_110446/latest.pth successfully!
+Model weights load from /home/sph/event/da2-prompt-tuning/exp/fuse_log_l1_eventscape_fuse_cor_20250114_110446/latest.pth successfully!
+The freezing mode of weights is: decoder
+The freezing mode of weights is: decoder
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.projects.0.weight, Trainable Parameters: 262144
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.projects.0.bias, Trainable Parameters: 256
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.projects.1.weight, Trainable Parameters: 524288
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.projects.1.bias, Trainable Parameters: 512
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.projects.2.weight, Trainable Parameters: 1048576
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.projects.2.bias, Trainable Parameters: 1024
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.projects.3.weight, Trainable Parameters: 1048576
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.projects.3.bias, Trainable Parameters: 1024
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.resize_layers.0.weight, Trainable Parameters: 1048576
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.resize_layers.0.bias, Trainable Parameters: 256
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.resize_layers.1.weight, Trainable Parameters: 1048576
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.resize_layers.1.bias, Trainable Parameters: 512
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.resize_layers.3.weight, Trainable Parameters: 9437184
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.resize_layers.3.bias, Trainable Parameters: 1024
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.scratch.layer1_rn.weight, Trainable Parameters: 589824
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.scratch.layer2_rn.weight, Trainable Parameters: 1179648
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.scratch.layer3_rn.weight, Trainable Parameters: 2359296
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.scratch.layer4_rn.weight, Trainable Parameters: 2359296
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.scratch.refinenet1.out_conv.weight, Trainable Parameters: 65536
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.scratch.refinenet1.out_conv.bias, Trainable Parameters: 256
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.scratch.refinenet1.resConfUnit1.conv1.weight, Trainable Parameters: 589824
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.scratch.refinenet1.resConfUnit1.conv1.bias, Trainable Parameters: 256
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.scratch.refinenet1.resConfUnit1.conv2.weight, Trainable Parameters: 589824
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.scratch.refinenet1.resConfUnit1.conv2.bias, Trainable Parameters: 256
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.scratch.refinenet1.resConfUnit2.conv1.weight, Trainable Parameters: 589824
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.scratch.refinenet1.resConfUnit2.conv1.bias, Trainable Parameters: 256
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.scratch.refinenet1.resConfUnit2.conv2.weight, Trainable Parameters: 589824
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.scratch.refinenet1.resConfUnit2.conv2.bias, Trainable Parameters: 256
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.scratch.refinenet2.out_conv.weight, Trainable Parameters: 65536
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.scratch.refinenet2.out_conv.bias, Trainable Parameters: 256
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.scratch.refinenet2.resConfUnit1.conv1.weight, Trainable Parameters: 589824
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.scratch.refinenet2.resConfUnit1.conv1.bias, Trainable Parameters: 256
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.scratch.refinenet2.resConfUnit1.conv2.weight, Trainable Parameters: 589824
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.scratch.refinenet2.resConfUnit1.conv2.bias, Trainable Parameters: 256
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.scratch.refinenet2.resConfUnit2.conv1.weight, Trainable Parameters: 589824
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.scratch.refinenet2.resConfUnit2.conv1.bias, Trainable Parameters: 256
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.scratch.refinenet2.resConfUnit2.conv2.weight, Trainable Parameters: 589824
+[2025-01-15 22:36:15,000][    INFO] Module: module.depth_head.scratch.refinenet2.resConfUnit2.conv2.bias, Trainable Parameters: 256
+[2025-01-15 22:36:15,001][    INFO] Module: module.depth_head.scratch.refinenet3.out_conv.weight, Trainable Parameters: 65536
+[2025-01-15 22:36:15,001][    INFO] Module: module.depth_head.scratch.refinenet3.out_conv.bias, Trainable Parameters: 256
+[2025-01-15 22:36:15,001][    INFO] Module: module.depth_head.scratch.refinenet3.resConfUnit1.conv1.weight, Trainable Parameters: 589824
+[2025-01-15 22:36:15,001][    INFO] Module: module.depth_head.scratch.refinenet3.resConfUnit1.conv1.bias, Trainable Parameters: 256
+[2025-01-15 22:36:15,001][    INFO] Module: module.depth_head.scratch.refinenet3.resConfUnit1.conv2.weight, Trainable Parameters: 589824
+[2025-01-15 22:36:15,001][    INFO] Module: module.depth_head.scratch.refinenet3.resConfUnit1.conv2.bias, Trainable Parameters: 256
+[2025-01-15 22:36:15,001][    INFO] Module: module.depth_head.scratch.refinenet3.resConfUnit2.conv1.weight, Trainable Parameters: 589824
+[2025-01-15 22:36:15,001][    INFO] Module: module.depth_head.scratch.refinenet3.resConfUnit2.conv1.bias, Trainable Parameters: 256
+[2025-01-15 22:36:15,001][    INFO] Module: module.depth_head.scratch.refinenet3.resConfUnit2.conv2.weight, Trainable Parameters: 589824
+[2025-01-15 22:36:15,001][    INFO] Module: module.depth_head.scratch.refinenet3.resConfUnit2.conv2.bias, Trainable Parameters: 256
+[2025-01-15 22:36:15,001][    INFO] Module: module.depth_head.scratch.refinenet4.out_conv.weight, Trainable Parameters: 65536
+[2025-01-15 22:36:15,001][    INFO] Module: module.depth_head.scratch.refinenet4.out_conv.bias, Trainable Parameters: 256
+[2025-01-15 22:36:15,001][    INFO] Module: module.depth_head.scratch.refinenet4.resConfUnit1.conv1.weight, Trainable Parameters: 589824
+[2025-01-15 22:36:15,001][    INFO] Module: module.depth_head.scratch.refinenet4.resConfUnit1.conv1.bias, Trainable Parameters: 256
+[2025-01-15 22:36:15,001][    INFO] Module: module.depth_head.scratch.refinenet4.resConfUnit1.conv2.weight, Trainable Parameters: 589824
+[2025-01-15 22:36:15,001][    INFO] Module: module.depth_head.scratch.refinenet4.resConfUnit1.conv2.bias, Trainable Parameters: 256
+[2025-01-15 22:36:15,001][    INFO] Module: module.depth_head.scratch.refinenet4.resConfUnit2.conv1.weight, Trainable Parameters: 589824
+[2025-01-15 22:36:15,001][    INFO] Module: module.depth_head.scratch.refinenet4.resConfUnit2.conv1.bias, Trainable Parameters: 256
+[2025-01-15 22:36:15,001][    INFO] Module: module.depth_head.scratch.refinenet4.resConfUnit2.conv2.weight, Trainable Parameters: 589824
+[2025-01-15 22:36:15,001][    INFO] Module: module.depth_head.scratch.refinenet4.resConfUnit2.conv2.bias, Trainable Parameters: 256
+[2025-01-15 22:36:15,001][    INFO] Module: module.depth_head.scratch.output_conv1.weight, Trainable Parameters: 294912
+[2025-01-15 22:36:15,001][    INFO] Module: module.depth_head.scratch.output_conv1.bias, Trainable Parameters: 128
+[2025-01-15 22:36:15,001][    INFO] Module: module.depth_head.scratch.output_conv2.0.weight, Trainable Parameters: 36864
+[2025-01-15 22:36:15,001][    INFO] Module: module.depth_head.scratch.output_conv2.0.bias, Trainable Parameters: 32
+[2025-01-15 22:36:15,001][    INFO] Module: module.depth_head.scratch.output_conv2.2.weight, Trainable Parameters: 32
+[2025-01-15 22:36:15,001][    INFO] Module: module.depth_head.scratch.output_conv2.2.bias, Trainable Parameters: 1
+[2025-01-15 22:36:15,003][    INFO] Total Trainable Parameters: 30947009
+[2025-01-15 22:36:15,003][    INFO] ===========> Epoch: 0/20, d1: 0.000, d2: 0.000, d3: 0.000
+[2025-01-15 22:36:15,003][    INFO] ===========> Epoch: 0/20, abs_rel: 100.000, sq_rel: 100.000, rmse: 100.000, rmse_log: 100.000, log10: 100.000, silog: 100.000
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/autograd/__init__.py:266: UserWarning: Grad strides do not match bucket view strides. This may indicate grad was not created according to the gradient layout contract, or that the param's strides changed since DDP was constructed.  This is not an error, but may impair performance.
+grad.sizes() = [1, 32, 1, 1], strides() = [32, 1, 32, 32]
+bucket_view.sizes() = [1, 32, 1, 1], strides() = [32, 1, 1, 1] (Triggered internally at ../torch/csrc/distributed/c10d/reducer.cpp:322.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/autograd/__init__.py:266: UserWarning: Grad strides do not match bucket view strides. This may indicate grad was not created according to the gradient layout contract, or that the param's strides changed since DDP was constructed.  This is not an error, but may impair performance.
+grad.sizes() = [1, 32, 1, 1], strides() = [32, 1, 32, 32]
+bucket_view.sizes() = [1, 32, 1, 1], strides() = [32, 1, 1, 1] (Triggered internally at ../torch/csrc/distributed/c10d/reducer.cpp:322.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+[2025-01-15 22:36:23,408][    INFO] Iter: 0/269, LR: 0.0000050, Loss: 15.404
+[2025-01-15 22:39:34,533][    INFO] Iter: 100/269, LR: 0.0000049, Loss: 6.113
+[2025-01-15 22:42:47,010][    INFO] Iter: 200/269, LR: 0.0000048, Loss: 5.968
+[2025-01-15 22:45:37,496][    INFO] ==========================================================================================
+[2025-01-15 22:45:37,496][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-15 22:45:37,497][    INFO]    0.606,    0.813,    0.916,    0.333,    3.016,    6.470,    0.374,    0.111,    0.364
+[2025-01-15 22:45:37,497][    INFO] ==========================================================================================
+
+[2025-01-15 22:45:48,263][    INFO] ===========> Epoch: 1/20, d1: 0.606, d2: 0.813, d3: 0.916
+[2025-01-15 22:45:48,263][    INFO] ===========> Epoch: 1/20, abs_rel: 0.333, sq_rel: 3.016, rmse: 6.470, rmse_log: 0.374, log10: 0.111, silog: 0.364
+[2025-01-15 22:45:50,752][    INFO] Iter: 0/269, LR: 0.0000048, Loss: 5.422
+[2025-01-15 22:49:02,873][    INFO] Iter: 100/269, LR: 0.0000047, Loss: 5.358
+[2025-01-15 22:52:15,211][    INFO] Iter: 200/269, LR: 0.0000046, Loss: 5.272
+[2025-01-15 22:55:04,850][    INFO] ==========================================================================================
+[2025-01-15 22:55:04,851][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-15 22:55:04,851][    INFO]    0.608,    0.819,    0.921,    0.311,    2.830,    6.501,    0.364,    0.107,    0.356
+[2025-01-15 22:55:04,851][    INFO] ==========================================================================================
+
+[2025-01-15 22:55:14,342][    INFO] ===========> Epoch: 2/20, d1: 0.608, d2: 0.819, d3: 0.921
+[2025-01-15 22:55:14,342][    INFO] ===========> Epoch: 2/20, abs_rel: 0.311, sq_rel: 2.830, rmse: 6.470, rmse_log: 0.364, log10: 0.107, silog: 0.356
+[2025-01-15 22:55:16,868][    INFO] Iter: 0/269, LR: 0.0000045, Loss: 5.074
+[2025-01-15 22:58:29,075][    INFO] Iter: 100/269, LR: 0.0000045, Loss: 5.308
+[2025-01-15 23:01:41,589][    INFO] Iter: 200/269, LR: 0.0000044, Loss: 5.188
+[2025-01-15 23:04:31,415][    INFO] ==========================================================================================
+[2025-01-15 23:04:31,416][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-15 23:04:31,416][    INFO]    0.614,    0.825,    0.925,    0.291,    2.655,    6.570,    0.357,    0.106,    0.352
+[2025-01-15 23:04:31,416][    INFO] ==========================================================================================
+
+[2025-01-15 23:04:40,903][    INFO] ===========> Epoch: 3/20, d1: 0.614, d2: 0.825, d3: 0.925
+[2025-01-15 23:04:40,904][    INFO] ===========> Epoch: 3/20, abs_rel: 0.291, sq_rel: 2.655, rmse: 6.470, rmse_log: 0.357, log10: 0.106, silog: 0.352
+[2025-01-15 23:04:43,431][    INFO] Iter: 0/269, LR: 0.0000043, Loss: 4.918
+[2025-01-15 23:07:55,803][    INFO] Iter: 100/269, LR: 0.0000042, Loss: 5.045
+[2025-01-15 23:11:08,537][    INFO] Iter: 200/269, LR: 0.0000041, Loss: 5.130
+[2025-01-15 23:13:58,283][    INFO] ==========================================================================================
+[2025-01-15 23:13:58,283][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-15 23:13:58,283][    INFO]    0.632,    0.830,    0.926,    0.300,    2.712,    6.426,    0.354,    0.106,    0.349
+[2025-01-15 23:13:58,283][    INFO] ==========================================================================================
+
+[2025-01-15 23:14:11,525][    INFO] ===========> Epoch: 4/20, d1: 0.632, d2: 0.830, d3: 0.926
+[2025-01-15 23:14:11,525][    INFO] ===========> Epoch: 4/20, abs_rel: 0.291, sq_rel: 2.655, rmse: 6.426, rmse_log: 0.354, log10: 0.106, silog: 0.349
+[2025-01-15 23:14:14,073][    INFO] Iter: 0/269, LR: 0.0000041, Loss: 4.891
+[2025-01-15 23:17:26,053][    INFO] Iter: 100/269, LR: 0.0000040, Loss: 4.833
+[2025-01-15 23:20:38,550][    INFO] Iter: 200/269, LR: 0.0000039, Loss: 4.916
+[2025-01-15 23:23:28,243][    INFO] ==========================================================================================
+[2025-01-15 23:23:28,243][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-15 23:23:28,244][    INFO]    0.631,    0.835,    0.929,    0.296,    2.753,    6.380,    0.351,    0.107,    0.346
+[2025-01-15 23:23:28,244][    INFO] ==========================================================================================
+
+[2025-01-15 23:23:35,001][    INFO] ===========> Epoch: 5/20, d1: 0.632, d2: 0.835, d3: 0.929
+[2025-01-15 23:23:35,001][    INFO] ===========> Epoch: 5/20, abs_rel: 0.291, sq_rel: 2.655, rmse: 6.380, rmse_log: 0.351, log10: 0.106, silog: 0.346
+[2025-01-15 23:23:37,465][    INFO] Iter: 0/269, LR: 0.0000039, Loss: 4.473
+[2025-01-15 23:26:49,684][    INFO] Iter: 100/269, LR: 0.0000038, Loss: 4.683
+[2025-01-15 23:30:02,087][    INFO] Iter: 200/269, LR: 0.0000037, Loss: 4.711
+[2025-01-15 23:32:51,774][    INFO] ==========================================================================================
+[2025-01-15 23:32:51,774][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-15 23:32:51,775][    INFO]    0.607,    0.814,    0.923,    0.278,    2.447,    6.935,    0.359,    0.108,    0.353
+[2025-01-15 23:32:51,775][    INFO] ==========================================================================================
+
+[2025-01-15 23:33:04,279][    INFO] ===========> Epoch: 6/20, d1: 0.632, d2: 0.835, d3: 0.929
+[2025-01-15 23:33:04,280][    INFO] ===========> Epoch: 6/20, abs_rel: 0.278, sq_rel: 2.447, rmse: 6.380, rmse_log: 0.351, log10: 0.106, silog: 0.346
+[2025-01-15 23:33:06,800][    INFO] Iter: 0/269, LR: 0.0000036, Loss: 4.878
+[2025-01-15 23:36:18,809][    INFO] Iter: 100/269, LR: 0.0000035, Loss: 4.163
+[2025-01-15 23:39:31,324][    INFO] Iter: 200/269, LR: 0.0000035, Loss: 4.144
+[2025-01-15 23:42:21,063][    INFO] ==========================================================================================
+[2025-01-15 23:42:21,064][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-15 23:42:21,064][    INFO]    0.627,    0.825,    0.926,    0.282,    2.565,    6.613,    0.353,    0.104,    0.349
+[2025-01-15 23:42:21,064][    INFO] ==========================================================================================
+
+[2025-01-15 23:42:25,049][    INFO] ===========> Epoch: 7/20, d1: 0.632, d2: 0.835, d3: 0.929
+[2025-01-15 23:42:25,049][    INFO] ===========> Epoch: 7/20, abs_rel: 0.278, sq_rel: 2.447, rmse: 6.380, rmse_log: 0.351, log10: 0.104, silog: 0.346
+[2025-01-15 23:42:27,552][    INFO] Iter: 0/269, LR: 0.0000034, Loss: 4.465
+[2025-01-15 23:45:39,761][    INFO] Iter: 100/269, LR: 0.0000033, Loss: 4.487
+[2025-01-15 23:48:59,074][    INFO] Iter: 200/269, LR: 0.0000032, Loss: 4.529
+[2025-01-15 23:51:48,756][    INFO] ==========================================================================================
+[2025-01-15 23:51:48,756][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-15 23:51:48,756][    INFO]    0.631,    0.827,    0.923,    0.294,    2.824,    6.535,    0.356,    0.103,    0.351
+[2025-01-15 23:51:48,757][    INFO] ==========================================================================================
+
+[2025-01-15 23:52:11,545][    INFO] ===========> Epoch: 8/20, d1: 0.632, d2: 0.835, d3: 0.929
+[2025-01-15 23:52:11,545][    INFO] ===========> Epoch: 8/20, abs_rel: 0.278, sq_rel: 2.447, rmse: 6.380, rmse_log: 0.351, log10: 0.103, silog: 0.346
+[2025-01-15 23:52:14,103][    INFO] Iter: 0/269, LR: 0.0000032, Loss: 3.980
+[2025-01-15 23:55:26,252][    INFO] Iter: 100/269, LR: 0.0000031, Loss: 4.332
+[2025-01-15 23:58:38,885][    INFO] Iter: 200/269, LR: 0.0000030, Loss: 4.372
+[2025-01-16 00:01:28,734][    INFO] ==========================================================================================
+[2025-01-16 00:01:28,735][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-16 00:01:28,735][    INFO]    0.636,    0.828,    0.924,    0.294,    2.783,    6.553,    0.356,    0.104,    0.351
+[2025-01-16 00:01:28,735][    INFO] ==========================================================================================
+
+[2025-01-16 00:01:35,425][    INFO] ===========> Epoch: 9/20, d1: 0.636, d2: 0.835, d3: 0.929
+[2025-01-16 00:01:35,426][    INFO] ===========> Epoch: 9/20, abs_rel: 0.278, sq_rel: 2.447, rmse: 6.380, rmse_log: 0.351, log10: 0.103, silog: 0.346
+[2025-01-16 00:01:37,945][    INFO] Iter: 0/269, LR: 0.0000029, Loss: 4.493
+[2025-01-16 00:04:50,173][    INFO] Iter: 100/269, LR: 0.0000028, Loss: 4.556
+[2025-01-16 00:08:02,562][    INFO] Iter: 200/269, LR: 0.0000027, Loss: 4.547
+[2025-01-16 00:10:52,126][    INFO] ==========================================================================================
+[2025-01-16 00:10:52,126][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-16 00:10:52,126][    INFO]    0.636,    0.832,    0.927,    0.290,    2.745,    6.434,    0.351,    0.103,    0.346
+[2025-01-16 00:10:52,126][    INFO] ==========================================================================================
+
+[2025-01-16 00:11:04,031][    INFO] ===========> Epoch: 10/20, d1: 0.636, d2: 0.835, d3: 0.929
+[2025-01-16 00:11:04,031][    INFO] ===========> Epoch: 10/20, abs_rel: 0.278, sq_rel: 2.447, rmse: 6.380, rmse_log: 0.351, log10: 0.103, silog: 0.346
+[2025-01-16 00:11:06,461][    INFO] Iter: 0/269, LR: 0.0000027, Loss: 3.877
+[2025-01-16 00:14:18,243][    INFO] Iter: 100/269, LR: 0.0000026, Loss: 4.309
+[2025-01-16 00:17:30,578][    INFO] Iter: 200/269, LR: 0.0000025, Loss: 3.925
+[2025-01-16 00:20:20,144][    INFO] ==========================================================================================
+[2025-01-16 00:20:20,144][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-16 00:20:20,145][    INFO]    0.620,    0.819,    0.920,    0.288,    2.707,    6.720,    0.364,    0.107,    0.359
+[2025-01-16 00:20:20,145][    INFO] ==========================================================================================
+
+[2025-01-16 00:20:24,354][    INFO] ===========> Epoch: 11/20, d1: 0.636, d2: 0.835, d3: 0.929
+[2025-01-16 00:20:24,354][    INFO] ===========> Epoch: 11/20, abs_rel: 0.278, sq_rel: 2.447, rmse: 6.380, rmse_log: 0.351, log10: 0.103, silog: 0.346
+[2025-01-16 00:20:26,849][    INFO] Iter: 0/269, LR: 0.0000024, Loss: 4.489
+[2025-01-16 00:23:38,885][    INFO] Iter: 100/269, LR: 0.0000023, Loss: 4.069
+[2025-01-16 00:26:51,052][    INFO] Iter: 200/269, LR: 0.0000023, Loss: 4.002
+[2025-01-16 00:29:40,514][    INFO] ==========================================================================================
+[2025-01-16 00:29:40,514][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-16 00:29:40,514][    INFO]    0.636,    0.826,    0.924,    0.281,    2.571,    6.683,    0.354,    0.103,    0.350
+[2025-01-16 00:29:40,515][    INFO] ==========================================================================================
+
+[2025-01-16 00:29:44,565][    INFO] ===========> Epoch: 12/20, d1: 0.636, d2: 0.835, d3: 0.929
+[2025-01-16 00:29:44,565][    INFO] ===========> Epoch: 12/20, abs_rel: 0.278, sq_rel: 2.447, rmse: 6.380, rmse_log: 0.351, log10: 0.103, silog: 0.346
+[2025-01-16 00:29:47,020][    INFO] Iter: 0/269, LR: 0.0000022, Loss: 3.964
+[2025-01-16 00:32:59,114][    INFO] Iter: 100/269, LR: 0.0000021, Loss: 4.033
+[2025-01-16 00:36:11,366][    INFO] Iter: 200/269, LR: 0.0000020, Loss: 3.877
+[2025-01-16 00:39:01,103][    INFO] ==========================================================================================
+[2025-01-16 00:39:01,103][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-16 00:39:01,104][    INFO]    0.636,    0.829,    0.926,    0.286,    2.682,    6.551,    0.353,    0.102,    0.348
+[2025-01-16 00:39:01,104][    INFO] ==========================================================================================
+
+[2025-01-16 00:39:07,854][    INFO] ===========> Epoch: 13/20, d1: 0.636, d2: 0.835, d3: 0.929
+[2025-01-16 00:39:07,854][    INFO] ===========> Epoch: 13/20, abs_rel: 0.278, sq_rel: 2.447, rmse: 6.380, rmse_log: 0.351, log10: 0.102, silog: 0.346
+[2025-01-16 00:39:10,373][    INFO] Iter: 0/269, LR: 0.0000019, Loss: 4.157
+[2025-01-16 00:42:22,607][    INFO] Iter: 100/269, LR: 0.0000019, Loss: 3.848
+[2025-01-16 00:45:34,952][    INFO] Iter: 200/269, LR: 0.0000018, Loss: 4.158
+[2025-01-16 00:48:24,568][    INFO] ==========================================================================================
+[2025-01-16 00:48:24,568][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-16 00:48:24,568][    INFO]    0.632,    0.829,    0.925,    0.287,    2.685,    6.513,    0.353,    0.102,    0.347
+[2025-01-16 00:48:24,568][    INFO] ==========================================================================================
+
+[2025-01-16 00:48:28,562][    INFO] ===========> Epoch: 14/20, d1: 0.636, d2: 0.835, d3: 0.929
+[2025-01-16 00:48:28,562][    INFO] ===========> Epoch: 14/20, abs_rel: 0.278, sq_rel: 2.447, rmse: 6.380, rmse_log: 0.351, log10: 0.102, silog: 0.346
+[2025-01-16 00:48:31,090][    INFO] Iter: 0/269, LR: 0.0000017, Loss: 3.696
+[2025-01-16 00:51:43,367][    INFO] Iter: 100/269, LR: 0.0000016, Loss: 4.173
+[2025-01-16 00:54:55,675][    INFO] Iter: 200/269, LR: 0.0000015, Loss: 4.234
+[2025-01-16 00:57:49,164][    INFO] ==========================================================================================
+[2025-01-16 00:57:49,164][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-16 00:57:49,165][    INFO]    0.643,    0.829,    0.924,    0.294,    2.869,    6.548,    0.355,    0.102,    0.349
+[2025-01-16 00:57:49,165][    INFO] ==========================================================================================
+
+[2025-01-16 00:57:55,968][    INFO] ===========> Epoch: 15/20, d1: 0.643, d2: 0.835, d3: 0.929
+[2025-01-16 00:57:55,968][    INFO] ===========> Epoch: 15/20, abs_rel: 0.278, sq_rel: 2.447, rmse: 6.380, rmse_log: 0.351, log10: 0.102, silog: 0.346
+[2025-01-16 00:57:58,433][    INFO] Iter: 0/269, LR: 0.0000014, Loss: 3.930
+[2025-01-16 01:01:10,550][    INFO] Iter: 100/269, LR: 0.0000013, Loss: 3.925
+[2025-01-16 01:04:22,710][    INFO] Iter: 200/269, LR: 0.0000012, Loss: 4.075
+[2025-01-16 01:07:12,280][    INFO] ==========================================================================================
+[2025-01-16 01:07:12,280][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-16 01:07:12,281][    INFO]    0.636,    0.828,    0.923,    0.286,    2.724,    6.607,    0.356,    0.103,    0.351
+[2025-01-16 01:07:12,281][    INFO] ==========================================================================================
+
+[2025-01-16 01:07:16,359][    INFO] ===========> Epoch: 16/20, d1: 0.643, d2: 0.835, d3: 0.929
+[2025-01-16 01:07:16,360][    INFO] ===========> Epoch: 16/20, abs_rel: 0.278, sq_rel: 2.447, rmse: 6.380, rmse_log: 0.351, log10: 0.102, silog: 0.346
+[2025-01-16 01:07:18,838][    INFO] Iter: 0/269, LR: 0.0000012, Loss: 4.025
+[2025-01-16 01:10:31,241][    INFO] Iter: 100/269, LR: 0.0000011, Loss: 3.957
+[2025-01-16 01:13:43,766][    INFO] Iter: 200/269, LR: 0.0000010, Loss: 3.935
+[2025-01-16 01:16:33,484][    INFO] ==========================================================================================
+[2025-01-16 01:16:33,484][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-16 01:16:33,484][    INFO]    0.635,    0.828,    0.923,    0.284,    2.726,    6.610,    0.356,    0.103,    0.351
+[2025-01-16 01:16:33,484][    INFO] ==========================================================================================
+
+[2025-01-16 01:16:37,502][    INFO] ===========> Epoch: 17/20, d1: 0.643, d2: 0.835, d3: 0.929
+[2025-01-16 01:16:37,502][    INFO] ===========> Epoch: 17/20, abs_rel: 0.278, sq_rel: 2.447, rmse: 6.380, rmse_log: 0.351, log10: 0.102, silog: 0.346
+[2025-01-16 01:16:39,957][    INFO] Iter: 0/269, LR: 0.0000009, Loss: 4.059
+[2025-01-16 01:19:52,294][    INFO] Iter: 100/269, LR: 0.0000008, Loss: 3.821
+[2025-01-16 01:23:04,658][    INFO] Iter: 200/269, LR: 0.0000007, Loss: 4.178
+[2025-01-16 01:25:54,476][    INFO] ==========================================================================================
+[2025-01-16 01:25:54,477][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-16 01:25:54,477][    INFO]    0.636,    0.827,    0.923,    0.288,    2.770,    6.595,    0.356,    0.102,    0.351
+[2025-01-16 01:25:54,477][    INFO] ==========================================================================================
+
+[2025-01-16 01:25:58,561][    INFO] ===========> Epoch: 18/20, d1: 0.643, d2: 0.835, d3: 0.929
+[2025-01-16 01:25:58,562][    INFO] ===========> Epoch: 18/20, abs_rel: 0.278, sq_rel: 2.447, rmse: 6.380, rmse_log: 0.351, log10: 0.102, silog: 0.346
+[2025-01-16 01:26:01,059][    INFO] Iter: 0/269, LR: 0.0000006, Loss: 4.126
+[2025-01-16 01:29:13,154][    INFO] Iter: 100/269, LR: 0.0000005, Loss: 3.760
+[2025-01-16 01:32:25,294][    INFO] Iter: 200/269, LR: 0.0000004, Loss: 3.859
+[2025-01-16 01:35:15,053][    INFO] ==========================================================================================
+[2025-01-16 01:35:15,053][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-16 01:35:15,054][    INFO]    0.638,    0.829,    0.923,    0.289,    2.797,    6.577,    0.355,    0.102,    0.350
+[2025-01-16 01:35:15,054][    INFO] ==========================================================================================
+
+[2025-01-16 01:35:21,460][    INFO] ===========> Epoch: 19/20, d1: 0.643, d2: 0.835, d3: 0.929
+[2025-01-16 01:35:21,460][    INFO] ===========> Epoch: 19/20, abs_rel: 0.278, sq_rel: 2.447, rmse: 6.380, rmse_log: 0.351, log10: 0.102, silog: 0.346
+[2025-01-16 01:35:23,961][    INFO] Iter: 0/269, LR: 0.0000003, Loss: 4.031
+[2025-01-16 01:38:36,152][    INFO] Iter: 100/269, LR: 0.0000002, Loss: 4.135
+[2025-01-16 01:41:48,696][    INFO] Iter: 200/269, LR: 0.0000001, Loss: 3.999
+[2025-01-16 01:44:38,597][    INFO] ==========================================================================================
+[2025-01-16 01:44:38,598][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-16 01:44:38,598][    INFO]    0.638,    0.830,    0.924,    0.284,    2.717,    6.601,    0.354,    0.102,    0.350
+[2025-01-16 01:44:38,598][    INFO] ==========================================================================================
+

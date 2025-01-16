@@ -45,7 +45,7 @@ class MVSEC(Dataset):
         # Normalize depth
         depth = np.clip(depth, 0.0, d_max)
         depth = depth / d_max
-        depth = np.log(depth + 1e-6) / reg_factor + 1.0
+        depth = np.log(depth) / reg_factor + 1.0
         depth = depth.clip(0.0, 1.0)
         return depth
 
@@ -67,8 +67,8 @@ class MVSEC(Dataset):
         if self.normalized_d:
             depth = self.prepare_depth(depth, reg_factor, d_max)
         else:
-            # depth = np.clip(depth, 0.0, d_max)
-            pass
+            depth = np.clip(depth, 0.0, d_max)
+            # pass
 
         sample = self.transform({"image": image, "depth": depth, "event_voxel": event_voxel})
 

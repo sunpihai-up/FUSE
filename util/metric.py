@@ -9,19 +9,15 @@ dataset2params = {
 }
 
 def convert_nl2abs_depth(depth, clip_distance, reg_factor):
-    """Converts normalized logarithmic depth values to absolute depth values.
-
-    Args:
-        depth (numpy.ndarray): Input depth map in normalized logarithmic scale.
-        clip_distance (float): Maximum depth value (used for scaling and clipping).
-        reg_factor (float):  Regularization factor used in the logarithmic transformation.
-
-    Returns:
-        numpy.ndarray: Absolute depth map
-    """
     depth = np.exp(reg_factor * (depth - 1.0))
     depth *= clip_distance
     depth = np.clip(depth, np.exp(-1 * reg_factor) * clip_distance, clip_distance)
+    return depth
+
+def convert_nl2abs_depth_tensor(depth, clip_distance, reg_factor):
+    depth = torch.exp(reg_factor * (depth - 1.0)) * clip_distance
+    min_depth = torch.exp(-1 * reg_factor) * clip_distance
+    depth = torch.clamp(depth, min=min_depth, max=clip_distance)
     return depth
 
 def prepare_depth_data(target, prediction, clip_distance, reg_factor=3.70378):
@@ -66,42 +62,6 @@ def prepare_depth_data(target, prediction, clip_distance, reg_factor=3.70378):
 def eval_depth(pred, target, dataset, eps=1e-6):
     assert pred.shape == target.shape
 
-    reg_factor = dataset2params[dataset]["reg_factor"]
-    max_depth = dataset2params[dataset]["clip_distance"]
-    
-    # Convert to the correct scale
-    pred, target, valid_mask = prepare_depth_data(
-        target, pred, clip_distance=max_depth, reg_factor=reg_factor
-    )
-    
-    pred = pred[valid_mask] + eps
-    target = target[valid_mask] + eps
-
-    thresh = torch.max((target / pred), (pred / target))
-
-    d1 = torch.sum(thresh < 1.25).float() / len(thresh)
-    d2 = torch.sum(thresh < 1.25 ** 2).float() / len(thresh)
-    d3 = torch.sum(thresh < 1.25 ** 3).float() / len(thresh)
-
-    diff = pred - target
-    diff_log = torch.log(pred) - torch.log(target)
-
-    abs_rel = torch.mean(torch.abs(diff) / target)
-    sq_rel = torch.mean(torch.pow(diff, 2) / target)
-
-    rmse = torch.sqrt(torch.mean(torch.pow(diff, 2)))
-    rmse_log = torch.sqrt(torch.mean(torch.pow(diff_log , 2)))
-
-    log10 = torch.mean(torch.abs(torch.log10(pred) - torch.log10(target)))
-    silog = torch.sqrt(torch.pow(diff_log, 2).mean() - 0.5 * torch.pow(diff_log.mean(), 2))
-
-    return {'d1': d1.item(), 'd2': d2.item(), 'd3': d3.item(), 'abs_rel': abs_rel.item(), 'sq_rel': sq_rel.item(), 
-            'rmse': rmse.item(), 'rmse_log': rmse_log.item(), 'log10':log10.item(), 'silog':silog.item()}
-
-
-def eval_depth_ori(pred, target, dataset, eps=1e-6):
-    assert pred.shape == target.shape
-    
     non_nan_mask = torch.isfinite(target)
     target = target[non_nan_mask]
     pred = pred[non_nan_mask]
@@ -110,8 +70,6 @@ def eval_depth_ori(pred, target, dataset, eps=1e-6):
     max_depth = dataset2params[dataset]["clip_distance"]
     min_depth = torch.exp(-1 * torch.tensor(reg_factor)) * torch.tensor(max_depth)
     
-    # target = np.clip(target, min_depth, max_depth)
-    # pred = np.clip(pred, min_depth, max_depth)
     target = torch.clamp(target, min=min_depth, max=max_depth)
     pred = torch.clamp(pred, min=min_depth, max=max_depth)
     

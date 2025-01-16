@@ -20,11 +20,16 @@ from dataset.mvsec import MVSEC
 from dataset.eventscape import EventScape
 
 from model.epde_modal import EPDE
+
 # from model.epde_modal_metric import EPDE
 from model.epde.utils import clean_pretrained_weight
 from util.dist_helper import setup_distributed
-from util.loss import SiLogLoss, MixedLoss
-from util.metric import eval_depth, eval_depth_ori
+from util.loss import SiLogLoss, MixedLoss, SiLoss, L1_Loss
+from util.metric import (
+    eval_depth,
+    convert_nl2abs_depth_tensor,
+    dataset2params,
+)
 from util.utils import init_log
 
 
@@ -57,7 +62,7 @@ parser.add_argument("--inv", action="store_true")
 parser.add_argument("--return-feature", action="store_true")
 parser.add_argument(
     "--finetune-mode",
-    choices=["prompt_fuse", "decoder", "bias", "bias_and_decoder", "overall"],
+    choices=["prompt_fuse", "decoder", "overall"],
     type=str,
 )
 
@@ -169,7 +174,7 @@ def main():
     if args.pretrained_from:
         checkpoint = torch.load(args.pretrained_from, map_location="cpu")
         checkpoint = clean_pretrained_weight(checkpoint)
-        checkpoint = {k:v for k, v in checkpoint.items() if "depth_head" not in k}
+        # checkpoint = {k: v for k, v in checkpoint.items() if "depth_head" not in k}
         model.load_state_dict(checkpoint, strict=False)
         print(f"Model weights load from {args.pretrained_from} successfully!")
 
@@ -183,8 +188,9 @@ def main():
         find_unused_parameters=True,
     )
 
-    criterion = SiLogLoss().cuda(local_rank)
-    # criterion = MixedLoss().cuda(local_rank)
+    # criterion = SiLogLoss().cuda(local_rank)
+    # criterion = SiLoss().cuda(local_rank)
+    criterion = MixedLoss().cuda(local_rank)
 
     # Handling frozen parameters
     if args.finetune_mode == "decoder":
@@ -195,6 +201,9 @@ def main():
         for name, param in model.named_parameters():
             if "depth_head" not in name and "prompt_fuse" not in name:
                 param.requires_grad = False
+    elif args.finetune_mode == "overall":
+        for name, param in model.named_parameters():
+            param.requires_grad = True
 
     print(f"The freezing mode of weights is: {args.finetune_mode}")
 
@@ -277,7 +286,6 @@ def main():
         trainloader.sampler.set_epoch(epoch + 1)
 
         model.train()
-        total_si_loss = 0
 
         for i, sample in enumerate(trainloader):
             optimizer.zero_grad()
@@ -296,22 +304,19 @@ def main():
 
             pred = model(img)
             # print(pred.min(), pred.max())
-            # loss, si_loss, grad_loss = criterion(
+            loss, si_loss, grad_loss = criterion(
+                pred,
+                depth,
+                valid_mask,
+            )
+            # loss = criterion(
             #     pred,
             #     depth,
             #     valid_mask,
             # )
 
-            loss = criterion(
-                pred,
-                depth,
-                valid_mask,
-            )
-
             loss.backward()
             optimizer.step()
-
-            # total_si_loss += si_loss.item()
 
             iters = epoch * len(trainloader) + i
 
@@ -322,16 +327,18 @@ def main():
 
             if rank == 0:
                 writer.add_scalar("train/loss", loss.item(), iters)
-                # writer.add_scalar("train/si_loss", si_loss.item(), iters)
-                # writer.add_scalar("train/grad_loss", grad_loss.item(), iters)
+                writer.add_scalar("train/si_loss", si_loss.item(), iters)
+                writer.add_scalar("train/grad_loss", grad_loss.item(), iters)
 
             if rank == 0 and i % 100 == 0:
                 logger.info(
-                    "Iter: {}/{}, LR: {:.7f}, Loss: {:.3f}".format(
+                    "Iter: {}/{}, LR: {:.7f}, Loss: {:.3f}, SiLoss: {:.3f}, GradLoss: {:.3f}".format(
                         i,
                         len(trainloader),
                         optimizer.param_groups[0]["lr"],
                         loss.item(),
+                        si_loss.item(),
+                        grad_loss.item(),
                     )
                 )
 
@@ -343,9 +350,6 @@ def main():
                     "previous_best": previous_best,
                 }
                 torch.save(checkpoint, os.path.join(args.save_path, "latest.pth"))
-            
-            if i >= 100:
-                break
 
         model.eval()
 
@@ -366,15 +370,14 @@ def main():
 
         for i, sample in enumerate(valloader):
 
-            img, depth, valid_mask = (
-                # sample["image"].cuda().float(),
+            inputs, depth, valid_mask = (
                 sample["input"].cuda().float(),
                 sample["depth"].cuda()[0],
                 sample["valid_mask"].cuda()[0],
             )
 
             with torch.no_grad():
-                pred = model(img)
+                pred = model(inputs)
                 pred = F.interpolate(
                     pred[:, None], depth.shape[-2:], mode="bilinear", align_corners=True
                 )[0, 0]
@@ -383,16 +386,13 @@ def main():
                 continue
 
             if args.normalized_depth:
-                cur_results = eval_depth(
-                    pred[valid_mask], depth[valid_mask], dataset=args.dataset
-                )
-            else:
-                cur_results = eval_depth_ori(
-                    pred, depth, dataset=args.dataset
-                )
-                # cur_results = eval_depth_ori(
-                #     pred[valid_mask], depth[valid_mask], dataset=args.dataset
-                # )
+                # Convert normalized log depth to absolute depth
+                reg_factor = dataset2params[args.dataset]["reg_factor"]
+                max_depth = dataset2params[args.dataset]["clip_distance"]
+                pred = convert_nl2abs_depth_tensor(pred, max_depth, reg_factor)
+                depth = convert_nl2abs_depth_tensor(depth, max_depth, reg_factor)
+
+            cur_results = eval_depth(pred, depth, dataset=args.dataset)
 
             for k in results.keys():
                 results[k] += cur_results[k]
@@ -426,14 +426,14 @@ def main():
             for name, metric in results.items():
                 writer.add_scalar(f"eval/{name}", (metric / nsamples).item(), epoch)
 
-        if rank == 0 and (epoch + 1) % 20 == 0:
-            checkpoint = {
-                "model": model.state_dict(),
-                "optimizer": optimizer.state_dict(),
-                "epoch": epoch,
-                "previous_best": previous_best,
-            }
-            torch.save(checkpoint, os.path.join(args.save_path, f"{epoch}.pth"))
+        # if rank == 0 and (epoch + 1) % 20 == 0:
+        #     checkpoint = {
+        #         "model": model.state_dict(),
+        #         "optimizer": optimizer.state_dict(),
+        #         "epoch": epoch,
+        #         "previous_best": previous_best,
+        #     }
+        #     torch.save(checkpoint, os.path.join(args.save_path, f"{epoch}.pth"))
 
         cur_results = {}
         for k in results.keys():

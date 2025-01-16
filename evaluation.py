@@ -222,10 +222,10 @@ def add_to_metrics(
         metrics = {k: 0 for k in metrics_keywords}
 
     prediction_mask = (prediction_ > 0) & (
-        prediction_ < np.amax(target_[~np.isnan(target_)])
+        prediction_ <= np.amax(target_[~np.isnan(target_)])
     )
     depth_mask = (target_ > 0) & (
-        target_ < np.amax(target_[~np.isnan(target_)])
+        target_ <= np.amax(target_[~np.isnan(target_)])
     )  # make (target> 3) for mvsec might drives
     mask = mask & depth_mask & prediction_mask
     eps = 1e-5

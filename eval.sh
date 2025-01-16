@@ -1,6 +1,6 @@
 python evaluation.py \
-    --predictions_dataset /home/sph/event/da2-prompt-tuning/results/test/epde_metric_nocrop_dpt2_mvsec_day1_7/npy \
-    --target_dataset /data_nvme/sph/mvsec_processed/outdoor_day1/depths \
+    --predictions_dataset /home/sph/event/da2-prompt-tuning/results/test/epde_metric_80_mvsec_2_decoder_116131204_mvsec_night1_7/npy \
+    --target_dataset /data_nvme/sph/mvsec_processed/outdoor_night1/depths \
     --clip_distance 80.0 \
     --dataset mvsec \
     --nan_mask \
