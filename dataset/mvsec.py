@@ -41,9 +41,9 @@ class MVSEC(Dataset):
             + ([Crop(size[0])] if self.mode == "trains" else [])
         )
 
-    def prepare_depth(self, depth, reg_factor, d_max):
+    def prepare_depth(self, depth, reg_factor, d_min, d_max):
         # Normalize depth
-        depth = np.clip(depth, 0.0, d_max)
+        depth = np.clip(depth, d_min, d_max)
         depth = depth / d_max
         depth = np.log(depth) / reg_factor + 1.0
         depth = depth.clip(0.0, 1.0)
@@ -53,7 +53,7 @@ class MVSEC(Dataset):
         # if self.mode == "train":
         #     reg_factor, d_max = 3.70378, 100
         # else:
-        reg_factor, d_max = 3.70378, 80
+        reg_factor, d_min, d_max = 3.70378, 1.97041, 80
 
         img_path = self.filelist[item].split(" ")[0]
         depth_path = self.filelist[item].split(" ")[1]
@@ -65,9 +65,9 @@ class MVSEC(Dataset):
         event_voxel = np.load(event_voxel_path)
         # Convert absolute scale depth to normalized log depth
         if self.normalized_d:
-            depth = self.prepare_depth(depth, reg_factor, d_max)
+            depth = self.prepare_depth(depth, reg_factor, d_min, d_max)
         else:
-            depth = np.clip(depth, 0.0, d_max)
+            depth = np.clip(depth, d_min, d_max)
             # pass
 
         sample = self.transform({"image": image, "depth": depth, "event_voxel": event_voxel})

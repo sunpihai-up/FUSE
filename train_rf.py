@@ -19,9 +19,8 @@ from dataset.dense import Dense
 from dataset.mvsec import MVSEC
 from dataset.eventscape import EventScape
 
-from model.epde_modal import EPDE
-
-# from model.epde_modal_metric import EPDE
+# from model.epde_modal import EPDE
+from model.epde_modal_metric import EPDE
 from model.epde.utils import clean_pretrained_weight
 from util.dist_helper import setup_distributed
 from util.loss import SiLogLoss, MixedLoss, SiLoss, L1_Loss
@@ -62,7 +61,7 @@ parser.add_argument("--inv", action="store_true")
 parser.add_argument("--return-feature", action="store_true")
 parser.add_argument(
     "--finetune-mode",
-    choices=["prompt_fuse", "decoder", "overall"],
+    choices=["prompt_fuse", "decoder", "overall", "freeze"],
     type=str,
 )
 
@@ -168,13 +167,14 @@ def main():
         max_depth=args.max_depth,
         event_voxel_chans=args.event_voxel_chans,
         return_feature=args.return_feature,
-        inv=args.inv,
+        # inv=args.inv,
     )
 
     if args.pretrained_from:
+        model.eval()
         checkpoint = torch.load(args.pretrained_from, map_location="cpu")
         checkpoint = clean_pretrained_weight(checkpoint)
-        # checkpoint = {k: v for k, v in checkpoint.items() if "depth_head" not in k}
+        checkpoint = {k: v for k, v in checkpoint.items() if "depth_head" not in k}
         model.load_state_dict(checkpoint, strict=False)
         print(f"Model weights load from {args.pretrained_from} successfully!")
 
@@ -204,6 +204,9 @@ def main():
     elif args.finetune_mode == "overall":
         for name, param in model.named_parameters():
             param.requires_grad = True
+    elif args.finetune_mode == "freeze":
+        for name, param in model.named_parameters():
+            param.requires_grad = False
 
     print(f"The freezing mode of weights is: {args.finetune_mode}")
 
@@ -303,7 +306,7 @@ def main():
                 valid_mask = valid_mask.flip(-1)
 
             pred = model(img)
-            # print(pred.min(), pred.max())
+            # print(pred.min(), pred.max(), depth[torch.isfinite(depth)].min(), depth[torch.isfinite(depth)].max())
             loss, si_loss, grad_loss = criterion(
                 pred,
                 depth,
@@ -344,8 +347,8 @@ def main():
 
             if iters % 2000 == 0 and iters >= 2000 and rank == 0:
                 checkpoint = {
-                    "model": model.state_dict(),
-                    "optimizer": optimizer.state_dict(),
+                    "model": model.module.state_dict(),
+                    # "optimizer": optimizer.state_dict(),
                     "epoch": epoch,
                     "previous_best": previous_best,
                 }
@@ -403,6 +406,7 @@ def main():
         for k in results.keys():
             dist.reduce(results[k], dst=0)
         dist.reduce(nsamples, dst=0)
+        print(nsamples)
 
         if rank == 0:
             logger.info(
@@ -453,7 +457,7 @@ def main():
                         if file.startswith(k) and file.endswith(".pth"):
                             os.remove(os.path.join(args.save_path, file))
                     checkpoint = {
-                        "model": model.state_dict(),
+                        "model": model.module.state_dict(),
                         "epoch": epoch,
                         "previous_best": previous_best,
                     }
@@ -472,8 +476,8 @@ def main():
 
         if rank == 0:
             checkpoint = {
-                "model": model.state_dict(),
-                "optimizer": optimizer.state_dict(),
+                "model": model.module.state_dict(),
+                # "optimizer": optimizer.state_dict(),
                 "epoch": epoch,
                 "previous_best": previous_best,
             }

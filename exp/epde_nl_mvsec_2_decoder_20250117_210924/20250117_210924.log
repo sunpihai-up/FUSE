@@ -1,0 +1,722 @@
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/distributed/launch.py:183: FutureWarning: The module torch.distributed.launch is deprecated
+and will be removed in future. Use torchrun.
+Note that --use-env is set by default in torchrun.
+If your script expects `--local-rank` argument to be set, please
+change it to read from `os.environ['LOCAL_RANK']` instead. See 
+https://pytorch.org/docs/stable/distributed.html#launch-utility for 
+further instructions
+
+  warnings.warn(
+[2025-01-17 21:09:25,959] torch.distributed.run: [WARNING] 
+[2025-01-17 21:09:25,959] torch.distributed.run: [WARNING] *****************************************
+[2025-01-17 21:09:25,959] torch.distributed.run: [WARNING] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+[2025-01-17 21:09:25,959] torch.distributed.run: [WARNING] *****************************************
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[2025-01-17 21:09:28,504][    INFO] {'bs': 24,
+ 'dataset': 'mvsec_2',
+ 'depth_anything_pretrained': None,
+ 'encoder': 'vitl',
+ 'epochs': 50,
+ 'event_voxel_chans': 3,
+ 'finetune_mode': 'decoder',
+ 'img_size': 266,
+ 'inv': False,
+ 'local_rank': 0,
+ 'lr': 5e-06,
+ 'max_depth': 1.0,
+ 'min_depth': 0.0,
+ 'ngpus': 2,
+ 'normalized_depth': True,
+ 'port': 20596,
+ 'pretrained_from': '/home/sph/event/da2-prompt-tuning/exp/fuse_log_l1_eventscape_fuse_cor_20250114_110446/latest.pth',
+ 'return_feature': False,
+ 'save_path': '/home/sph/event/da2-prompt-tuning/exp/epde_nl_mvsec_2_decoder_20250117_210924'}
+
+max_depth: 1.0
+INFO:dinov2:using MLP layer as FFN
+max_depth: 1.0
+INFO:dinov2:using MLP layer as FFN
+INFO:dinov2:using MLP layer as FFN
+INFO:dinov2:using MLP layer as FFN
+Initializing encoder parameters without pre-trained weights
+Initializing encoder parameters without pre-trained weights
+Model weights load from /home/sph/event/da2-prompt-tuning/exp/fuse_log_l1_eventscape_fuse_cor_20250114_110446/latest.pth successfully!
+Model weights load from /home/sph/event/da2-prompt-tuning/exp/fuse_log_l1_eventscape_fuse_cor_20250114_110446/latest.pth successfully!
+The freezing mode of weights is: decoder
+The freezing mode of weights is: decoder
+[2025-01-17 21:09:47,400][    INFO] Module: module.depth_head.projects.0.weight, Trainable Parameters: 262144
+[2025-01-17 21:09:47,400][    INFO] Module: module.depth_head.projects.0.bias, Trainable Parameters: 256
+[2025-01-17 21:09:47,400][    INFO] Module: module.depth_head.projects.1.weight, Trainable Parameters: 524288
+[2025-01-17 21:09:47,400][    INFO] Module: module.depth_head.projects.1.bias, Trainable Parameters: 512
+[2025-01-17 21:09:47,400][    INFO] Module: module.depth_head.projects.2.weight, Trainable Parameters: 1048576
+[2025-01-17 21:09:47,400][    INFO] Module: module.depth_head.projects.2.bias, Trainable Parameters: 1024
+[2025-01-17 21:09:47,400][    INFO] Module: module.depth_head.projects.3.weight, Trainable Parameters: 1048576
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.projects.3.bias, Trainable Parameters: 1024
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.resize_layers.0.weight, Trainable Parameters: 1048576
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.resize_layers.0.bias, Trainable Parameters: 256
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.resize_layers.1.weight, Trainable Parameters: 1048576
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.resize_layers.1.bias, Trainable Parameters: 512
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.resize_layers.3.weight, Trainable Parameters: 9437184
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.resize_layers.3.bias, Trainable Parameters: 1024
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.layer1_rn.weight, Trainable Parameters: 589824
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.layer2_rn.weight, Trainable Parameters: 1179648
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.layer3_rn.weight, Trainable Parameters: 2359296
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.layer4_rn.weight, Trainable Parameters: 2359296
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet1.out_conv.weight, Trainable Parameters: 65536
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet1.out_conv.bias, Trainable Parameters: 256
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet1.resConfUnit1.conv1.weight, Trainable Parameters: 589824
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet1.resConfUnit1.conv1.bias, Trainable Parameters: 256
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet1.resConfUnit1.conv2.weight, Trainable Parameters: 589824
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet1.resConfUnit1.conv2.bias, Trainable Parameters: 256
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet1.resConfUnit2.conv1.weight, Trainable Parameters: 589824
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet1.resConfUnit2.conv1.bias, Trainable Parameters: 256
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet1.resConfUnit2.conv2.weight, Trainable Parameters: 589824
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet1.resConfUnit2.conv2.bias, Trainable Parameters: 256
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet2.out_conv.weight, Trainable Parameters: 65536
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet2.out_conv.bias, Trainable Parameters: 256
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet2.resConfUnit1.conv1.weight, Trainable Parameters: 589824
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet2.resConfUnit1.conv1.bias, Trainable Parameters: 256
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet2.resConfUnit1.conv2.weight, Trainable Parameters: 589824
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet2.resConfUnit1.conv2.bias, Trainable Parameters: 256
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet2.resConfUnit2.conv1.weight, Trainable Parameters: 589824
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet2.resConfUnit2.conv1.bias, Trainable Parameters: 256
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet2.resConfUnit2.conv2.weight, Trainable Parameters: 589824
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet2.resConfUnit2.conv2.bias, Trainable Parameters: 256
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet3.out_conv.weight, Trainable Parameters: 65536
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet3.out_conv.bias, Trainable Parameters: 256
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet3.resConfUnit1.conv1.weight, Trainable Parameters: 589824
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet3.resConfUnit1.conv1.bias, Trainable Parameters: 256
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet3.resConfUnit1.conv2.weight, Trainable Parameters: 589824
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet3.resConfUnit1.conv2.bias, Trainable Parameters: 256
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet3.resConfUnit2.conv1.weight, Trainable Parameters: 589824
+[2025-01-17 21:09:47,401][    INFO] Module: module.depth_head.scratch.refinenet3.resConfUnit2.conv1.bias, Trainable Parameters: 256
+[2025-01-17 21:09:47,402][    INFO] Module: module.depth_head.scratch.refinenet3.resConfUnit2.conv2.weight, Trainable Parameters: 589824
+[2025-01-17 21:09:47,402][    INFO] Module: module.depth_head.scratch.refinenet3.resConfUnit2.conv2.bias, Trainable Parameters: 256
+[2025-01-17 21:09:47,402][    INFO] Module: module.depth_head.scratch.refinenet4.out_conv.weight, Trainable Parameters: 65536
+[2025-01-17 21:09:47,402][    INFO] Module: module.depth_head.scratch.refinenet4.out_conv.bias, Trainable Parameters: 256
+[2025-01-17 21:09:47,402][    INFO] Module: module.depth_head.scratch.refinenet4.resConfUnit1.conv1.weight, Trainable Parameters: 589824
+[2025-01-17 21:09:47,402][    INFO] Module: module.depth_head.scratch.refinenet4.resConfUnit1.conv1.bias, Trainable Parameters: 256
+[2025-01-17 21:09:47,402][    INFO] Module: module.depth_head.scratch.refinenet4.resConfUnit1.conv2.weight, Trainable Parameters: 589824
+[2025-01-17 21:09:47,402][    INFO] Module: module.depth_head.scratch.refinenet4.resConfUnit1.conv2.bias, Trainable Parameters: 256
+[2025-01-17 21:09:47,402][    INFO] Module: module.depth_head.scratch.refinenet4.resConfUnit2.conv1.weight, Trainable Parameters: 589824
+[2025-01-17 21:09:47,402][    INFO] Module: module.depth_head.scratch.refinenet4.resConfUnit2.conv1.bias, Trainable Parameters: 256
+[2025-01-17 21:09:47,402][    INFO] Module: module.depth_head.scratch.refinenet4.resConfUnit2.conv2.weight, Trainable Parameters: 589824
+[2025-01-17 21:09:47,402][    INFO] Module: module.depth_head.scratch.refinenet4.resConfUnit2.conv2.bias, Trainable Parameters: 256
+[2025-01-17 21:09:47,402][    INFO] Module: module.depth_head.scratch.output_conv1.weight, Trainable Parameters: 294912
+[2025-01-17 21:09:47,402][    INFO] Module: module.depth_head.scratch.output_conv1.bias, Trainable Parameters: 128
+[2025-01-17 21:09:47,402][    INFO] Module: module.depth_head.scratch.output_conv2.0.weight, Trainable Parameters: 36864
+[2025-01-17 21:09:47,402][    INFO] Module: module.depth_head.scratch.output_conv2.0.bias, Trainable Parameters: 32
+[2025-01-17 21:09:47,402][    INFO] Module: module.depth_head.scratch.output_conv2.2.weight, Trainable Parameters: 32
+[2025-01-17 21:09:47,402][    INFO] Module: module.depth_head.scratch.output_conv2.2.bias, Trainable Parameters: 1
+[2025-01-17 21:09:47,404][    INFO] Total Trainable Parameters: 30947009
+[2025-01-17 21:09:47,404][    INFO] ===========> Epoch: 0/50, d1: 0.000, d2: 0.000, d3: 0.000
+[2025-01-17 21:09:47,404][    INFO] ===========> Epoch: 0/50, abs_rel: 100.000, sq_rel: 100.000, rmse: 100.000, rmse_log: 100.000, log10: 100.000, silog: 100.000
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/autograd/__init__.py:266: UserWarning: Grad strides do not match bucket view strides. This may indicate grad was not created according to the gradient layout contract, or that the param's strides changed since DDP was constructed.  This is not an error, but may impair performance.
+grad.sizes() = [1, 32, 1, 1], strides() = [32, 1, 32, 32]
+bucket_view.sizes() = [1, 32, 1, 1], strides() = [32, 1, 1, 1] (Triggered internally at ../torch/csrc/distributed/c10d/reducer.cpp:322.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/autograd/__init__.py:266: UserWarning: Grad strides do not match bucket view strides. This may indicate grad was not created according to the gradient layout contract, or that the param's strides changed since DDP was constructed.  This is not an error, but may impair performance.
+grad.sizes() = [1, 32, 1, 1], strides() = [32, 1, 32, 32]
+bucket_view.sizes() = [1, 32, 1, 1], strides() = [32, 1, 1, 1] (Triggered internally at ../torch/csrc/distributed/c10d/reducer.cpp:322.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+[2025-01-17 21:09:56,509][    INFO] Iter: 0/269, LR: 0.0000050, Loss: 0.255, SiLoss: 0.046, GradLoss: 0.835
+[2025-01-17 21:13:09,911][    INFO] Iter: 100/269, LR: 0.0000050, Loss: 0.162, SiLoss: 0.007, GradLoss: 0.619
+[2025-01-17 21:16:25,437][    INFO] Iter: 200/269, LR: 0.0000049, Loss: 0.153, SiLoss: 0.006, GradLoss: 0.585
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-17 21:19:18,845][    INFO] ==========================================================================================
+[2025-01-17 21:19:18,845][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-17 21:19:18,845][    INFO]    0.584,    0.807,    0.915,    0.309,    2.606,    7.292,    0.374,    0.113,    0.368
+[2025-01-17 21:19:18,845][    INFO] ==========================================================================================
+
+[2025-01-17 21:19:28,936][    INFO] ===========> Epoch: 1/50, d1: 0.584, d2: 0.807, d3: 0.915
+[2025-01-17 21:19:28,936][    INFO] ===========> Epoch: 1/50, abs_rel: 0.309, sq_rel: 2.606, rmse: 7.292, rmse_log: 0.374, log10: 0.113, silog: 0.368
+[2025-01-17 21:19:31,530][    INFO] Iter: 0/269, LR: 0.0000049, Loss: 0.146, SiLoss: 0.006, GradLoss: 0.560
+[2025-01-17 21:22:47,263][    INFO] Iter: 100/269, LR: 0.0000049, Loss: 0.156, SiLoss: 0.007, GradLoss: 0.595
+[2025-01-17 21:26:03,206][    INFO] Iter: 200/269, LR: 0.0000048, Loss: 0.137, SiLoss: 0.006, GradLoss: 0.526
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-17 21:28:55,852][    INFO] ==========================================================================================
+[2025-01-17 21:28:55,852][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-17 21:28:55,852][    INFO]    0.577,    0.790,    0.908,    0.289,    2.479,    7.731,    0.378,    0.114,    0.371
+[2025-01-17 21:28:55,852][    INFO] ==========================================================================================
+
+[2025-01-17 21:29:02,157][    INFO] ===========> Epoch: 2/50, d1: 0.584, d2: 0.807, d3: 0.915
+[2025-01-17 21:29:02,158][    INFO] ===========> Epoch: 2/50, abs_rel: 0.289, sq_rel: 2.479, rmse: 7.292, rmse_log: 0.374, log10: 0.113, silog: 0.368
+[2025-01-17 21:29:04,792][    INFO] Iter: 0/269, LR: 0.0000048, Loss: 0.125, SiLoss: 0.005, GradLoss: 0.478
+[2025-01-17 21:32:20,587][    INFO] Iter: 100/269, LR: 0.0000048, Loss: 0.139, SiLoss: 0.006, GradLoss: 0.536
+[2025-01-17 21:35:36,680][    INFO] Iter: 200/269, LR: 0.0000048, Loss: 0.126, SiLoss: 0.005, GradLoss: 0.485
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-17 21:38:29,504][    INFO] ==========================================================================================
+[2025-01-17 21:38:29,504][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-17 21:38:29,504][    INFO]    0.598,    0.816,    0.924,    0.280,    2.330,    7.103,    0.359,    0.108,    0.353
+[2025-01-17 21:38:29,504][    INFO] ==========================================================================================
+
+[2025-01-17 21:38:41,041][    INFO] ===========> Epoch: 3/50, d1: 0.598, d2: 0.816, d3: 0.924
+[2025-01-17 21:38:41,041][    INFO] ===========> Epoch: 3/50, abs_rel: 0.280, sq_rel: 2.330, rmse: 7.103, rmse_log: 0.359, log10: 0.108, silog: 0.353
+[2025-01-17 21:38:43,672][    INFO] Iter: 0/269, LR: 0.0000047, Loss: 0.152, SiLoss: 0.006, GradLoss: 0.583
+[2025-01-17 21:41:59,454][    INFO] Iter: 100/269, LR: 0.0000047, Loss: 0.144, SiLoss: 0.006, GradLoss: 0.552
+[2025-01-17 21:45:15,749][    INFO] Iter: 200/269, LR: 0.0000047, Loss: 0.140, SiLoss: 0.006, GradLoss: 0.534
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-17 21:48:08,789][    INFO] ==========================================================================================
+[2025-01-17 21:48:08,789][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-17 21:48:08,789][    INFO]    0.577,    0.794,    0.912,    0.280,    2.388,    7.618,    0.375,    0.113,    0.368
+[2025-01-17 21:48:08,789][    INFO] ==========================================================================================
+
+[2025-01-17 21:48:12,410][    INFO] ===========> Epoch: 4/50, d1: 0.598, d2: 0.816, d3: 0.924
+[2025-01-17 21:48:12,410][    INFO] ===========> Epoch: 4/50, abs_rel: 0.280, sq_rel: 2.330, rmse: 7.103, rmse_log: 0.359, log10: 0.108, silog: 0.353
+[2025-01-17 21:48:15,073][    INFO] Iter: 0/269, LR: 0.0000046, Loss: 0.121, SiLoss: 0.005, GradLoss: 0.462
+[2025-01-17 21:51:31,354][    INFO] Iter: 100/269, LR: 0.0000046, Loss: 0.138, SiLoss: 0.006, GradLoss: 0.530
+[2025-01-17 21:54:47,615][    INFO] Iter: 200/269, LR: 0.0000046, Loss: 0.127, SiLoss: 0.006, GradLoss: 0.483
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-17 21:57:40,462][    INFO] ==========================================================================================
+[2025-01-17 21:57:40,462][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-17 21:57:40,463][    INFO]    0.599,    0.816,    0.922,    0.278,    2.395,    7.122,    0.361,    0.107,    0.356
+[2025-01-17 21:57:40,463][    INFO] ==========================================================================================
+
+[2025-01-17 21:57:49,586][    INFO] ===========> Epoch: 5/50, d1: 0.599, d2: 0.816, d3: 0.924
+[2025-01-17 21:57:49,586][    INFO] ===========> Epoch: 5/50, abs_rel: 0.278, sq_rel: 2.330, rmse: 7.103, rmse_log: 0.359, log10: 0.107, silog: 0.353
+[2025-01-17 21:57:52,230][    INFO] Iter: 0/269, LR: 0.0000045, Loss: 0.122, SiLoss: 0.004, GradLoss: 0.471
+[2025-01-17 22:01:08,177][    INFO] Iter: 100/269, LR: 0.0000045, Loss: 0.124, SiLoss: 0.005, GradLoss: 0.478
+[2025-01-17 22:04:24,449][    INFO] Iter: 200/269, LR: 0.0000045, Loss: 0.114, SiLoss: 0.005, GradLoss: 0.435
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-17 22:07:17,533][    INFO] ==========================================================================================
+[2025-01-17 22:07:17,533][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-17 22:07:17,534][    INFO]    0.613,    0.824,    0.925,    0.272,    2.390,    6.837,    0.356,    0.104,    0.351
+[2025-01-17 22:07:17,534][    INFO] ==========================================================================================
+
+[2025-01-17 22:07:29,094][    INFO] ===========> Epoch: 6/50, d1: 0.613, d2: 0.824, d3: 0.925
+[2025-01-17 22:07:29,095][    INFO] ===========> Epoch: 6/50, abs_rel: 0.272, sq_rel: 2.330, rmse: 6.837, rmse_log: 0.356, log10: 0.104, silog: 0.351
+[2025-01-17 22:07:31,708][    INFO] Iter: 0/269, LR: 0.0000045, Loss: 0.113, SiLoss: 0.004, GradLoss: 0.437
+[2025-01-17 22:10:47,993][    INFO] Iter: 100/269, LR: 0.0000044, Loss: 0.117, SiLoss: 0.004, GradLoss: 0.452
+[2025-01-17 22:14:04,579][    INFO] Iter: 200/269, LR: 0.0000044, Loss: 0.123, SiLoss: 0.004, GradLoss: 0.475
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-17 22:16:57,751][    INFO] ==========================================================================================
+[2025-01-17 22:16:57,751][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-17 22:16:57,752][    INFO]    0.609,    0.818,    0.923,    0.266,    2.265,    7.255,    0.357,    0.106,    0.352
+[2025-01-17 22:16:57,752][    INFO] ==========================================================================================
+
+[2025-01-17 22:17:04,236][    INFO] ===========> Epoch: 7/50, d1: 0.613, d2: 0.824, d3: 0.925
+[2025-01-17 22:17:04,236][    INFO] ===========> Epoch: 7/50, abs_rel: 0.266, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.356, log10: 0.104, silog: 0.351
+[2025-01-17 22:17:06,849][    INFO] Iter: 0/269, LR: 0.0000044, Loss: 0.110, SiLoss: 0.004, GradLoss: 0.423
+[2025-01-17 22:20:22,960][    INFO] Iter: 100/269, LR: 0.0000043, Loss: 0.115, SiLoss: 0.004, GradLoss: 0.441
+[2025-01-17 22:23:42,546][    INFO] Iter: 200/269, LR: 0.0000043, Loss: 0.120, SiLoss: 0.005, GradLoss: 0.463
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-17 22:26:35,405][    INFO] ==========================================================================================
+[2025-01-17 22:26:35,405][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-17 22:26:35,406][    INFO]    0.591,    0.802,    0.915,    0.280,    2.489,    7.521,    0.369,    0.110,    0.364
+[2025-01-17 22:26:35,406][    INFO] ==========================================================================================
+
+[2025-01-17 22:26:39,047][    INFO] ===========> Epoch: 8/50, d1: 0.613, d2: 0.824, d3: 0.925
+[2025-01-17 22:26:39,047][    INFO] ===========> Epoch: 8/50, abs_rel: 0.266, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.356, log10: 0.104, silog: 0.351
+[2025-01-17 22:26:41,675][    INFO] Iter: 0/269, LR: 0.0000043, Loss: 0.108, SiLoss: 0.003, GradLoss: 0.420
+[2025-01-17 22:29:58,041][    INFO] Iter: 100/269, LR: 0.0000042, Loss: 0.118, SiLoss: 0.004, GradLoss: 0.453
+[2025-01-17 22:33:14,588][    INFO] Iter: 200/269, LR: 0.0000042, Loss: 0.110, SiLoss: 0.004, GradLoss: 0.424
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-17 22:36:07,576][    INFO] ==========================================================================================
+[2025-01-17 22:36:07,576][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-17 22:36:07,577][    INFO]    0.625,    0.831,    0.930,    0.274,    2.365,    6.839,    0.350,    0.103,    0.345
+[2025-01-17 22:36:07,577][    INFO] ==========================================================================================
+
+[2025-01-17 22:36:14,010][    INFO] ===========> Epoch: 9/50, d1: 0.625, d2: 0.831, d3: 0.930
+[2025-01-17 22:36:14,011][    INFO] ===========> Epoch: 9/50, abs_rel: 0.266, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.103, silog: 0.345
+[2025-01-17 22:36:16,665][    INFO] Iter: 0/269, LR: 0.0000042, Loss: 0.112, SiLoss: 0.004, GradLoss: 0.432
+[2025-01-17 22:39:32,626][    INFO] Iter: 100/269, LR: 0.0000041, Loss: 0.113, SiLoss: 0.004, GradLoss: 0.436
+[2025-01-17 22:42:48,755][    INFO] Iter: 200/269, LR: 0.0000041, Loss: 0.112, SiLoss: 0.004, GradLoss: 0.432
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-17 22:45:41,824][    INFO] ==========================================================================================
+[2025-01-17 22:45:41,824][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-17 22:45:41,825][    INFO]    0.625,    0.823,    0.925,    0.273,    2.391,    6.953,    0.356,    0.104,    0.351
+[2025-01-17 22:45:41,825][    INFO] ==========================================================================================
+
+[2025-01-17 22:45:48,348][    INFO] ===========> Epoch: 10/50, d1: 0.625, d2: 0.831, d3: 0.930
+[2025-01-17 22:45:48,348][    INFO] ===========> Epoch: 10/50, abs_rel: 0.266, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.103, silog: 0.345
+[2025-01-17 22:45:50,956][    INFO] Iter: 0/269, LR: 0.0000041, Loss: 0.087, SiLoss: 0.003, GradLoss: 0.334
+[2025-01-17 22:49:07,517][    INFO] Iter: 100/269, LR: 0.0000041, Loss: 0.114, SiLoss: 0.004, GradLoss: 0.439
+[2025-01-17 22:52:24,212][    INFO] Iter: 200/269, LR: 0.0000040, Loss: 0.104, SiLoss: 0.004, GradLoss: 0.402
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-17 22:55:17,583][    INFO] ==========================================================================================
+[2025-01-17 22:55:17,583][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-17 22:55:17,583][    INFO]    0.613,    0.812,    0.919,    0.272,    2.421,    7.478,    0.366,    0.109,    0.360
+[2025-01-17 22:55:17,584][    INFO] ==========================================================================================
+
+[2025-01-17 22:55:21,270][    INFO] ===========> Epoch: 11/50, d1: 0.625, d2: 0.831, d3: 0.930
+[2025-01-17 22:55:21,270][    INFO] ===========> Epoch: 11/50, abs_rel: 0.266, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.103, silog: 0.345
+[2025-01-17 22:55:23,848][    INFO] Iter: 0/269, LR: 0.0000040, Loss: 0.110, SiLoss: 0.004, GradLoss: 0.423
+[2025-01-17 22:58:40,445][    INFO] Iter: 100/269, LR: 0.0000040, Loss: 0.111, SiLoss: 0.004, GradLoss: 0.427
+[2025-01-17 23:01:57,201][    INFO] Iter: 200/269, LR: 0.0000039, Loss: 0.098, SiLoss: 0.004, GradLoss: 0.377
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-17 23:04:51,112][    INFO] ==========================================================================================
+[2025-01-17 23:04:51,113][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-17 23:04:51,113][    INFO]    0.618,    0.825,    0.930,    0.272,    2.351,    6.887,    0.351,    0.103,    0.347
+[2025-01-17 23:04:51,113][    INFO] ==========================================================================================
+
+[2025-01-17 23:04:54,819][    INFO] ===========> Epoch: 12/50, d1: 0.625, d2: 0.831, d3: 0.930
+[2025-01-17 23:04:54,819][    INFO] ===========> Epoch: 12/50, abs_rel: 0.266, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.103, silog: 0.345
+[2025-01-17 23:04:57,469][    INFO] Iter: 0/269, LR: 0.0000039, Loss: 0.101, SiLoss: 0.004, GradLoss: 0.388
+[2025-01-17 23:08:14,402][    INFO] Iter: 100/269, LR: 0.0000039, Loss: 0.106, SiLoss: 0.004, GradLoss: 0.411
+[2025-01-17 23:11:31,432][    INFO] Iter: 200/269, LR: 0.0000038, Loss: 0.105, SiLoss: 0.003, GradLoss: 0.405
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-17 23:14:24,829][    INFO] ==========================================================================================
+[2025-01-17 23:14:24,829][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-17 23:14:24,830][    INFO]    0.628,    0.820,    0.924,    0.274,    2.481,    7.033,    0.357,    0.104,    0.352
+[2025-01-17 23:14:24,830][    INFO] ==========================================================================================
+
+[2025-01-17 23:14:31,239][    INFO] ===========> Epoch: 13/50, d1: 0.628, d2: 0.831, d3: 0.930
+[2025-01-17 23:14:31,239][    INFO] ===========> Epoch: 13/50, abs_rel: 0.266, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.103, silog: 0.345
+[2025-01-17 23:14:33,898][    INFO] Iter: 0/269, LR: 0.0000038, Loss: 0.119, SiLoss: 0.004, GradLoss: 0.461
+[2025-01-17 23:17:50,341][    INFO] Iter: 100/269, LR: 0.0000038, Loss: 0.105, SiLoss: 0.004, GradLoss: 0.407
+[2025-01-17 23:21:06,863][    INFO] Iter: 200/269, LR: 0.0000037, Loss: 0.122, SiLoss: 0.004, GradLoss: 0.470
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-17 23:24:00,239][    INFO] ==========================================================================================
+[2025-01-17 23:24:00,239][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-17 23:24:00,240][    INFO]    0.620,    0.818,    0.925,    0.265,    2.322,    7.088,    0.356,    0.105,    0.351
+[2025-01-17 23:24:00,240][    INFO] ==========================================================================================
+
+[2025-01-17 23:24:06,651][    INFO] ===========> Epoch: 14/50, d1: 0.628, d2: 0.831, d3: 0.930
+[2025-01-17 23:24:06,651][    INFO] ===========> Epoch: 14/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.103, silog: 0.345
+[2025-01-17 23:24:09,243][    INFO] Iter: 0/269, LR: 0.0000037, Loss: 0.104, SiLoss: 0.003, GradLoss: 0.403
+[2025-01-17 23:27:25,845][    INFO] Iter: 100/269, LR: 0.0000037, Loss: 0.121, SiLoss: 0.004, GradLoss: 0.467
+[2025-01-17 23:30:42,705][    INFO] Iter: 200/269, LR: 0.0000037, Loss: 0.119, SiLoss: 0.004, GradLoss: 0.460
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-17 23:33:39,799][    INFO] ==========================================================================================
+[2025-01-17 23:33:39,799][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-17 23:33:39,799][    INFO]    0.619,    0.812,    0.919,    0.270,    2.419,    7.238,    0.365,    0.106,    0.359
+[2025-01-17 23:33:39,799][    INFO] ==========================================================================================
+
+[2025-01-17 23:33:43,488][    INFO] ===========> Epoch: 15/50, d1: 0.628, d2: 0.831, d3: 0.930
+[2025-01-17 23:33:43,488][    INFO] ===========> Epoch: 15/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.103, silog: 0.345
+[2025-01-17 23:33:46,119][    INFO] Iter: 0/269, LR: 0.0000036, Loss: 0.112, SiLoss: 0.004, GradLoss: 0.431
+[2025-01-17 23:37:02,985][    INFO] Iter: 100/269, LR: 0.0000036, Loss: 0.108, SiLoss: 0.004, GradLoss: 0.416
+[2025-01-17 23:40:19,896][    INFO] Iter: 200/269, LR: 0.0000036, Loss: 0.118, SiLoss: 0.004, GradLoss: 0.454
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-17 23:43:13,502][    INFO] ==========================================================================================
+[2025-01-17 23:43:13,502][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-17 23:43:13,503][    INFO]    0.632,    0.827,    0.926,    0.271,    2.434,    6.839,    0.354,    0.102,    0.350
+[2025-01-17 23:43:13,503][    INFO] ==========================================================================================
+
+[2025-01-17 23:43:19,792][    INFO] ===========> Epoch: 16/50, d1: 0.632, d2: 0.831, d3: 0.930
+[2025-01-17 23:43:19,792][    INFO] ===========> Epoch: 16/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-17 23:43:22,449][    INFO] Iter: 0/269, LR: 0.0000035, Loss: 0.093, SiLoss: 0.003, GradLoss: 0.360
+[2025-01-17 23:46:39,451][    INFO] Iter: 100/269, LR: 0.0000035, Loss: 0.100, SiLoss: 0.003, GradLoss: 0.386
+[2025-01-17 23:49:56,578][    INFO] Iter: 200/269, LR: 0.0000035, Loss: 0.106, SiLoss: 0.003, GradLoss: 0.410
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-17 23:52:50,351][    INFO] ==========================================================================================
+[2025-01-17 23:52:50,351][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-17 23:52:50,352][    INFO]    0.626,    0.819,    0.924,    0.269,    2.402,    7.103,    0.358,    0.105,    0.353
+[2025-01-17 23:52:50,352][    INFO] ==========================================================================================
+
+[2025-01-17 23:52:53,996][    INFO] ===========> Epoch: 17/50, d1: 0.632, d2: 0.831, d3: 0.930
+[2025-01-17 23:52:53,996][    INFO] ===========> Epoch: 17/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-17 23:52:56,625][    INFO] Iter: 0/269, LR: 0.0000034, Loss: 0.111, SiLoss: 0.004, GradLoss: 0.429
+[2025-01-17 23:56:13,386][    INFO] Iter: 100/269, LR: 0.0000034, Loss: 0.097, SiLoss: 0.003, GradLoss: 0.373
+[2025-01-17 23:59:30,050][    INFO] Iter: 200/269, LR: 0.0000034, Loss: 0.124, SiLoss: 0.005, GradLoss: 0.478
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 00:02:23,520][    INFO] ==========================================================================================
+[2025-01-18 00:02:23,520][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 00:02:23,521][    INFO]    0.601,    0.799,    0.913,    0.265,    2.374,    7.565,    0.372,    0.110,    0.365
+[2025-01-18 00:02:23,521][    INFO] ==========================================================================================
+
+[2025-01-18 00:02:29,841][    INFO] ===========> Epoch: 18/50, d1: 0.632, d2: 0.831, d3: 0.930
+[2025-01-18 00:02:29,841][    INFO] ===========> Epoch: 18/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 00:02:32,473][    INFO] Iter: 0/269, LR: 0.0000033, Loss: 0.110, SiLoss: 0.004, GradLoss: 0.426
+[2025-01-18 00:05:49,243][    INFO] Iter: 100/269, LR: 0.0000033, Loss: 0.106, SiLoss: 0.004, GradLoss: 0.409
+[2025-01-18 00:09:06,144][    INFO] Iter: 200/269, LR: 0.0000033, Loss: 0.096, SiLoss: 0.003, GradLoss: 0.373
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 00:11:59,618][    INFO] ==========================================================================================
+[2025-01-18 00:11:59,618][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 00:11:59,618][    INFO]    0.626,    0.819,    0.922,    0.276,    2.583,    7.032,    0.361,    0.105,    0.357
+[2025-01-18 00:11:59,618][    INFO] ==========================================================================================
+
+[2025-01-18 00:12:03,265][    INFO] ===========> Epoch: 19/50, d1: 0.632, d2: 0.831, d3: 0.930
+[2025-01-18 00:12:03,265][    INFO] ===========> Epoch: 19/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 00:12:05,888][    INFO] Iter: 0/269, LR: 0.0000033, Loss: 0.096, SiLoss: 0.003, GradLoss: 0.373
+[2025-01-18 00:15:22,718][    INFO] Iter: 100/269, LR: 0.0000032, Loss: 0.120, SiLoss: 0.004, GradLoss: 0.462
+[2025-01-18 00:18:39,632][    INFO] Iter: 200/269, LR: 0.0000032, Loss: 0.091, SiLoss: 0.003, GradLoss: 0.354
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 00:21:33,127][    INFO] ==========================================================================================
+[2025-01-18 00:21:33,127][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 00:21:33,127][    INFO]    0.624,    0.816,    0.922,    0.270,    2.441,    7.098,    0.360,    0.105,    0.355
+[2025-01-18 00:21:33,127][    INFO] ==========================================================================================
+
+[2025-01-18 00:21:36,831][    INFO] ===========> Epoch: 20/50, d1: 0.632, d2: 0.831, d3: 0.930
+[2025-01-18 00:21:36,831][    INFO] ===========> Epoch: 20/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 00:21:39,431][    INFO] Iter: 0/269, LR: 0.0000032, Loss: 0.094, SiLoss: 0.003, GradLoss: 0.363
+[2025-01-18 00:24:56,218][    INFO] Iter: 100/269, LR: 0.0000031, Loss: 0.096, SiLoss: 0.003, GradLoss: 0.370
+[2025-01-18 00:28:12,967][    INFO] Iter: 200/269, LR: 0.0000031, Loss: 0.104, SiLoss: 0.004, GradLoss: 0.400
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 00:31:06,486][    INFO] ==========================================================================================
+[2025-01-18 00:31:06,486][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 00:31:06,486][    INFO]    0.625,    0.817,    0.920,    0.270,    2.438,    7.153,    0.362,    0.104,    0.357
+[2025-01-18 00:31:06,486][    INFO] ==========================================================================================
+
+[2025-01-18 00:31:10,122][    INFO] ===========> Epoch: 21/50, d1: 0.632, d2: 0.831, d3: 0.930
+[2025-01-18 00:31:10,122][    INFO] ===========> Epoch: 21/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 00:31:12,761][    INFO] Iter: 0/269, LR: 0.0000031, Loss: 0.090, SiLoss: 0.003, GradLoss: 0.349
+[2025-01-18 00:34:29,467][    INFO] Iter: 100/269, LR: 0.0000030, Loss: 0.120, SiLoss: 0.004, GradLoss: 0.464
+[2025-01-18 00:37:46,349][    INFO] Iter: 200/269, LR: 0.0000030, Loss: 0.095, SiLoss: 0.003, GradLoss: 0.365
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 00:40:39,918][    INFO] ==========================================================================================
+[2025-01-18 00:40:39,918][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 00:40:39,919][    INFO]    0.629,    0.821,    0.924,    0.276,    2.515,    6.969,    0.358,    0.103,    0.353
+[2025-01-18 00:40:39,919][    INFO] ==========================================================================================
+
+[2025-01-18 00:40:43,540][    INFO] ===========> Epoch: 22/50, d1: 0.632, d2: 0.831, d3: 0.930
+[2025-01-18 00:40:43,541][    INFO] ===========> Epoch: 22/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 00:40:46,188][    INFO] Iter: 0/269, LR: 0.0000030, Loss: 0.107, SiLoss: 0.004, GradLoss: 0.414
+[2025-01-18 00:44:06,587][    INFO] Iter: 100/269, LR: 0.0000029, Loss: 0.094, SiLoss: 0.003, GradLoss: 0.364
+[2025-01-18 00:47:23,498][    INFO] Iter: 200/269, LR: 0.0000029, Loss: 0.107, SiLoss: 0.004, GradLoss: 0.411
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 00:50:17,179][    INFO] ==========================================================================================
+[2025-01-18 00:50:17,179][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 00:50:17,179][    INFO]    0.631,    0.824,    0.925,    0.275,    2.475,    6.923,    0.355,    0.103,    0.351
+[2025-01-18 00:50:17,179][    INFO] ==========================================================================================
+
+[2025-01-18 00:50:20,844][    INFO] ===========> Epoch: 23/50, d1: 0.632, d2: 0.831, d3: 0.930
+[2025-01-18 00:50:20,844][    INFO] ===========> Epoch: 23/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 00:50:23,495][    INFO] Iter: 0/269, LR: 0.0000029, Loss: 0.100, SiLoss: 0.003, GradLoss: 0.386
+[2025-01-18 00:53:40,388][    INFO] Iter: 100/269, LR: 0.0000028, Loss: 0.098, SiLoss: 0.003, GradLoss: 0.379
+[2025-01-18 00:56:57,320][    INFO] Iter: 200/269, LR: 0.0000028, Loss: 0.104, SiLoss: 0.003, GradLoss: 0.403
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 00:59:50,862][    INFO] ==========================================================================================
+[2025-01-18 00:59:50,863][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 00:59:50,863][    INFO]    0.619,    0.815,    0.919,    0.274,    2.529,    7.130,    0.363,    0.105,    0.358
+[2025-01-18 00:59:50,863][    INFO] ==========================================================================================
+
+[2025-01-18 00:59:54,471][    INFO] ===========> Epoch: 24/50, d1: 0.632, d2: 0.831, d3: 0.930
+[2025-01-18 00:59:54,471][    INFO] ===========> Epoch: 24/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 00:59:57,085][    INFO] Iter: 0/269, LR: 0.0000028, Loss: 0.095, SiLoss: 0.003, GradLoss: 0.369
+[2025-01-18 01:03:13,985][    INFO] Iter: 100/269, LR: 0.0000027, Loss: 0.098, SiLoss: 0.003, GradLoss: 0.380
+[2025-01-18 01:06:30,893][    INFO] Iter: 200/269, LR: 0.0000027, Loss: 0.097, SiLoss: 0.003, GradLoss: 0.374
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 01:09:24,571][    INFO] ==========================================================================================
+[2025-01-18 01:09:24,571][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 01:09:24,572][    INFO]    0.625,    0.816,    0.920,    0.270,    2.501,    7.098,    0.361,    0.104,    0.357
+[2025-01-18 01:09:24,572][    INFO] ==========================================================================================
+
+[2025-01-18 01:09:28,241][    INFO] ===========> Epoch: 25/50, d1: 0.632, d2: 0.831, d3: 0.930
+[2025-01-18 01:09:28,241][    INFO] ===========> Epoch: 25/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 01:09:30,862][    INFO] Iter: 0/269, LR: 0.0000027, Loss: 0.101, SiLoss: 0.003, GradLoss: 0.392
+[2025-01-18 01:12:47,647][    INFO] Iter: 100/269, LR: 0.0000026, Loss: 0.114, SiLoss: 0.003, GradLoss: 0.442
+[2025-01-18 01:16:04,324][    INFO] Iter: 200/269, LR: 0.0000026, Loss: 0.090, SiLoss: 0.003, GradLoss: 0.348
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 01:18:57,603][    INFO] ==========================================================================================
+[2025-01-18 01:18:57,603][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 01:18:57,603][    INFO]    0.630,    0.819,    0.920,    0.276,    2.568,    7.043,    0.362,    0.104,    0.358
+[2025-01-18 01:18:57,603][    INFO] ==========================================================================================
+
+[2025-01-18 01:19:01,224][    INFO] ===========> Epoch: 26/50, d1: 0.632, d2: 0.831, d3: 0.930
+[2025-01-18 01:19:01,225][    INFO] ===========> Epoch: 26/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 01:19:03,878][    INFO] Iter: 0/269, LR: 0.0000026, Loss: 0.094, SiLoss: 0.003, GradLoss: 0.366
+[2025-01-18 01:22:20,499][    INFO] Iter: 100/269, LR: 0.0000025, Loss: 0.103, SiLoss: 0.003, GradLoss: 0.400
+[2025-01-18 01:25:37,140][    INFO] Iter: 200/269, LR: 0.0000025, Loss: 0.097, SiLoss: 0.003, GradLoss: 0.374
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 01:28:30,513][    INFO] ==========================================================================================
+[2025-01-18 01:28:30,514][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 01:28:30,514][    INFO]    0.630,    0.819,    0.920,    0.274,    2.559,    7.003,    0.362,    0.104,    0.357
+[2025-01-18 01:28:30,514][    INFO] ==========================================================================================
+
+[2025-01-18 01:28:34,168][    INFO] ===========> Epoch: 27/50, d1: 0.632, d2: 0.831, d3: 0.930
+[2025-01-18 01:28:34,168][    INFO] ===========> Epoch: 27/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 01:28:36,796][    INFO] Iter: 0/269, LR: 0.0000025, Loss: 0.115, SiLoss: 0.004, GradLoss: 0.446
+[2025-01-18 01:31:53,369][    INFO] Iter: 100/269, LR: 0.0000024, Loss: 0.106, SiLoss: 0.003, GradLoss: 0.411
+[2025-01-18 01:35:10,069][    INFO] Iter: 200/269, LR: 0.0000024, Loss: 0.090, SiLoss: 0.003, GradLoss: 0.349
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 01:38:03,358][    INFO] ==========================================================================================
+[2025-01-18 01:38:03,358][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 01:38:03,358][    INFO]    0.626,    0.817,    0.920,    0.274,    2.533,    7.012,    0.363,    0.105,    0.358
+[2025-01-18 01:38:03,358][    INFO] ==========================================================================================
+
+[2025-01-18 01:38:07,013][    INFO] ===========> Epoch: 28/50, d1: 0.632, d2: 0.831, d3: 0.930
+[2025-01-18 01:38:07,013][    INFO] ===========> Epoch: 28/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 01:38:09,696][    INFO] Iter: 0/269, LR: 0.0000024, Loss: 0.091, SiLoss: 0.003, GradLoss: 0.353
+[2025-01-18 01:41:26,422][    INFO] Iter: 100/269, LR: 0.0000024, Loss: 0.105, SiLoss: 0.004, GradLoss: 0.404
+[2025-01-18 01:44:43,135][    INFO] Iter: 200/269, LR: 0.0000023, Loss: 0.082, SiLoss: 0.003, GradLoss: 0.318
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 01:47:36,441][    INFO] ==========================================================================================
+[2025-01-18 01:47:36,441][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 01:47:36,441][    INFO]    0.635,    0.822,    0.922,    0.273,    2.559,    6.923,    0.359,    0.102,    0.354
+[2025-01-18 01:47:36,441][    INFO] ==========================================================================================
+
+[2025-01-18 01:47:42,821][    INFO] ===========> Epoch: 29/50, d1: 0.635, d2: 0.831, d3: 0.930
+[2025-01-18 01:47:42,821][    INFO] ===========> Epoch: 29/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 01:47:45,435][    INFO] Iter: 0/269, LR: 0.0000023, Loss: 0.094, SiLoss: 0.003, GradLoss: 0.362
+[2025-01-18 01:51:01,891][    INFO] Iter: 100/269, LR: 0.0000023, Loss: 0.100, SiLoss: 0.003, GradLoss: 0.389
+[2025-01-18 01:54:21,973][    INFO] Iter: 200/269, LR: 0.0000022, Loss: 0.086, SiLoss: 0.003, GradLoss: 0.335
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 01:57:15,155][    INFO] ==========================================================================================
+[2025-01-18 01:57:15,155][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 01:57:15,156][    INFO]    0.629,    0.819,    0.921,    0.271,    2.502,    7.064,    0.361,    0.104,    0.356
+[2025-01-18 01:57:15,156][    INFO] ==========================================================================================
+
+[2025-01-18 01:57:18,838][    INFO] ===========> Epoch: 30/50, d1: 0.635, d2: 0.831, d3: 0.930
+[2025-01-18 01:57:18,838][    INFO] ===========> Epoch: 30/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 01:57:21,513][    INFO] Iter: 0/269, LR: 0.0000022, Loss: 0.099, SiLoss: 0.004, GradLoss: 0.383
+[2025-01-18 02:00:38,223][    INFO] Iter: 100/269, LR: 0.0000022, Loss: 0.099, SiLoss: 0.003, GradLoss: 0.382
+[2025-01-18 02:03:55,035][    INFO] Iter: 200/269, LR: 0.0000021, Loss: 0.094, SiLoss: 0.003, GradLoss: 0.365
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 02:06:48,393][    INFO] ==========================================================================================
+[2025-01-18 02:06:48,393][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 02:06:48,394][    INFO]    0.621,    0.815,    0.920,    0.276,    2.587,    7.087,    0.364,    0.105,    0.360
+[2025-01-18 02:06:48,394][    INFO] ==========================================================================================
+
+[2025-01-18 02:06:52,086][    INFO] ===========> Epoch: 31/50, d1: 0.635, d2: 0.831, d3: 0.930
+[2025-01-18 02:06:52,086][    INFO] ===========> Epoch: 31/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 02:06:54,750][    INFO] Iter: 0/269, LR: 0.0000021, Loss: 0.091, SiLoss: 0.003, GradLoss: 0.352
+[2025-01-18 02:10:11,395][    INFO] Iter: 100/269, LR: 0.0000021, Loss: 0.099, SiLoss: 0.003, GradLoss: 0.382
+[2025-01-18 02:13:28,038][    INFO] Iter: 200/269, LR: 0.0000020, Loss: 0.100, SiLoss: 0.003, GradLoss: 0.388
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 02:16:21,525][    INFO] ==========================================================================================
+[2025-01-18 02:16:21,525][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 02:16:21,526][    INFO]    0.631,    0.819,    0.921,    0.273,    2.545,    7.029,    0.361,    0.103,    0.357
+[2025-01-18 02:16:21,526][    INFO] ==========================================================================================
+
+[2025-01-18 02:16:28,524][    INFO] ===========> Epoch: 32/50, d1: 0.635, d2: 0.831, d3: 0.930
+[2025-01-18 02:16:28,524][    INFO] ===========> Epoch: 32/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 02:16:31,178][    INFO] Iter: 0/269, LR: 0.0000020, Loss: 0.103, SiLoss: 0.004, GradLoss: 0.398
+[2025-01-18 02:19:47,770][    INFO] Iter: 100/269, LR: 0.0000020, Loss: 0.096, SiLoss: 0.003, GradLoss: 0.373
+[2025-01-18 02:23:04,554][    INFO] Iter: 200/269, LR: 0.0000019, Loss: 0.098, SiLoss: 0.004, GradLoss: 0.380
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 02:25:58,036][    INFO] ==========================================================================================
+[2025-01-18 02:25:58,036][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 02:25:58,037][    INFO]    0.633,    0.820,    0.921,    0.271,    2.523,    6.980,    0.360,    0.103,    0.355
+[2025-01-18 02:25:58,037][    INFO] ==========================================================================================
+
+[2025-01-18 02:26:01,718][    INFO] ===========> Epoch: 33/50, d1: 0.635, d2: 0.831, d3: 0.930
+[2025-01-18 02:26:01,718][    INFO] ===========> Epoch: 33/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 02:26:04,342][    INFO] Iter: 0/269, LR: 0.0000019, Loss: 0.091, SiLoss: 0.003, GradLoss: 0.352
+[2025-01-18 02:29:20,936][    INFO] Iter: 100/269, LR: 0.0000019, Loss: 0.083, SiLoss: 0.003, GradLoss: 0.322
+[2025-01-18 02:32:37,453][    INFO] Iter: 200/269, LR: 0.0000018, Loss: 0.086, SiLoss: 0.002, GradLoss: 0.336
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 02:35:30,754][    INFO] ==========================================================================================
+[2025-01-18 02:35:30,754][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 02:35:30,754][    INFO]    0.625,    0.816,    0.919,    0.273,    2.561,    7.068,    0.364,    0.104,    0.359
+[2025-01-18 02:35:30,754][    INFO] ==========================================================================================
+
+[2025-01-18 02:35:34,406][    INFO] ===========> Epoch: 34/50, d1: 0.635, d2: 0.831, d3: 0.930
+[2025-01-18 02:35:34,406][    INFO] ===========> Epoch: 34/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 02:35:37,076][    INFO] Iter: 0/269, LR: 0.0000018, Loss: 0.089, SiLoss: 0.003, GradLoss: 0.343
+[2025-01-18 02:38:53,729][    INFO] Iter: 100/269, LR: 0.0000018, Loss: 0.090, SiLoss: 0.003, GradLoss: 0.348
+[2025-01-18 02:42:10,464][    INFO] Iter: 200/269, LR: 0.0000017, Loss: 0.097, SiLoss: 0.003, GradLoss: 0.374
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 02:45:03,676][    INFO] ==========================================================================================
+[2025-01-18 02:45:03,677][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 02:45:03,677][    INFO]    0.633,    0.820,    0.921,    0.276,    2.604,    6.978,    0.361,    0.103,    0.357
+[2025-01-18 02:45:03,677][    INFO] ==========================================================================================
+
+[2025-01-18 02:45:07,305][    INFO] ===========> Epoch: 35/50, d1: 0.635, d2: 0.831, d3: 0.930
+[2025-01-18 02:45:07,306][    INFO] ===========> Epoch: 35/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 02:45:09,955][    INFO] Iter: 0/269, LR: 0.0000017, Loss: 0.095, SiLoss: 0.003, GradLoss: 0.370
+[2025-01-18 02:48:26,357][    INFO] Iter: 100/269, LR: 0.0000017, Loss: 0.097, SiLoss: 0.003, GradLoss: 0.375
+[2025-01-18 02:51:42,949][    INFO] Iter: 200/269, LR: 0.0000016, Loss: 0.093, SiLoss: 0.002, GradLoss: 0.362
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 02:54:36,158][    INFO] ==========================================================================================
+[2025-01-18 02:54:36,158][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 02:54:36,158][    INFO]    0.627,    0.816,    0.919,    0.273,    2.556,    7.038,    0.364,    0.105,    0.359
+[2025-01-18 02:54:36,158][    INFO] ==========================================================================================
+
+[2025-01-18 02:54:39,820][    INFO] ===========> Epoch: 36/50, d1: 0.635, d2: 0.831, d3: 0.930
+[2025-01-18 02:54:39,821][    INFO] ===========> Epoch: 36/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 02:54:42,432][    INFO] Iter: 0/269, LR: 0.0000016, Loss: 0.086, SiLoss: 0.003, GradLoss: 0.333
+[2025-01-18 02:57:59,133][    INFO] Iter: 100/269, LR: 0.0000016, Loss: 0.080, SiLoss: 0.003, GradLoss: 0.311
+[2025-01-18 03:01:15,844][    INFO] Iter: 200/269, LR: 0.0000015, Loss: 0.096, SiLoss: 0.003, GradLoss: 0.372
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 03:04:09,078][    INFO] ==========================================================================================
+[2025-01-18 03:04:09,079][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 03:04:09,079][    INFO]    0.631,    0.819,    0.920,    0.275,    2.608,    6.983,    0.362,    0.103,    0.358
+[2025-01-18 03:04:09,079][    INFO] ==========================================================================================
+
+[2025-01-18 03:04:12,707][    INFO] ===========> Epoch: 37/50, d1: 0.635, d2: 0.831, d3: 0.930
+[2025-01-18 03:04:12,708][    INFO] ===========> Epoch: 37/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 03:04:15,347][    INFO] Iter: 0/269, LR: 0.0000015, Loss: 0.091, SiLoss: 0.003, GradLoss: 0.353
+[2025-01-18 03:07:35,309][    INFO] Iter: 100/269, LR: 0.0000014, Loss: 0.100, SiLoss: 0.003, GradLoss: 0.386
+[2025-01-18 03:10:51,941][    INFO] Iter: 200/269, LR: 0.0000014, Loss: 0.114, SiLoss: 0.004, GradLoss: 0.438
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 03:13:45,278][    INFO] ==========================================================================================
+[2025-01-18 03:13:45,278][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 03:13:45,278][    INFO]    0.631,    0.818,    0.919,    0.274,    2.594,    7.043,    0.364,    0.104,    0.359
+[2025-01-18 03:13:45,278][    INFO] ==========================================================================================
+
+[2025-01-18 03:13:52,402][    INFO] ===========> Epoch: 38/50, d1: 0.635, d2: 0.831, d3: 0.930
+[2025-01-18 03:13:52,402][    INFO] ===========> Epoch: 38/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 03:13:55,012][    INFO] Iter: 0/269, LR: 0.0000014, Loss: 0.092, SiLoss: 0.003, GradLoss: 0.359
+[2025-01-18 03:17:11,648][    INFO] Iter: 100/269, LR: 0.0000013, Loss: 0.093, SiLoss: 0.003, GradLoss: 0.359
+[2025-01-18 03:20:28,475][    INFO] Iter: 200/269, LR: 0.0000013, Loss: 0.097, SiLoss: 0.003, GradLoss: 0.377
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 03:23:21,878][    INFO] ==========================================================================================
+[2025-01-18 03:23:21,878][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 03:23:21,878][    INFO]    0.629,    0.819,    0.920,    0.275,    2.599,    7.049,    0.363,    0.104,    0.358
+[2025-01-18 03:23:21,878][    INFO] ==========================================================================================
+
+[2025-01-18 03:23:25,518][    INFO] ===========> Epoch: 39/50, d1: 0.635, d2: 0.831, d3: 0.930
+[2025-01-18 03:23:25,518][    INFO] ===========> Epoch: 39/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 03:23:28,156][    INFO] Iter: 0/269, LR: 0.0000013, Loss: 0.092, SiLoss: 0.003, GradLoss: 0.356
+[2025-01-18 03:26:44,856][    INFO] Iter: 100/269, LR: 0.0000012, Loss: 0.096, SiLoss: 0.003, GradLoss: 0.371
+[2025-01-18 03:30:01,629][    INFO] Iter: 200/269, LR: 0.0000012, Loss: 0.089, SiLoss: 0.003, GradLoss: 0.346
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 03:32:55,031][    INFO] ==========================================================================================
+[2025-01-18 03:32:55,031][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 03:32:55,031][    INFO]    0.629,    0.817,    0.919,    0.273,    2.566,    7.104,    0.364,    0.105,    0.359
+[2025-01-18 03:32:55,031][    INFO] ==========================================================================================
+
+[2025-01-18 03:32:58,631][    INFO] ===========> Epoch: 40/50, d1: 0.635, d2: 0.831, d3: 0.930
+[2025-01-18 03:32:58,632][    INFO] ===========> Epoch: 40/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 03:33:01,294][    INFO] Iter: 0/269, LR: 0.0000012, Loss: 0.097, SiLoss: 0.003, GradLoss: 0.373
+[2025-01-18 03:36:18,004][    INFO] Iter: 100/269, LR: 0.0000011, Loss: 0.086, SiLoss: 0.003, GradLoss: 0.330
+[2025-01-18 03:39:34,815][    INFO] Iter: 200/269, LR: 0.0000011, Loss: 0.086, SiLoss: 0.003, GradLoss: 0.335
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 03:42:28,257][    INFO] ==========================================================================================
+[2025-01-18 03:42:28,257][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 03:42:28,257][    INFO]    0.630,    0.819,    0.920,    0.275,    2.594,    6.995,    0.363,    0.104,    0.358
+[2025-01-18 03:42:28,257][    INFO] ==========================================================================================
+
+[2025-01-18 03:42:31,872][    INFO] ===========> Epoch: 41/50, d1: 0.635, d2: 0.831, d3: 0.930
+[2025-01-18 03:42:31,873][    INFO] ===========> Epoch: 41/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 03:42:34,483][    INFO] Iter: 0/269, LR: 0.0000011, Loss: 0.085, SiLoss: 0.003, GradLoss: 0.331
+[2025-01-18 03:45:50,953][    INFO] Iter: 100/269, LR: 0.0000010, Loss: 0.082, SiLoss: 0.003, GradLoss: 0.319
+[2025-01-18 03:49:07,488][    INFO] Iter: 200/269, LR: 0.0000010, Loss: 0.092, SiLoss: 0.003, GradLoss: 0.356
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 03:52:00,685][    INFO] ==========================================================================================
+[2025-01-18 03:52:00,685][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 03:52:00,685][    INFO]    0.628,    0.817,    0.919,    0.276,    2.610,    7.042,    0.363,    0.104,    0.359
+[2025-01-18 03:52:00,686][    INFO] ==========================================================================================
+
+[2025-01-18 03:52:04,350][    INFO] ===========> Epoch: 42/50, d1: 0.635, d2: 0.831, d3: 0.930
+[2025-01-18 03:52:04,350][    INFO] ===========> Epoch: 42/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 03:52:06,986][    INFO] Iter: 0/269, LR: 0.0000010, Loss: 0.078, SiLoss: 0.002, GradLoss: 0.301
+[2025-01-18 03:55:23,703][    INFO] Iter: 100/269, LR: 0.0000009, Loss: 0.090, SiLoss: 0.003, GradLoss: 0.348
+[2025-01-18 03:58:40,625][    INFO] Iter: 200/269, LR: 0.0000009, Loss: 0.085, SiLoss: 0.003, GradLoss: 0.330
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 04:01:34,124][    INFO] ==========================================================================================
+[2025-01-18 04:01:34,124][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 04:01:34,124][    INFO]    0.630,    0.818,    0.919,    0.276,    2.648,    6.991,    0.364,    0.104,    0.360
+[2025-01-18 04:01:34,124][    INFO] ==========================================================================================
+
+[2025-01-18 04:01:37,791][    INFO] ===========> Epoch: 43/50, d1: 0.635, d2: 0.831, d3: 0.930
+[2025-01-18 04:01:37,791][    INFO] ===========> Epoch: 43/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 04:01:40,442][    INFO] Iter: 0/269, LR: 0.0000009, Loss: 0.091, SiLoss: 0.003, GradLoss: 0.352
+[2025-01-18 04:04:57,336][    INFO] Iter: 100/269, LR: 0.0000008, Loss: 0.094, SiLoss: 0.003, GradLoss: 0.363
+[2025-01-18 04:08:14,282][    INFO] Iter: 200/269, LR: 0.0000008, Loss: 0.083, SiLoss: 0.003, GradLoss: 0.323
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 04:11:07,808][    INFO] ==========================================================================================
+[2025-01-18 04:11:07,809][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 04:11:07,809][    INFO]    0.630,    0.816,    0.918,    0.275,    2.607,    7.047,    0.365,    0.104,    0.360
+[2025-01-18 04:11:07,809][    INFO] ==========================================================================================
+
+[2025-01-18 04:11:11,429][    INFO] ===========> Epoch: 44/50, d1: 0.635, d2: 0.831, d3: 0.930
+[2025-01-18 04:11:11,429][    INFO] ===========> Epoch: 44/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 04:11:14,086][    INFO] Iter: 0/269, LR: 0.0000007, Loss: 0.097, SiLoss: 0.003, GradLoss: 0.374
+[2025-01-18 04:14:30,957][    INFO] Iter: 100/269, LR: 0.0000007, Loss: 0.080, SiLoss: 0.002, GradLoss: 0.312
+[2025-01-18 04:17:51,245][    INFO] Iter: 200/269, LR: 0.0000007, Loss: 0.092, SiLoss: 0.003, GradLoss: 0.356
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 04:20:44,664][    INFO] ==========================================================================================
+[2025-01-18 04:20:44,664][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 04:20:44,664][    INFO]    0.632,    0.819,    0.920,    0.276,    2.656,    6.975,    0.363,    0.103,    0.359
+[2025-01-18 04:20:44,664][    INFO] ==========================================================================================
+
+[2025-01-18 04:20:48,270][    INFO] ===========> Epoch: 45/50, d1: 0.635, d2: 0.831, d3: 0.930
+[2025-01-18 04:20:48,271][    INFO] ===========> Epoch: 45/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 04:20:50,871][    INFO] Iter: 0/269, LR: 0.0000006, Loss: 0.076, SiLoss: 0.002, GradLoss: 0.293
+[2025-01-18 04:24:07,649][    INFO] Iter: 100/269, LR: 0.0000006, Loss: 0.091, SiLoss: 0.003, GradLoss: 0.350
+[2025-01-18 04:27:24,548][    INFO] Iter: 200/269, LR: 0.0000005, Loss: 0.078, SiLoss: 0.002, GradLoss: 0.304
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 04:30:18,122][    INFO] ==========================================================================================
+[2025-01-18 04:30:18,122][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 04:30:18,123][    INFO]    0.628,    0.818,    0.919,    0.276,    2.614,    7.028,    0.364,    0.104,    0.360
+[2025-01-18 04:30:18,123][    INFO] ==========================================================================================
+
+[2025-01-18 04:30:21,755][    INFO] ===========> Epoch: 46/50, d1: 0.635, d2: 0.831, d3: 0.930
+[2025-01-18 04:30:21,756][    INFO] ===========> Epoch: 46/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 04:30:24,360][    INFO] Iter: 0/269, LR: 0.0000005, Loss: 0.087, SiLoss: 0.003, GradLoss: 0.339
+[2025-01-18 04:33:41,268][    INFO] Iter: 100/269, LR: 0.0000005, Loss: 0.092, SiLoss: 0.003, GradLoss: 0.354
+[2025-01-18 04:36:58,266][    INFO] Iter: 200/269, LR: 0.0000004, Loss: 0.089, SiLoss: 0.003, GradLoss: 0.345
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 04:39:51,909][    INFO] ==========================================================================================
+[2025-01-18 04:39:51,910][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 04:39:51,910][    INFO]    0.627,    0.815,    0.917,    0.275,    2.615,    7.107,    0.366,    0.105,    0.362
+[2025-01-18 04:39:51,910][    INFO] ==========================================================================================
+
+[2025-01-18 04:39:55,558][    INFO] ===========> Epoch: 47/50, d1: 0.635, d2: 0.831, d3: 0.930
+[2025-01-18 04:39:55,559][    INFO] ===========> Epoch: 47/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 04:39:58,168][    INFO] Iter: 0/269, LR: 0.0000004, Loss: 0.077, SiLoss: 0.002, GradLoss: 0.299
+[2025-01-18 04:43:15,126][    INFO] Iter: 100/269, LR: 0.0000004, Loss: 0.093, SiLoss: 0.003, GradLoss: 0.360
+[2025-01-18 04:46:32,042][    INFO] Iter: 200/269, LR: 0.0000003, Loss: 0.091, SiLoss: 0.003, GradLoss: 0.354
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 04:49:25,566][    INFO] ==========================================================================================
+[2025-01-18 04:49:25,566][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 04:49:25,566][    INFO]    0.630,    0.817,    0.919,    0.274,    2.601,    7.043,    0.364,    0.104,    0.360
+[2025-01-18 04:49:25,566][    INFO] ==========================================================================================
+
+[2025-01-18 04:49:29,248][    INFO] ===========> Epoch: 48/50, d1: 0.635, d2: 0.831, d3: 0.930
+[2025-01-18 04:49:29,248][    INFO] ===========> Epoch: 48/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 04:49:31,908][    INFO] Iter: 0/269, LR: 0.0000003, Loss: 0.102, SiLoss: 0.003, GradLoss: 0.394
+[2025-01-18 04:52:48,849][    INFO] Iter: 100/269, LR: 0.0000002, Loss: 0.086, SiLoss: 0.003, GradLoss: 0.332
+[2025-01-18 04:56:05,882][    INFO] Iter: 200/269, LR: 0.0000002, Loss: 0.102, SiLoss: 0.003, GradLoss: 0.393
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 04:58:59,513][    INFO] ==========================================================================================
+[2025-01-18 04:58:59,514][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 04:58:59,514][    INFO]    0.629,    0.816,    0.918,    0.276,    2.634,    7.043,    0.366,    0.104,    0.361
+[2025-01-18 04:58:59,514][    INFO] ==========================================================================================
+
+[2025-01-18 04:59:03,157][    INFO] ===========> Epoch: 49/50, d1: 0.635, d2: 0.831, d3: 0.930
+[2025-01-18 04:59:03,157][    INFO] ===========> Epoch: 49/50, abs_rel: 0.265, sq_rel: 2.265, rmse: 6.837, rmse_log: 0.350, log10: 0.102, silog: 0.345
+[2025-01-18 04:59:05,827][    INFO] Iter: 0/269, LR: 0.0000001, Loss: 0.089, SiLoss: 0.003, GradLoss: 0.346
+[2025-01-18 05:02:22,747][    INFO] Iter: 100/269, LR: 0.0000001, Loss: 0.087, SiLoss: 0.002, GradLoss: 0.339
+[2025-01-18 05:05:39,846][    INFO] Iter: 200/269, LR: 0.0000000, Loss: 0.089, SiLoss: 0.003, GradLoss: 0.343
+tensor([526.], device='cuda:1')
+tensor([1052.], device='cuda:0')
+[2025-01-18 05:08:33,481][    INFO] ==========================================================================================
+[2025-01-18 05:08:33,481][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-01-18 05:08:33,481][    INFO]    0.630,    0.817,    0.918,    0.275,    2.618,    7.033,    0.365,    0.104,    0.360
+[2025-01-18 05:08:33,481][    INFO] ==========================================================================================
+

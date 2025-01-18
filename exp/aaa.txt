@@ -19,3 +19,17 @@ epde_metric_clip_mvsec_2_decoder_20250116_095723：
 * 解码头最后为ReLu，输出绝对深度；
 * abs_rel-0.2919783294200897-5
 
+epde_nl_mvsec_2_decoder_20250116_190436:
+* 标签clip(min_depth, max_depth)后log normalized
+* 训练时没有crop；
+* 损失函数为SiLoss + 0.25*GradLoss
+* 解码头最后为sigmoid，输出log normalized depth
+* abs_rel-0.26532474160194397-6.pth
+
+
+epde_nl_mvsec_2_decoder_20250117_210924:
+* 标签clip(min_depth, max_depth)后log normalized
+* 训练时没有crop；
+* 损失函数为SiLoss + 0.25*GradLoss
+* 解码头最后为sigmoid，输出log normalized depth
+* 修改了lora改变模型参数的bug

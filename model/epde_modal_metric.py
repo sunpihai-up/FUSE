@@ -90,6 +90,7 @@ class EPDEVisionTransformer(nn.Module):
         self.embed_dim = embed_dim
         self.depth = depth
         self.max_depth = max_depth
+        print(f"max_depth: {max_depth}")
         self.norm_layer = norm_layer or partial(nn.LayerNorm, eps=1e-6)
         self.depth_anything_pretrained = depth_anything_pretrained
         self.prompt_encoder_pretrained = prompt_encoder_pretrained

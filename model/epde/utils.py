@@ -32,7 +32,7 @@ def feature2token(feature):
 def clean_pretrained_weight(pretrained_weights):
     if "model" in pretrained_weights:
         pretrained_weights = pretrained_weights["model"]
-        pretrained_weights = {
-            k.replace("module.", ""): v for k, v in pretrained_weights.items()
-        }
+    pretrained_weights = {
+        k.replace("module.", ""): v for k, v in pretrained_weights.items()
+    }
     return pretrained_weights

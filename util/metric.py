@@ -15,6 +15,11 @@ def convert_nl2abs_depth(depth, clip_distance, reg_factor):
     return depth
 
 def convert_nl2abs_depth_tensor(depth, clip_distance, reg_factor):
+    device = depth.device
+    clip_distance = torch.tensor(clip_distance).to(device)
+    reg_factor = torch.tensor(reg_factor).to(device)
+    # depth = torch.tensor(depth)
+    
     depth = torch.exp(reg_factor * (depth - 1.0)) * clip_distance
     min_depth = torch.exp(-1 * reg_factor) * clip_distance
     depth = torch.clamp(depth, min=min_depth, max=clip_distance)
