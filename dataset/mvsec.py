@@ -67,8 +67,8 @@ class MVSEC(Dataset):
         if self.normalized_d:
             depth = self.prepare_depth(depth, reg_factor, d_min, d_max)
         else:
-            depth = np.clip(depth, d_min, d_max)
-            # pass
+            # depth = np.clip(depth, d_min, d_max)
+            pass
 
         sample = self.transform({"image": image, "depth": depth, "event_voxel": event_voxel})
 

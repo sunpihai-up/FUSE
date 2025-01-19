@@ -1,0 +1,124 @@
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/distributed/launch.py:183: FutureWarning: The module torch.distributed.launch is deprecated
+and will be removed in future. Use torchrun.
+Note that --use-env is set by default in torchrun.
+If your script expects `--local-rank` argument to be set, please
+change it to read from `os.environ['LOCAL_RANK']` instead. See 
+https://pytorch.org/docs/stable/distributed.html#launch-utility for 
+further instructions
+
+  warnings.warn(
+[2025-01-19 19:19:08,042] torch.distributed.run: [WARNING] 
+[2025-01-19 19:19:08,042] torch.distributed.run: [WARNING] *****************************************
+[2025-01-19 19:19:08,042] torch.distributed.run: [WARNING] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+[2025-01-19 19:19:08,042] torch.distributed.run: [WARNING] *****************************************
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[2025-01-19 19:19:10,573][    INFO] {'bs': 24,
+ 'dataset': 'mvsec_2',
+ 'depth_anything_pretrained': None,
+ 'encoder': 'vitl',
+ 'epochs': 50,
+ 'event_voxel_chans': 3,
+ 'finetune_mode': 'decoder',
+ 'img_size': 266,
+ 'inv': False,
+ 'local_rank': 0,
+ 'lr': 5e-06,
+ 'max_depth': 1.0,
+ 'min_depth': 0.0,
+ 'ngpus': 2,
+ 'normalized_depth': False,
+ 'port': 20596,
+ 'pretrained_from': '/home/sph/event/da2-prompt-tuning/exp/fuse_log_l1_eventscape_fuse_cor_20250114_110446/latest.pth',
+ 'return_feature': False,
+ 'save_path': '/home/sph/event/da2-prompt-tuning/exp/epde_metric_noclip_mvsec_2_decoder_20250119_191906'}
+
+INFO:dinov2:using MLP layer as FFN
+INFO:dinov2:using MLP layer as FFN
+INFO:dinov2:using MLP layer as FFN
+INFO:dinov2:using MLP layer as FFN
+Initializing encoder parameters without pre-trained weights
+Initializing encoder parameters without pre-trained weights
+Model weights load from /home/sph/event/da2-prompt-tuning/exp/fuse_log_l1_eventscape_fuse_cor_20250114_110446/latest.pth successfully!
+Model weights load from /home/sph/event/da2-prompt-tuning/exp/fuse_log_l1_eventscape_fuse_cor_20250114_110446/latest.pth successfully!
+The freezing mode of weights is: decoder
+The freezing mode of weights is: decoder
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.projects.0.weight, Trainable Parameters: 262144
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.projects.0.bias, Trainable Parameters: 256
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.projects.1.weight, Trainable Parameters: 524288
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.projects.1.bias, Trainable Parameters: 512
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.projects.2.weight, Trainable Parameters: 1048576
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.projects.2.bias, Trainable Parameters: 1024
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.projects.3.weight, Trainable Parameters: 1048576
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.projects.3.bias, Trainable Parameters: 1024
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.resize_layers.0.weight, Trainable Parameters: 1048576
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.resize_layers.0.bias, Trainable Parameters: 256
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.resize_layers.1.weight, Trainable Parameters: 1048576
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.resize_layers.1.bias, Trainable Parameters: 512
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.resize_layers.3.weight, Trainable Parameters: 9437184
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.resize_layers.3.bias, Trainable Parameters: 1024
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.scratch.layer1_rn.weight, Trainable Parameters: 589824
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.scratch.layer2_rn.weight, Trainable Parameters: 1179648
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.scratch.layer3_rn.weight, Trainable Parameters: 2359296
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.scratch.layer4_rn.weight, Trainable Parameters: 2359296
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.scratch.refinenet1.out_conv.weight, Trainable Parameters: 65536
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.scratch.refinenet1.out_conv.bias, Trainable Parameters: 256
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.scratch.refinenet1.resConfUnit1.conv1.weight, Trainable Parameters: 589824
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.scratch.refinenet1.resConfUnit1.conv1.bias, Trainable Parameters: 256
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.scratch.refinenet1.resConfUnit1.conv2.weight, Trainable Parameters: 589824
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.scratch.refinenet1.resConfUnit1.conv2.bias, Trainable Parameters: 256
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.scratch.refinenet1.resConfUnit2.conv1.weight, Trainable Parameters: 589824
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.scratch.refinenet1.resConfUnit2.conv1.bias, Trainable Parameters: 256
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.scratch.refinenet1.resConfUnit2.conv2.weight, Trainable Parameters: 589824
+[2025-01-19 19:19:28,207][    INFO] Module: module.depth_head.scratch.refinenet1.resConfUnit2.conv2.bias, Trainable Parameters: 256
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet2.out_conv.weight, Trainable Parameters: 65536
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet2.out_conv.bias, Trainable Parameters: 256
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet2.resConfUnit1.conv1.weight, Trainable Parameters: 589824
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet2.resConfUnit1.conv1.bias, Trainable Parameters: 256
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet2.resConfUnit1.conv2.weight, Trainable Parameters: 589824
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet2.resConfUnit1.conv2.bias, Trainable Parameters: 256
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet2.resConfUnit2.conv1.weight, Trainable Parameters: 589824
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet2.resConfUnit2.conv1.bias, Trainable Parameters: 256
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet2.resConfUnit2.conv2.weight, Trainable Parameters: 589824
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet2.resConfUnit2.conv2.bias, Trainable Parameters: 256
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet3.out_conv.weight, Trainable Parameters: 65536
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet3.out_conv.bias, Trainable Parameters: 256
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet3.resConfUnit1.conv1.weight, Trainable Parameters: 589824
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet3.resConfUnit1.conv1.bias, Trainable Parameters: 256
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet3.resConfUnit1.conv2.weight, Trainable Parameters: 589824
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet3.resConfUnit1.conv2.bias, Trainable Parameters: 256
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet3.resConfUnit2.conv1.weight, Trainable Parameters: 589824
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet3.resConfUnit2.conv1.bias, Trainable Parameters: 256
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet3.resConfUnit2.conv2.weight, Trainable Parameters: 589824
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet3.resConfUnit2.conv2.bias, Trainable Parameters: 256
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet4.out_conv.weight, Trainable Parameters: 65536
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet4.out_conv.bias, Trainable Parameters: 256
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet4.resConfUnit1.conv1.weight, Trainable Parameters: 589824
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet4.resConfUnit1.conv1.bias, Trainable Parameters: 256
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet4.resConfUnit1.conv2.weight, Trainable Parameters: 589824
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet4.resConfUnit1.conv2.bias, Trainable Parameters: 256
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet4.resConfUnit2.conv1.weight, Trainable Parameters: 589824
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet4.resConfUnit2.conv1.bias, Trainable Parameters: 256
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet4.resConfUnit2.conv2.weight, Trainable Parameters: 589824
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.refinenet4.resConfUnit2.conv2.bias, Trainable Parameters: 256
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.output_conv1.weight, Trainable Parameters: 294912
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.output_conv1.bias, Trainable Parameters: 128
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.output_conv2.0.weight, Trainable Parameters: 36864
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.output_conv2.0.bias, Trainable Parameters: 32
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.output_conv2.2.weight, Trainable Parameters: 32
+[2025-01-19 19:19:28,208][    INFO] Module: module.depth_head.scratch.output_conv2.2.bias, Trainable Parameters: 1
+[2025-01-19 19:19:28,210][    INFO] Total Trainable Parameters: 30947009
+[2025-01-19 19:19:28,210][    INFO] ===========> Epoch: 0/50, d1: 0.000, d2: 0.000, d3: 0.000
+[2025-01-19 19:19:28,210][    INFO] ===========> Epoch: 0/50, abs_rel: 100.000, sq_rel: 100.000, rmse: 100.000, rmse_log: 100.000, log10: 100.000, silog: 100.000
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/autograd/__init__.py:266: UserWarning: Grad strides do not match bucket view strides. This may indicate grad was not created according to the gradient layout contract, or that the param's strides changed since DDP was constructed.  This is not an error, but may impair performance.
+grad.sizes() = [1, 32, 1, 1], strides() = [32, 1, 32, 32]
+bucket_view.sizes() = [1, 32, 1, 1], strides() = [32, 1, 1, 1] (Triggered internally at ../torch/csrc/distributed/c10d/reducer.cpp:322.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/autograd/__init__.py:266: UserWarning: Grad strides do not match bucket view strides. This may indicate grad was not created according to the gradient layout contract, or that the param's strides changed since DDP was constructed.  This is not an error, but may impair performance.
+grad.sizes() = [1, 32, 1, 1], strides() = [32, 1, 32, 32]
+bucket_view.sizes() = [1, 32, 1, 1], strides() = [32, 1, 1, 1] (Triggered internally at ../torch/csrc/distributed/c10d/reducer.cpp:322.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+[2025-01-19 19:19:37,006][    INFO] Iter: 0/269, LR: 0.0000050, Loss: 251.328, SiLoss: 239.236, GradLoss: 48.365
+[2025-01-19 19:22:50,230][    INFO] Iter: 100/269, LR: 0.0000050, Loss: 48.524, SiLoss: 37.940, GradLoss: 42.335

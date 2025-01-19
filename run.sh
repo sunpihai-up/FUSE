@@ -1,10 +1,10 @@
 encoder=vitl
 dataset=mvsec
-scene=day1
+scene=night1
 img_size=266
 max_depth=1
-load_from=/home/sph/event/da2-prompt-tuning/exp/epde_nl_mvsec_2_decoder_20250117_210924/abs_rel-0.2653605043888092-17.pth
-outdir=/home/sph/event/da2-prompt-tuning/results/test/epde_nl_mvsec_2_decoder_${dataset}_${scene}_18
+load_from=/home/sph/event/da2-prompt-tuning/exp/epde_metric_mvsec_2_decoder_20250118_153930/abs_rel-0.27630615234375-33.pth
+outdir=/home/sph/event/da2-prompt-tuning/results/test/epde_metric_${dataset}_${scene}_34
 event_voxel_chans=3
 
 python run_rf.py \

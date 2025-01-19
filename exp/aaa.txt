@@ -28,7 +28,16 @@ epde_nl_mvsec_2_decoder_20250116_190436:
 
 
 epde_nl_mvsec_2_decoder_20250117_210924:
+* abs_rel-0.2653605043888092-17
 * 标签clip(min_depth, max_depth)后log normalized
+* 训练时没有crop；
+* 损失函数为SiLoss + 0.25*GradLoss
+* 解码头最后为sigmoid，输出log normalized depth
+* 修改了lora改变模型参数的bug
+
+epde_metric_mvsec_2_decoder_20250118_153930：
+* abs_rel-0.27630615234375-33
+* 标签clip(min_depth, max_depth)
 * 训练时没有crop；
 * 损失函数为SiLoss + 0.25*GradLoss
 * 解码头最后为sigmoid，输出log normalized depth

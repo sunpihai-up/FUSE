@@ -14,7 +14,7 @@ event_voxel_chans=3
 finetune_mode=decoder # choices=["prompt", "decoder", "freeze", "bias_and_decoder", "overall"], 
 pretrained_from=/home/sph/event/da2-prompt-tuning/exp/fuse_log_l1_eventscape_fuse_cor_20250114_110446/latest.pth
 # pretrained_from=/home/sph/event/da2-prompt-tuning/exp/epde_nl_mvsec_2_decoder_20250116_190436/abs_rel-0.26532474160194397-6.pth
-save_path=/home/sph/event/da2-prompt-tuning/exp/epde_nl_${dataset}_${finetune_mode}_${now}
+save_path=/home/sph/event/da2-prompt-tuning/exp/epde_metric_noclip_${dataset}_${finetune_mode}_${now}
 
 mkdir -p $save_path
 

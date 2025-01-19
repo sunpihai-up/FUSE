@@ -7,8 +7,8 @@ import os
 import torch
 import torch.nn.functional as F
 
-# from model.epde_modal import EPDE
-from model.epde_modal_metric import EPDE
+from model.epde_modal import EPDE
+# from model.epde_modal_metric import EPDE
 from util.metric import convert_nl2abs_depth, dataset2params
 from model.epde.utils import clean_pretrained_weight
 

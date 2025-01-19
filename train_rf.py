@@ -19,8 +19,8 @@ from dataset.dense import Dense
 from dataset.mvsec import MVSEC
 from dataset.eventscape import EventScape
 
-# from model.epde_modal import EPDE
-from model.epde_modal_metric import EPDE
+from model.epde_modal import EPDE
+# from model.epde_modal_metric import EPDE
 from model.epde.utils import clean_pretrained_weight
 from util.dist_helper import setup_distributed
 from util.loss import SiLogLoss, MixedLoss, SiLoss, L1_Loss
