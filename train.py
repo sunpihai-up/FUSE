@@ -19,10 +19,16 @@ from dataset.dense import Dense
 from dataset.mvsec import MVSEC
 from dataset.eventscape import EventScape
 
-from model.epde.epde import EPDE
+# from model.epde_modal import EPDE
+from model.epde_modal_metric import EPDE
+from model.epde.utils import clean_pretrained_weight
 from util.dist_helper import setup_distributed
-from util.loss import SiLogLoss, MixedLoss
-from util.metric import eval_depth, eval_depth_ori
+from util.loss import SiLogLoss, MixedLoss, SiLoss, L1_Loss
+from util.metric import (
+    eval_depth,
+    convert_nl2abs_depth_tensor,
+    dataset2params,
+)
 from util.utils import init_log
 
 
@@ -30,11 +36,13 @@ parser = argparse.ArgumentParser(
     description="Depth Anything V2 for Metric Depth Estimation"
 )
 
-parser.add_argument("--encoder", default="vitl", choices=["vits", "vitb", "vitl"])
+parser.add_argument(
+    "--encoder", default="vitl", choices=["vits", "vitb", "vitl", "vitg"]
+)
 parser.add_argument(
     "--dataset",
     default="mvsec",
-    choices=["mvsec", "eventscape"],
+    choices=["mvsec", "eventscape", "mvsec_2"],
 )
 parser.add_argument("--min-depth", default=0.001, type=float)
 parser.add_argument("--max-depth", default=1, type=float)
@@ -48,46 +56,30 @@ parser.add_argument("--save-path", type=str, required=True)
 parser.add_argument("--local-rank", default=0, type=int)
 parser.add_argument("--port", default=None, type=int)
 parser.add_argument("--event_voxel_chans", default=5, type=int)
-parser.add_argument(
-    "--normalized_depth", action="store_true", help="Enable normalized depth."
-)
-parser.add_argument(
-    "--prompt_type",
-    choices=["epde_deep", "epde_shaw", "add", "none"],
-    type=str,
-)
+parser.add_argument("--normalized_depth", action="store_true")
+parser.add_argument("--inv", action="store_true")
+parser.add_argument("--return-feature", action="store_true")
 parser.add_argument(
     "--finetune-mode",
-    choices=["prompt", "decoder", "bias", "bias_and_decoder", "overall"],
-    default="prompt",
+    choices=["prompt_fuse", "decoder", "overall", "freeze"],
     type=str,
 )
 
 
-def main():
-    args = parser.parse_args()
-
-    warnings.simplefilter("ignore", np.RankWarning)
-
-    logger = init_log("global", logging.INFO)
-    logger.propagate = 0
-
-    rank, world_size = setup_distributed(port=args.port)
-
-    if rank == 0:
-        all_args = {**vars(args), "ngpus": world_size}
-        logger.info("{}\n".format(pprint.pformat(all_args)))
-        writer = SummaryWriter(args.save_path)
-
-    cudnn.enabled = True
-    cudnn.benchmark = True
-
+def get_dataloader(args):
     size = (args.img_size, args.img_size)
     if args.dataset == "dense":
         trainset = Dense("dataset/splits/dense/train.txt", "train", size=size)
     elif args.dataset == "mvsec":
         trainset = MVSEC(
             "dataset/splits/mvsec/train.txt",
+            "train",
+            normalized_d=args.normalized_depth,
+            size=size,
+        )
+    elif args.dataset == "mvsec_2":
+        trainset = MVSEC(
+            "dataset/splits/mvsec/train_2.txt",
             "train",
             normalized_d=args.normalized_depth,
             size=size,
@@ -118,7 +110,14 @@ def main():
         valset = Dense("dataset/splits/dense/val.txt", "val", size=size)
     elif args.dataset == "mvsec":
         valset = MVSEC(
-            "./dataset/splits/mvsec/outdoor_night1_val.txt",
+            "./dataset/splits/mvsec/outdoor_night1.txt",
+            "val",
+            normalized_d=args.normalized_depth,
+            size=size,
+        )
+    elif args.dataset == "mvsec_2":
+        valset = MVSEC(
+            "./dataset/splits/mvsec/outdoor_night1.txt",
             "val",
             normalized_d=args.normalized_depth,
             size=size,
@@ -143,27 +142,48 @@ def main():
         sampler=valsampler,
     )
 
+    return trainloader, valloader
+
+
+def main():
+    args = parser.parse_args()
+
+    warnings.simplefilter("ignore", np.RankWarning)
+
+    logger = init_log("global", logging.INFO)
+    logger.propagate = 0
+
+    rank, world_size = setup_distributed(port=args.port)
+
+    if rank == 0:
+        all_args = {**vars(args), "ngpus": world_size}
+        logger.info("{}\n".format(pprint.pformat(all_args)))
+        writer = SummaryWriter(args.save_path)
+
+    cudnn.enabled = True
+    cudnn.benchmark = True
+
+    # Data Loader
+    trainloader, valloader = get_dataloader(args=args)
+
     local_rank = int(os.environ["LOCAL_RANK"])
 
     # Instantiate Model
     model = EPDE(
         model_name=args.encoder,
-        dataset=args.dataset,
         max_depth=args.max_depth,
         event_voxel_chans=args.event_voxel_chans,
-        prompt_type=args.prompt_type,
-        depth_anything_pretrained=args.depth_anything_pretrained,
+        return_feature=args.return_feature,
+        # inv=args.inv,
     )
 
     if args.pretrained_from:
-        model.load_state_dict(
-            {
-                k: v
-                for k, v in torch.load(args.pretrained_from, map_location="cpu").items()
-                if "pretrained" in k
-            },
-            strict=False,
-        )
+        model.eval()
+        checkpoint = torch.load(args.pretrained_from, map_location="cpu")
+        checkpoint = clean_pretrained_weight(checkpoint)
+        checkpoint = {k: v for k, v in checkpoint.items() if "depth_head" not in k}
+        model.load_state_dict(checkpoint, strict=False)
+        print(f"Model weights load from {args.pretrained_from} successfully!")
 
     model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
     model.cuda(local_rank)
@@ -175,26 +195,27 @@ def main():
         find_unused_parameters=True,
     )
 
-    # criterion = SiLogLoss().cuda(local_rank)
-    criterion = MixedLoss().cuda(local_rank)
+    criterion = SiLogLoss().cuda(local_rank)
+    # criterion = SiLoss().cuda(local_rank)
+    # criterion = L1_Loss().cuda(local_rank)
+    # criterion = MixedLoss().cuda(local_rank)
 
     # Handling frozen parameters
-    if args.finetune_mode == "prompt":
+    if args.finetune_mode == "decoder":
         for name, param in model.named_parameters():
-            if "foundation" in name:
+            if "depth_head" not in name:
                 param.requires_grad = False
-    elif args.finetune_mode == "decoder":
+    elif args.finetune_mode == "prompt_fuse":
         for name, param in model.named_parameters():
-            if "foundation.pretrained" in name:
+            if "depth_head" not in name and "prompt_fuse" not in name:
                 param.requires_grad = False
-    elif args.finetune_mode == "bias":
+    elif args.finetune_mode == "overall":
         for name, param in model.named_parameters():
-            if "bias" not in name and "foundation" in name:
-                param.requires_grad = False
-    elif args.finetune_mode == "bias_and_decoder":
+            param.requires_grad = True
+    elif args.finetune_mode == "freeze":
         for name, param in model.named_parameters():
-            if "bias" not in name and "foundation.pretrained" in name:
-                param.requires_grad = False
+            param.requires_grad = False
+
     print(f"The freezing mode of weights is: {args.finetune_mode}")
 
     # Configure optimizer to include only trainable parameters
@@ -204,7 +225,7 @@ def main():
                 "params": [
                     param
                     for name, param in model.named_parameters()
-                    if "pretrained" in name and param.requires_grad
+                    if "depth_head" not in name and param.requires_grad
                 ],
                 "lr": args.lr,
             },
@@ -212,7 +233,7 @@ def main():
                 "params": [
                     param
                     for name, param in model.named_parameters()
-                    if "pretrained" not in name and param.requires_grad
+                    if "depth_head" in name and param.requires_grad
                 ],
                 "lr": args.lr * 10.0,
             },
@@ -276,7 +297,6 @@ def main():
         trainloader.sampler.set_epoch(epoch + 1)
 
         model.train()
-        total_si_loss = 0
 
         for i, sample in enumerate(trainloader):
             optimizer.zero_grad()
@@ -294,19 +314,20 @@ def main():
                 valid_mask = valid_mask.flip(-1)
 
             pred = model(img)
-            loss, si_loss, grad_loss = criterion(
+            # print(pred.min(), pred.max(), depth[torch.isfinite(depth)].min(), depth[torch.isfinite(depth)].max())
+            # loss, si_loss, grad_loss = criterion(
+            #     pred,
+            #     depth,
+            #     valid_mask,
+            # )
+            loss = criterion(
                 pred,
                 depth,
-                (valid_mask == 1)
-                & (depth >= args.min_depth)
-                & (depth <= args.max_depth),
+                valid_mask,
             )
-            # si_loss = torch.tensor(0)
 
             loss.backward()
             optimizer.step()
-
-            total_si_loss += si_loss.item()
 
             iters = epoch * len(trainloader) + i
 
@@ -317,18 +338,29 @@ def main():
 
             if rank == 0:
                 writer.add_scalar("train/loss", loss.item(), iters)
-                writer.add_scalar("train/si_loss", si_loss.item(), iters)
-                writer.add_scalar("train/grad_loss", grad_loss.item(), iters)
+                # writer.add_scalar("train/si_loss", si_loss.item(), iters)
+                # writer.add_scalar("train/grad_loss", grad_loss.item(), iters)
 
             if rank == 0 and i % 100 == 0:
                 logger.info(
-                    "Iter: {}/{}, LR: {:.7f}, Loss: {:.3f}".format(
+                    "Iter: {}/{}, LR: {:.7f}, Loss: {:.3f}, SiLoss: {:.3f}, GradLoss: {:.3f}".format(
                         i,
                         len(trainloader),
                         optimizer.param_groups[0]["lr"],
                         loss.item(),
+                        loss.item(),
+                        loss.item(),
                     )
                 )
+
+            if iters % 2000 == 0 and iters >= 2000 and rank == 0:
+                checkpoint = {
+                    "model": model.module.state_dict(),
+                    # "optimizer": optimizer.state_dict(),
+                    "epoch": epoch,
+                    "previous_best": previous_best,
+                }
+                torch.save(checkpoint, os.path.join(args.save_path, "latest.pth"))
 
         model.eval()
 
@@ -349,15 +381,14 @@ def main():
 
         for i, sample in enumerate(valloader):
 
-            img, depth, valid_mask = (
-                # sample["image"].cuda().float(),
+            inputs, depth, valid_mask = (
                 sample["input"].cuda().float(),
                 sample["depth"].cuda()[0],
                 sample["valid_mask"].cuda()[0],
             )
 
             with torch.no_grad():
-                pred = model(img)
+                pred = model(inputs)
                 pred = F.interpolate(
                     pred[:, None], depth.shape[-2:], mode="bilinear", align_corners=True
                 )[0, 0]
@@ -366,13 +397,13 @@ def main():
                 continue
 
             if args.normalized_depth:
-                cur_results = eval_depth(
-                    pred[valid_mask], depth[valid_mask], dataset=args.dataset
-                )
-            else:
-                cur_results = eval_depth_ori(
-                    pred[valid_mask], depth[valid_mask], dataset=args.dataset
-                )
+                # Convert normalized log depth to absolute depth
+                reg_factor = dataset2params[args.dataset]["reg_factor"]
+                max_depth = dataset2params[args.dataset]["clip_distance"]
+                pred = convert_nl2abs_depth_tensor(pred, max_depth, reg_factor)
+                depth = convert_nl2abs_depth_tensor(depth, max_depth, reg_factor)
+
+            cur_results = eval_depth(pred, depth, dataset=args.dataset)
 
             for k in results.keys():
                 results[k] += cur_results[k]
@@ -383,6 +414,7 @@ def main():
         for k in results.keys():
             dist.reduce(results[k], dst=0)
         dist.reduce(nsamples, dst=0)
+        print(nsamples)
 
         if rank == 0:
             logger.info(
@@ -406,14 +438,14 @@ def main():
             for name, metric in results.items():
                 writer.add_scalar(f"eval/{name}", (metric / nsamples).item(), epoch)
 
-        if rank == 0 and (epoch + 1) % 20 == 0:
-            checkpoint = {
-                "model": model.state_dict(),
-                "optimizer": optimizer.state_dict(),
-                "epoch": epoch,
-                "previous_best": previous_best,
-            }
-            torch.save(checkpoint, os.path.join(args.save_path, f"{epoch}.pth"))
+        # if rank == 0 and (epoch + 1) % 20 == 0:
+        #     checkpoint = {
+        #         "model": model.state_dict(),
+        #         "optimizer": optimizer.state_dict(),
+        #         "epoch": epoch,
+        #         "previous_best": previous_best,
+        #     }
+        #     torch.save(checkpoint, os.path.join(args.save_path, f"{epoch}.pth"))
 
         cur_results = {}
         for k in results.keys():
@@ -433,7 +465,7 @@ def main():
                         if file.startswith(k) and file.endswith(".pth"):
                             os.remove(os.path.join(args.save_path, file))
                     checkpoint = {
-                        "model": model.state_dict(),
+                        "model": model.module.state_dict(),
                         "epoch": epoch,
                         "previous_best": previous_best,
                     }
@@ -452,8 +484,8 @@ def main():
 
         if rank == 0:
             checkpoint = {
-                "model": model.state_dict(),
-                "optimizer": optimizer.state_dict(),
+                "model": model.module.state_dict(),
+                # "optimizer": optimizer.state_dict(),
                 "epoch": epoch,
                 "previous_best": previous_best,
             }
