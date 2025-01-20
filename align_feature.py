@@ -24,7 +24,7 @@ from model.depth_anything_v2.dpt_align import DepthAnythingV2
 from model.depth_anything_v2.dpt_align_lora import DepthAnythingV2_lora
 
 from util.dist_helper import setup_distributed
-from util.loss import SiLogLoss, FeatureCosLoss, MixedLoss, F1_Loss
+from util.loss import SiLogLoss, FeatureCosLoss, MixedLoss, L1_Loss
 from util.metric import eval_depth, eval_depth_ori, eval_disparity
 from util.utils import init_log
 
@@ -195,6 +195,9 @@ def main():
             (key[7:] if key.startswith("module.") else key): value
             for key, value in checkpoint.items()
         }
+    
+    teacher_model.eval()
+    student_model.eval()
     teacher_model.load_state_dict(checkpoint, strict=False)
     student_model.load_state_dict(checkpoint, strict=False)
     print(f"Model weights load from {args.load_from} successfully!")
@@ -226,8 +229,8 @@ def main():
 
     # criterion = SiLogLoss().cuda(local_rank)
     criterion = MixedLoss(log_normalize=True).cuda(local_rank)
-    feature_loss = FeatureCosLoss(beta=0.0).cuda(local_rank)
-    l1_loss = F1_Loss(log_normalized=True).cuda(local_rank)
+    feature_loss = FeatureCosLoss(beta=0.2).cuda(local_rank)
+    l1_loss = L1_Loss(log_normalized=True).cuda(local_rank)
 
     # Configure optimizer to include only trainable parameters
     optimizer = AdamW(

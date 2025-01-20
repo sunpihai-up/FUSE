@@ -48,6 +48,11 @@ class MVSEC(Dataset):
         depth = np.log(depth) / reg_factor + 1.0
         depth = depth.clip(0.0, 1.0)
         return depth
+    
+    def normalize_depth_min_max(self, depth, d_min, d_max, eps=1e-6):
+        depth = np.clip(depth, d_min, d_max)
+        normalized_depth = (depth - d_min) / (d_max - d_min + eps)
+        return normalized_depth
 
     def __getitem__(self, item):
         # if self.mode == "train":
@@ -66,8 +71,9 @@ class MVSEC(Dataset):
         # Convert absolute scale depth to normalized log depth
         if self.normalized_d:
             depth = self.prepare_depth(depth, reg_factor, d_min, d_max)
+            depth = self.normalize_depth_min_max(depth, d_min=d_min, d_max=d_max)
         else:
-            # depth = np.clip(depth, d_min, d_max)
+            # depth = np.clip(depth, 0, d_max)
             pass
 
         sample = self.transform({"image": image, "depth": depth, "event_voxel": event_voxel})
@@ -81,6 +87,7 @@ class MVSEC(Dataset):
         del sample['event_voxel']
 
         sample['valid_mask'] = torch.isfinite(sample["depth"])
+        sample['valid_mask'] = torch.logical_and(sample["valid_mask"], sample['depth'] <= d_max)
         sample["image_path"] = img_path
 
         return sample

@@ -40,5 +40,30 @@ epde_metric_mvsec_2_decoder_20250118_153930：
 * 标签clip(min_depth, max_depth)
 * 训练时没有crop；
 * 损失函数为SiLoss + 0.25*GradLoss
-* 解码头最后为sigmoid，输出log normalized depth
+* 解码头最后为ReLU，输出absolute depth
 * 修改了lora改变模型参数的bug
+
+epde_metric_noclip_mvsec_2_decoder_20250119_191906：
+* abs_rel-0.280333936214447-38
+* 标签没有处理（clip和normalization均没有）；
+* 训练时没有crop；
+* 损失函数为SiLoss + 0.25*GradLoss
+* 解码头最后为ReLU，输出absolute depth
+* 修改了lora改变模型参数的bug
+
+epde_metric_noclip_siloss_mvsec_2_decoder_20250120_155330
+* abs_rel-0.2780318856239319-6
+* 标签没有处理（clip和normalization均没有）；
+* 训练时没有crop；
+* 损失函数为SiLoss
+* 解码头最后为ReLU，输出absolute depth
+* 修改了lora改变模型参数的bug
+
+epde_metric_noclip_sigloss_mvsec_2_decoder_20250120_151034
+* abs_rel-0.3056771457195282-2
+* 标签没有处理（clip和normalization均没有）；
+* 训练时没有crop；
+* 损失函数为SigLoss
+* 解码头最后为ReLU，输出absolute depth
+* 修改了lora改变模型参数的bug
+* 损失函数会震荡

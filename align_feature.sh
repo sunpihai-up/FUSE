@@ -7,9 +7,9 @@ gpus=2
 lr=0.000005
 encoder=vitl
 dataset=eventscape_align
-img_size=350
+img_size=266
 event_voxel_chans=3
-load_from=/data/coding/upload-data/checkpoints/depth_anything_v2_vitl.pth
+load_from=/data_nvme/sph/da2_checkpoints/depth_anything_v2_vitl.pth
 save_path=/data/coding/code/da2-prompt-tuning/exp/align_logl1_fea_${dataset}_${now}
 
 mkdir -p $save_path

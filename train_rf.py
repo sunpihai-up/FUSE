@@ -19,8 +19,8 @@ from dataset.dense import Dense
 from dataset.mvsec import MVSEC
 from dataset.eventscape import EventScape
 
-from model.epde_modal import EPDE
-# from model.epde_modal_metric import EPDE
+# from model.epde_modal import EPDE
+from model.epde_modal_metric import EPDE
 from model.epde.utils import clean_pretrained_weight
 from util.dist_helper import setup_distributed
 from util.loss import SiLogLoss, MixedLoss, SiLoss, L1_Loss
@@ -66,24 +66,7 @@ parser.add_argument(
 )
 
 
-def main():
-    args = parser.parse_args()
-
-    warnings.simplefilter("ignore", np.RankWarning)
-
-    logger = init_log("global", logging.INFO)
-    logger.propagate = 0
-
-    rank, world_size = setup_distributed(port=args.port)
-
-    if rank == 0:
-        all_args = {**vars(args), "ngpus": world_size}
-        logger.info("{}\n".format(pprint.pformat(all_args)))
-        writer = SummaryWriter(args.save_path)
-
-    cudnn.enabled = True
-    cudnn.benchmark = True
-
+def get_dataloader(args):
     size = (args.img_size, args.img_size)
     if args.dataset == "dense":
         trainset = Dense("dataset/splits/dense/train.txt", "train", size=size)
@@ -159,6 +142,30 @@ def main():
         sampler=valsampler,
     )
 
+    return trainloader, valloader
+
+
+def main():
+    args = parser.parse_args()
+
+    warnings.simplefilter("ignore", np.RankWarning)
+
+    logger = init_log("global", logging.INFO)
+    logger.propagate = 0
+
+    rank, world_size = setup_distributed(port=args.port)
+
+    if rank == 0:
+        all_args = {**vars(args), "ngpus": world_size}
+        logger.info("{}\n".format(pprint.pformat(all_args)))
+        writer = SummaryWriter(args.save_path)
+
+    cudnn.enabled = True
+    cudnn.benchmark = True
+
+    # Data Loader
+    trainloader, valloader = get_dataloader(args=args)
+
     local_rank = int(os.environ["LOCAL_RANK"])
 
     # Instantiate Model
@@ -188,9 +195,10 @@ def main():
         find_unused_parameters=True,
     )
 
-    # criterion = SiLogLoss().cuda(local_rank)
+    criterion = SiLogLoss().cuda(local_rank)
     # criterion = SiLoss().cuda(local_rank)
-    criterion = MixedLoss().cuda(local_rank)
+    # criterion = L1_Loss().cuda(local_rank)
+    # criterion = MixedLoss().cuda(local_rank)
 
     # Handling frozen parameters
     if args.finetune_mode == "decoder":
@@ -307,16 +315,16 @@ def main():
 
             pred = model(img)
             # print(pred.min(), pred.max(), depth[torch.isfinite(depth)].min(), depth[torch.isfinite(depth)].max())
-            loss, si_loss, grad_loss = criterion(
-                pred,
-                depth,
-                valid_mask,
-            )
-            # loss = criterion(
+            # loss, si_loss, grad_loss = criterion(
             #     pred,
             #     depth,
             #     valid_mask,
             # )
+            loss = criterion(
+                pred,
+                depth,
+                valid_mask,
+            )
 
             loss.backward()
             optimizer.step()
@@ -330,8 +338,8 @@ def main():
 
             if rank == 0:
                 writer.add_scalar("train/loss", loss.item(), iters)
-                writer.add_scalar("train/si_loss", si_loss.item(), iters)
-                writer.add_scalar("train/grad_loss", grad_loss.item(), iters)
+                # writer.add_scalar("train/si_loss", si_loss.item(), iters)
+                # writer.add_scalar("train/grad_loss", grad_loss.item(), iters)
 
             if rank == 0 and i % 100 == 0:
                 logger.info(
@@ -340,8 +348,8 @@ def main():
                         len(trainloader),
                         optimizer.param_groups[0]["lr"],
                         loss.item(),
-                        si_loss.item(),
-                        grad_loss.item(),
+                        loss.item(),
+                        loss.item(),
                     )
                 )
 

@@ -7,6 +7,7 @@ import os
 import torch
 
 from depth_anything_v2.dpt import DepthAnythingV2
+# from depth_anything_v2.dpt_align import DepthAnythingV2
 from depth_anything_v2.dpt_lora import DepthAnythingV2_lora
 
 from util.metric import convert_nl2abs_depth, dataset2params
@@ -91,6 +92,7 @@ if __name__ == '__main__':
         'vitg': {'encoder': 'vitg', 'features': 384, 'out_channels': [1536, 1536, 1536, 1536]}
     }
     
+    # depth_anything = DepthAnythingV2(**{**model_configs[args.encoder]})
     depth_anything = DepthAnythingV2(**{**model_configs[args.encoder], 'max_depth': args.max_depth})
     # depth_anything = DepthAnythingV2_lora(
     #     **{**model_configs[args.encoder], "max_depth": args.max_depth}
