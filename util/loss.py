@@ -5,25 +5,37 @@ from kornia.filters.sobel import spatial_gradient, sobel
 
 
 class SiLogLoss(nn.Module):
-    def __init__(self, lambd=0.5):
+    def __init__(self, lambd=0.5, do_sqrt=False):
         super().__init__()
         self.lambd = lambd
+        self.sqrt = do_sqrt
 
     def forward(self, pred, target, valid_mask, eps=1e-8):
         valid_mask = valid_mask.detach()
-        diff_log = torch.log(target[valid_mask] + eps) - torch.log(
-            pred[valid_mask] + eps
-        )
-        loss = torch.sqrt(
-            torch.pow(diff_log, 2).mean() - self.lambd * torch.pow(diff_log.mean(), 2)
-        )
+
+        target = target[valid_mask] + eps
+        pred = pred[valid_mask] + eps
+
+        diff_log = torch.log(target) - torch.log(pred)
+        d_square_mean = torch.pow(diff_log, 2).mean()
+        d_mean_square = torch.pow(diff_log.mean(), 2)
+
+        loss = d_square_mean - self.lambd * d_mean_square
+        if self.sqrt:
+            loss = torch.sqrt(loss)
+
+        if torch.isnan(loss).item() or torch.isinf(loss).item():
+            raise RuntimeError(
+                f"Silog error, {loss}, d_square_mean: {d_square_mean}, d_mean: {d_mean_square}"
+            )
         return loss
 
 
 class SiLoss(nn.Module):
-    def __init__(self, lambd=0.5):
+    def __init__(self, lambd=0.5, do_sqrt=False):
         super().__init__()
         self.lambd = lambd
+        self.sqrt = do_sqrt
 
     def forward(self, pred, target, valid_mask):
         valid_mask = valid_mask.detach()
@@ -31,7 +43,17 @@ class SiLoss(nn.Module):
         target = target[valid_mask]
 
         diff = target - pred
-        loss = torch.pow(diff, 2).mean() - self.lambd * torch.pow(diff.mean(), 2)
+        d_square_mean = torch.pow(diff, 2).mean()
+        d_mean_square = torch.pow(diff.mean(), 2)
+
+        loss = d_square_mean - self.lambd * d_mean_square
+        if self.sqrt:
+            loss = torch.sqrt(loss)
+
+        if torch.isnan(loss).item() or torch.isinf(loss).item():
+            raise RuntimeError(
+                f"Siloss error, {loss}, d_square_mean: {d_square_mean}, d_mean: {d_mean_square}"
+            )
         return loss
 
 
@@ -51,16 +73,23 @@ class L1_Loss(nn.Module):
         if self.log_normalized:
             pred = self.log_normalize_fun(pred)
             target = self.log_normalize_fun(target)
+
         diff = torch.abs(pred - target)
-        return diff.mean()
+        loss = diff.mean()
+
+        if torch.isnan(loss).item() or torch.isinf(loss).item():
+            raise RuntimeError(f"L1 NAN error, {loss}")
+        return loss
 
 
 class MultiScaleGradient(torch.nn.Module):
-    def __init__(self, start_scale=1, num_scales=4):
+    def __init__(self, start_scale=1, num_scales=4, log_space=False, eps=1e-6):
         super(MultiScaleGradient, self).__init__()
 
         self.start_scale = start_scale
         self.num_scales = num_scales
+        self.log_space = log_space
+        self.eps = eps
 
         self.multi_scales = [
             torch.nn.AvgPool2d(
@@ -69,45 +98,135 @@ class MultiScaleGradient(torch.nn.Module):
             for scale in range(self.num_scales)
         ]
 
-    def forward(self, prediction, target):
-        prediction = prediction.unsqueeze(1)
-        target = target.unsqueeze(1)
+    def forward(self, prediction, target, mask=None):
+        if prediction.ndim == 3:
+            prediction = prediction.unsqueeze(1)
+            target = target.unsqueeze(1)
+            if mask != None:
+                mask = mask.unsqueeze(1)
 
-        loss_value = 0
+        target = target + (~mask) * 1000
+
+        loss = 0
+        if self.log_space:
+            prediction = torch.log(prediction)
+            target = torch.log(target)
+
         diff = prediction - target
         _, _, H, W = target.shape
 
         for m in self.multi_scales:
             # input and type are of the type [B x C x H x W]
-            # Use kornia spatial gradient computation
-            delta_diff = spatial_gradient(m(diff))
-            is_nan = torch.isnan(delta_diff)
-            is_not_nan_sum = (~is_nan).sum()
-            # output of kornia spatial gradient is [B x C x 2 x H x W]
-            loss_value += (
-                torch.abs(delta_diff[~is_nan]).sum()
-                / is_not_nan_sum
-                * target.shape[0]
-                * 2
-            )
-            # * batch size * 2 (because kornia spatial product has two outputs).
-            # replaces the following line to be able to deal with nan's.
-            # loss_value += torch.abs(delta_diff).mean(dim=(3,4)).sum()
+            diff_pooled = m(diff)
+            if mask != None:
+                mask_pooled = m(mask.float())
+                # Determine whether all the original windows of the pooled mask are valid
+                # (with an average value of 1.0)
+                mask_scale = torch.isclose(mask_pooled, torch.ones_like(mask_pooled))
 
-        return loss_value / self.num_scales
+            # Use kornia spatial gradient computation
+            # output of kornia spatial gradient is [B x C x 2 x H x W]
+            delta_diff = spatial_gradient(diff_pooled)
+            is_nan = torch.isnan(delta_diff)
+
+            if mask != None:
+                # Expand mask_scale to match the dimension of delta_diff
+                B, C, _, H_p, W_p = delta_diff.shape
+                mask_scale = mask_scale.view(B, 1, 1, H_p, W_p).expand_as(delta_diff)
+
+            valid_mask = ~is_nan
+            if mask != None:
+                # Combine the valid regions of non-NaN and mask
+                valid_mask = valid_mask & mask_scale
+            valid_count = valid_mask.sum()
+
+            loss += torch.abs(delta_diff[valid_mask]).sum() / valid_count
+
+        if torch.isnan(loss).item() | torch.isinf(loss).item():
+            raise RuntimeError(f"MultiScaleGradient error, {loss}")
+        return loss / self.num_scales
+
+
+class GradientLoss_Li(nn.Module):
+    def __init__(
+        self,
+        scale_num=4,
+        loss_weight=1,
+        step=2,
+        data_type=["lidar", "stereo"],
+    ):
+        super(GradientLoss_Li, self).__init__()
+        self.__scales = scale_num
+        self.loss_weight = loss_weight
+        self.data_type = data_type
+        self.step = step
+        self.eps = 1e-6
+
+    def gradient_log_loss(self, log_prediction_d, log_gt, mask, step=2):
+        log_d_diff = log_prediction_d - log_gt
+
+        v_gradient = torch.abs(log_d_diff[:, :, :-step, :] - log_d_diff[:, :, step:, :])
+        v_mask = torch.mul(mask[:, :, :-step, :], mask[:, :, step:, :])
+        v_gradient = torch.mul(v_gradient, v_mask)
+
+        h_gradient = torch.abs(log_d_diff[:, :, :, :-step] - log_d_diff[:, :, :, step:])
+        h_mask = torch.mul(mask[:, :, :, :-step], mask[:, :, :, step:])
+        h_gradient = torch.mul(h_gradient, h_mask)
+
+        N = torch.sum(h_mask) + torch.sum(v_mask) + self.eps
+
+        gradient_loss = torch.sum(h_gradient) + torch.sum(v_gradient)
+        gradient_loss = gradient_loss / N
+
+        return gradient_loss
+
+    def forward(self, prediction, target, mask):
+        if prediction.ndim == 3:
+            prediction = prediction.unsqueeze(1)
+            target = target.unsqueeze(1)
+            mask = mask.unsqueeze(1)
+
+        total = 0
+        target_trans = target + (~mask) * 1000
+        pred_log = torch.log(prediction)
+        gt_log = torch.log(target_trans)
+        for scale in range(self.__scales):
+            step = pow(2, scale)
+
+            total += self.gradient_log_loss(
+                pred_log[:, ::step, ::step],
+                gt_log[:, ::step, ::step],
+                mask[:, ::step, ::step],
+                step=self.step,
+            )
+        loss = total / self.__scales
+        if torch.isnan(loss).item() | torch.isinf(loss).item():
+            raise RuntimeError(f"GradientLoss_Li error, {loss}")
+        return loss * self.loss_weight
 
 
 class MixedLoss(nn.Module):
-    def __init__(self, siloss_lambd=0.5, grad_loss_weight=0.25, log_normalize=False):
+    def __init__(
+        self,
+        siloss_lambd=0.5,
+        grad_loss_weight=0.25,
+        do_sqrt=False,
+        scale_num=4,
+        log_normalize=False,
+    ):
         super().__init__()
         self.siloss_lambd = siloss_lambd
         self.grad_loss_weight = grad_loss_weight
+        self.do_sqrt = do_sqrt
+        self.scale_num = scale_num
         self.log_normalize = log_normalize
 
-        self.si_loss = SiLoss(lambd=siloss_lambd)
-        # self.si_loss = SiLogLoss(lambd=siloss_lambd)
+        self.si_loss = SiLogLoss(lambd=siloss_lambd, do_sqrt=do_sqrt)
+        # self.si_loss = SiLoss(lambd=siloss_lambd)
         # self.si_loss = L1_Loss()
-        self.grad_loss = MultiScaleGradient()
+
+        # self.grad_loss = MultiScaleGradient(log_space=True)
+        self.grad_loss = GradientLoss_Li(scale_num=scale_num, step=2)
 
     def log_normalize_fun(self, depth_map, max_val=None):
         # Find the maximum value
@@ -120,7 +239,7 @@ class MixedLoss(nn.Module):
             target = self.log_normalize_fun(target)
 
         si_loss_value = self.si_loss(pred, target, valid_mask)
-        grad_loss_value = self.grad_loss(pred, target)
+        grad_loss_value = self.grad_loss(pred, target, valid_mask)
 
         total_loss = si_loss_value + self.grad_loss_weight * grad_loss_value
 
@@ -169,77 +288,3 @@ class FeatureCosLoss(nn.Module):
             return total_loss / count
         else:
             return torch.tensor(0.0, requires_grad=True).cuda()
-
-
-class MSGIL_NORM_Loss(nn.Module):
-    """
-    Our proposed GT normalized Multi-scale Gradient Loss Function.
-    """
-
-    def __init__(self, scale=4, valid_threshold=-1e-8, max_threshold=1e8):
-        super(MSGIL_NORM_Loss, self).__init__()
-        self.scales_num = scale
-        self.valid_threshold = valid_threshold
-        self.max_threshold = max_threshold
-        self.EPSILON = 1e-6
-
-    def one_scale_gradient_loss(self, pred_scale, gt, mask):
-        mask_float = mask.to(dtype=pred_scale.dtype, device=pred_scale.device)
-
-        d_diff = pred_scale - gt
-
-        v_mask = torch.mul(mask_float[:, :, :-2, :], mask_float[:, :, 2:, :])
-        v_gradient = torch.abs(d_diff[:, :, :-2, :] - d_diff[:, :, 2:, :])
-        v_gradient = torch.mul(v_gradient, v_mask)
-
-        h_gradient = torch.abs(d_diff[:, :, :, :-2] - d_diff[:, :, :, 2:])
-        h_mask = torch.mul(mask_float[:, :, :, :-2], mask_float[:, :, :, 2:])
-        h_gradient = torch.mul(h_gradient, h_mask)
-
-        valid_num = torch.sum(h_mask) + torch.sum(v_mask)
-
-        gradient_loss = torch.sum(h_gradient) + torch.sum(v_gradient)
-        gradient_loss = gradient_loss / (valid_num + 1e-8)
-
-        return gradient_loss
-
-    def transform(self, gt):
-        # Get mean and standard deviation
-        data_mean = []
-        data_std_dev = []
-        for i in range(gt.shape[0]):
-            gt_i = gt[i]
-            mask = gt_i > 0
-            depth_valid = gt_i[mask]
-            if depth_valid.shape[0] < 10:
-                data_mean.append(torch.tensor(0).cuda())
-                data_std_dev.append(torch.tensor(1).cuda())
-                continue
-            size = depth_valid.shape[0]
-            depth_valid_sort, _ = torch.sort(depth_valid, 0)
-            depth_valid_mask = depth_valid_sort[int(size * 0.1) : -int(size * 0.1)]
-            data_mean.append(depth_valid_mask.mean())
-            data_std_dev.append(depth_valid_mask.std())
-        data_mean = torch.stack(data_mean, dim=0).cuda()
-        data_std_dev = torch.stack(data_std_dev, dim=0).cuda()
-
-        return data_mean, data_std_dev
-
-    def forward(self, pred, gt):
-        if pred.ndim == 3:
-            pred = pred.unsqueeze(1)
-            gt = gt.unsqueeze(1)
-
-        mask = gt > self.valid_threshold
-        grad_term = 0.0
-        gt_mean, gt_std = self.transform(gt)
-        gt_trans = (gt - gt_mean[:, None, None, None]) / (
-            gt_std[:, None, None, None] + 1e-8
-        )
-        for i in range(self.scales_num):
-            step = pow(2, i)
-            d_gt = gt_trans[:, :, ::step, ::step]
-            d_pred = pred[:, :, ::step, ::step]
-            d_mask = mask[:, :, ::step, ::step]
-            grad_term += self.one_scale_gradient_loss(d_pred, d_gt, d_mask)
-        return grad_term

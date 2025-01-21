@@ -67,3 +67,12 @@ epde_metric_noclip_sigloss_mvsec_2_decoder_20250120_151034
 * 解码头最后为ReLU，输出absolute depth
 * 修改了lora改变模型参数的bug
 * 损失函数会震荡
+
+epde_metric_noclip_sigloss_sigmoid_mvsec_2_decoder_20250120_202107
+* abs_rel-0.2618878185749054-10
+* 标签没有处理，mask只保留小于等于80的；
+* 训练时没有crop；
+* 损失函数为SigLoss
+* 解码头最后为Sigmoid，乘以最大深度
+* SiLoss为depth anything版本
+* 修改了lora改变模型参数的bug

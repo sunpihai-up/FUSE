@@ -67,7 +67,7 @@ def prepare_depth_data(target, prediction, clip_distance, reg_factor=3.70378):
 def eval_depth(pred, target, dataset, eps=1e-6):
     assert pred.shape == target.shape
 
-    non_nan_mask = torch.isfinite(target)
+    non_nan_mask = torch.logical_and(torch.isfinite(target), (target != 0))
     target = target[non_nan_mask]
     pred = pred[non_nan_mask]
     

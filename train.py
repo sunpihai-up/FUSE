@@ -195,10 +195,10 @@ def main():
         find_unused_parameters=True,
     )
 
-    criterion = SiLogLoss().cuda(local_rank)
+    # criterion = SiLogLoss().cuda(local_rank)
     # criterion = SiLoss().cuda(local_rank)
     # criterion = L1_Loss().cuda(local_rank)
-    # criterion = MixedLoss().cuda(local_rank)
+    criterion = MixedLoss(do_sqrt=True).cuda(local_rank)
 
     # Handling frozen parameters
     if args.finetune_mode == "decoder":
@@ -259,9 +259,9 @@ def main():
 
     if rank == 0:
         # Log module names and trainable parameter counts
-        for name, param in model.named_parameters():
-            if param.requires_grad:
-                logger.info(f"Module: {name}, Trainable Parameters: {param.numel()}")
+        # for name, param in model.named_parameters():
+        #     if param.requires_grad:
+        #         logger.info(f"Module: {name}, Trainable Parameters: {param.numel()}")
 
         # Optional: Total trainable parameters
         total_trainable_params = sum(
@@ -315,16 +315,16 @@ def main():
 
             pred = model(img)
             # print(pred.min(), pred.max(), depth[torch.isfinite(depth)].min(), depth[torch.isfinite(depth)].max())
-            # loss, si_loss, grad_loss = criterion(
-            #     pred,
-            #     depth,
-            #     valid_mask,
-            # )
-            loss = criterion(
+            loss, si_loss, grad_loss = criterion(
                 pred,
                 depth,
                 valid_mask,
             )
+            # loss = criterion(
+            #     pred,
+            #     depth,
+            #     valid_mask,
+            # )
 
             loss.backward()
             optimizer.step()
@@ -338,8 +338,8 @@ def main():
 
             if rank == 0:
                 writer.add_scalar("train/loss", loss.item(), iters)
-                # writer.add_scalar("train/si_loss", si_loss.item(), iters)
-                # writer.add_scalar("train/grad_loss", grad_loss.item(), iters)
+                writer.add_scalar("train/si_loss", si_loss.item(), iters)
+                writer.add_scalar("train/grad_loss", grad_loss.item(), iters)
 
             if rank == 0 and i % 100 == 0:
                 logger.info(
@@ -348,8 +348,8 @@ def main():
                         len(trainloader),
                         optimizer.param_groups[0]["lr"],
                         loss.item(),
-                        loss.item(),
-                        loss.item(),
+                        si_loss.item(),
+                        grad_loss.item(),
                     )
                 )
 
@@ -414,7 +414,6 @@ def main():
         for k in results.keys():
             dist.reduce(results[k], dst=0)
         dist.reduce(nsamples, dst=0)
-        print(nsamples)
 
         if rank == 0:
             logger.info(

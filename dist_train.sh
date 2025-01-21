@@ -14,7 +14,7 @@ event_voxel_chans=3
 finetune_mode=decoder # choices=["prompt", "decoder", "freeze", "bias_and_decoder", "overall"], 
 pretrained_from=/home/sph/event/da2-prompt-tuning/exp/fuse_log_l1_eventscape_fuse_cor_20250114_110446/latest.pth
 # pretrained_from=/home/sph/event/da2-prompt-tuning/exp/epde_nl_mvsec_2_decoder_20250116_190436/abs_rel-0.26532474160194397-6.pth
-save_path=/home/sph/event/da2-prompt-tuning/exp/epde_metric_noclip_sigloss_sigmoid_${dataset}_${finetune_mode}_${now}
+save_path=/home/sph/event/da2-prompt-tuning/exp/epde_metric_noclip_mixed_sigmoid_${dataset}_${finetune_mode}_${now}
 
 mkdir -p $save_path
 
@@ -24,7 +24,7 @@ python3 -m torch.distributed.launch \
     --node_rank=0 \
     --master_addr=localhost \
     --master_port=20596 \
-    train_rf.py --epoch $epoch --encoder $encoder --bs $bs --lr $lr --save-path $save_path --dataset $dataset \
+    train.py --epoch $epoch --encoder $encoder --bs $bs --lr $lr --save-path $save_path --dataset $dataset \
     --img-size $img_size --min-depth $min_depth --max-depth $max_depth \
     --event_voxel_chans $event_voxel_chans \
     --pretrained-from $pretrained_from \

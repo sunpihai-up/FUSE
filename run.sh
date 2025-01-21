@@ -7,7 +7,7 @@ load_from=/home/sph/event/da2-prompt-tuning/exp/epde_metric_mvsec_2_decoder_2025
 outdir=/home/sph/event/da2-prompt-tuning/results/test/epde_metric_${dataset}_${scene}_34
 event_voxel_chans=3
 
-python run_rf.py \
+python run.py \
     --encoder $encoder \
     --dataset $dataset --scene $scene \
     --input-size $img_size \
