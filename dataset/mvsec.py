@@ -87,8 +87,8 @@ class MVSEC(Dataset):
         del sample['event_voxel']
 
         sample['valid_mask'] = torch.isfinite(sample["depth"])
-        sample['valid_mask'] = torch.logical_and(sample["valid_mask"], sample['depth'] <= d_max)
-        sample['valid_mask'] = torch.logical_and(sample["valid_mask"], sample['depth'] >= d_min)
+        sample['valid_mask'] = torch.logical_and(sample["valid_mask"], sample['depth'] <= 100)
+        sample['valid_mask'] = torch.logical_and(sample["valid_mask"], sample['depth'] > 0)
         # Remove nan value
         sample["depth"] = torch.nan_to_num(sample["depth"], nan=0.0)
         sample["image_path"] = img_path

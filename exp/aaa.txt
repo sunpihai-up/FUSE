@@ -76,3 +76,23 @@ epde_metric_noclip_sigloss_sigmoid_mvsec_2_decoder_20250120_202107
 * 解码头最后为Sigmoid，乘以最大深度
 * SiLoss为depth anything版本
 * 修改了lora改变模型参数的bug
+
+
+epde_metric_noclip_mixed_mvsec_2_decoder_20250122_150406
+* abs_rel-0.26230141520500183-1
+* 标签没有处理，mask只保留小于等于80的 && 大于等于d_min；
+* 训练时没有crop；
+* 损失函数为MixedLoss
+* 解码头最后为Sigmoid，乘以最大深度
+* SigLoss为depth anything版本
+* 修改了lora改变模型参数的bug
+
+epde_metric_noclip_mixed_mvsec_2_decoder_20250122_150844
+* abs_rel-0.2639985680580139-13
+* 标签没有处理；mask只保留小于等于100 && 大于0；
+* max_depth = 100
+* 训练时没有crop；
+* 损失函数为MixedLoss
+* 解码头最后为Sigmoid，乘以最大深度
+* SigLoss为depth anything版本
+* 修改了lora改变模型参数的bug

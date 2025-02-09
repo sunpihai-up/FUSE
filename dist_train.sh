@@ -1,20 +1,20 @@
 #!/bin/bash
 now=$(date +"%Y%m%d_%H%M%S")
 
-epoch=50
+epoch=20
 bs=24
 gpus=2
 lr=0.000005
 encoder=vitl
-dataset=mvsec_2
+dataset=mvsec_3
 img_size=266
 min_depth=0
-max_depth=80
+max_depth=100
 event_voxel_chans=3
 finetune_mode=decoder # choices=["prompt", "decoder", "freeze", "bias_and_decoder", "overall"], 
 pretrained_from=/home/sph/event/da2-prompt-tuning/exp/fuse_log_l1_eventscape_fuse_cor_20250114_110446/latest.pth
 # pretrained_from=/home/sph/event/da2-prompt-tuning/exp/epde_nl_mvsec_2_decoder_20250116_190436/abs_rel-0.26532474160194397-6.pth
-save_path=/home/sph/event/da2-prompt-tuning/exp/epde_metric_noclip_mixed_sigmoid_${dataset}_${finetune_mode}_${now}
+save_path=/home/sph/event/da2-prompt-tuning/exp/epde_metric_sigloss_${dataset}_${finetune_mode}_${now}
 
 mkdir -p $save_path
 

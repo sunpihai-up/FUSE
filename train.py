@@ -42,7 +42,7 @@ parser.add_argument(
 parser.add_argument(
     "--dataset",
     default="mvsec",
-    choices=["mvsec", "eventscape", "mvsec_2"],
+    choices=["mvsec", "eventscape", "mvsec_2", "mvsec_3"],
 )
 parser.add_argument("--min-depth", default=0.001, type=float)
 parser.add_argument("--max-depth", default=1, type=float)
@@ -84,6 +84,13 @@ def get_dataloader(args):
             normalized_d=args.normalized_depth,
             size=size,
         )
+    elif args.dataset == "mvsec_3":
+        trainset = MVSEC(
+            "dataset/splits/mvsec/train_3.txt",
+            "train",
+            normalized_d=args.normalized_depth,
+            size=size,
+        )
     elif args.dataset == "eventscape":
         trainset = EventScape(
             "dataset/splits/eventscape/train.txt",
@@ -116,6 +123,13 @@ def get_dataloader(args):
             size=size,
         )
     elif args.dataset == "mvsec_2":
+        valset = MVSEC(
+            "./dataset/splits/mvsec/outdoor_night1.txt",
+            "val",
+            normalized_d=args.normalized_depth,
+            size=size,
+        )
+    elif args.dataset == "mvsec_3":
         valset = MVSEC(
             "./dataset/splits/mvsec/outdoor_night1.txt",
             "val",
@@ -320,6 +334,7 @@ def main():
                 depth,
                 valid_mask,
             )
+            loss = si_loss
             # loss = criterion(
             #     pred,
             #     depth,
@@ -341,7 +356,7 @@ def main():
                 writer.add_scalar("train/si_loss", si_loss.item(), iters)
                 writer.add_scalar("train/grad_loss", grad_loss.item(), iters)
 
-            if rank == 0 and i % 100 == 0:
+            if rank == 0 and i % 50 == 0:
                 logger.info(
                     "Iter: {}/{}, LR: {:.7f}, Loss: {:.3f}, SiLoss: {:.3f}, GradLoss: {:.3f}".format(
                         i,

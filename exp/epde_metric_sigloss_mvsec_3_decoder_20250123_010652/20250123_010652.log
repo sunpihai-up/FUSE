@@ -1,0 +1,123 @@
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/distributed/launch.py:183: FutureWarning: The module torch.distributed.launch is deprecated
+and will be removed in future. Use torchrun.
+Note that --use-env is set by default in torchrun.
+If your script expects `--local-rank` argument to be set, please
+change it to read from `os.environ['LOCAL_RANK']` instead. See 
+https://pytorch.org/docs/stable/distributed.html#launch-utility for 
+further instructions
+
+  warnings.warn(
+[2025-01-23 01:06:53,285] torch.distributed.run: [WARNING] 
+[2025-01-23 01:06:53,285] torch.distributed.run: [WARNING] *****************************************
+[2025-01-23 01:06:53,285] torch.distributed.run: [WARNING] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+[2025-01-23 01:06:53,285] torch.distributed.run: [WARNING] *****************************************
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[2025-01-23 01:06:55,757][    INFO] {'bs': 24,
+ 'dataset': 'mvsec_3',
+ 'depth_anything_pretrained': None,
+ 'encoder': 'vitl',
+ 'epochs': 20,
+ 'event_voxel_chans': 3,
+ 'finetune_mode': 'decoder',
+ 'img_size': 266,
+ 'inv': False,
+ 'local_rank': 0,
+ 'lr': 5e-06,
+ 'max_depth': 100.0,
+ 'min_depth': 0.0,
+ 'ngpus': 2,
+ 'normalized_depth': False,
+ 'port': 20596,
+ 'pretrained_from': '/home/sph/event/da2-prompt-tuning/exp/fuse_log_l1_eventscape_fuse_cor_20250114_110446/latest.pth',
+ 'return_feature': False,
+ 'save_path': '/home/sph/event/da2-prompt-tuning/exp/epde_metric_sigloss_mvsec_3_decoder_20250123_010652'}
+
+max_depth: 100.0
+INFO:dinov2:using MLP layer as FFN
+max_depth: 100.0
+INFO:dinov2:using MLP layer as FFN
+INFO:dinov2:using MLP layer as FFN
+INFO:dinov2:using MLP layer as FFN
+Initializing encoder parameters without pre-trained weights
+Initializing encoder parameters without pre-trained weights
+Model weights load from /home/sph/event/da2-prompt-tuning/exp/fuse_log_l1_eventscape_fuse_cor_20250114_110446/latest.pth successfully!
+Model weights load from /home/sph/event/da2-prompt-tuning/exp/fuse_log_l1_eventscape_fuse_cor_20250114_110446/latest.pth successfully!
+The freezing mode of weights is: decoder
+The freezing mode of weights is: decoder
+[2025-01-23 01:07:13,617][    INFO] Total Trainable Parameters: 30947009
+[2025-01-23 01:07:13,617][    INFO] ===========> Epoch: 0/20, d1: 0.000, d2: 0.000, d3: 0.000
+[2025-01-23 01:07:13,617][    INFO] ===========> Epoch: 0/20, abs_rel: 100.000, sq_rel: 100.000, rmse: 100.000, rmse_log: 100.000, log10: 100.000, silog: 100.000
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/autograd/__init__.py:266: UserWarning: Grad strides do not match bucket view strides. This may indicate grad was not created according to the gradient layout contract, or that the param's strides changed since DDP was constructed.  This is not an error, but may impair performance.
+grad.sizes() = [1, 32, 1, 1], strides() = [32, 1, 32, 32]
+bucket_view.sizes() = [1, 32, 1, 1], strides() = [32, 1, 1, 1] (Triggered internally at ../torch/csrc/distributed/c10d/reducer.cpp:322.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/autograd/__init__.py:266: UserWarning: Grad strides do not match bucket view strides. This may indicate grad was not created according to the gradient layout contract, or that the param's strides changed since DDP was constructed.  This is not an error, but may impair performance.
+grad.sizes() = [1, 32, 1, 1], strides() = [32, 1, 32, 32]
+bucket_view.sizes() = [1, 32, 1, 1], strides() = [32, 1, 1, 1] (Triggered internally at ../torch/csrc/distributed/c10d/reducer.cpp:322.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+[2025-01-23 01:07:22,250][    INFO] Iter: 0/316, LR: 0.0000050, Loss: 1.434, SiLoss: 1.434, GradLoss: 0.133
+[2025-01-23 01:08:56,592][    INFO] Iter: 50/316, LR: 0.0000050, Loss: 0.347, SiLoss: 0.347, GradLoss: 0.120
+[2025-01-23 01:10:31,427][    INFO] Iter: 100/316, LR: 0.0000049, Loss: 0.318, SiLoss: 0.318, GradLoss: 0.117
+[2025-01-23 01:12:06,414][    INFO] Iter: 150/316, LR: 0.0000049, Loss: 0.295, SiLoss: 0.295, GradLoss: 0.103
+[2025-01-23 01:13:41,395][    INFO] Iter: 200/316, LR: 0.0000049, Loss: 0.308, SiLoss: 0.308, GradLoss: 0.116
+[2025-01-23 01:15:16,380][    INFO] Iter: 250/316, LR: 0.0000048, Loss: 0.307, SiLoss: 0.307, GradLoss: 0.113
+[2025-01-23 01:16:51,376][    INFO] Iter: 300/316, LR: 0.0000048, Loss: 0.281, SiLoss: 0.281, GradLoss: 0.105
+Traceback (most recent call last):
+  File "/home/sph/event/da2-prompt-tuning/train.py", line 510, in <module>
+    main()
+  File "/home/sph/event/da2-prompt-tuning/train.py", line 421, in main
+    cur_results = eval_depth(pred, depth, dataset=args.dataset)
+  File "/home/sph/event/da2-prompt-tuning/util/metric.py", line 74, in eval_depth
+    reg_factor = dataset2params[dataset]["reg_factor"]
+KeyError: 'mvsec_3'
+Traceback (most recent call last):
+  File "/home/sph/event/da2-prompt-tuning/train.py", line 510, in <module>
+    main()
+  File "/home/sph/event/da2-prompt-tuning/train.py", line 421, in main
+    cur_results = eval_depth(pred, depth, dataset=args.dataset)
+  File "/home/sph/event/da2-prompt-tuning/util/metric.py", line 74, in eval_depth
+    reg_factor = dataset2params[dataset]["reg_factor"]
+KeyError: 'mvsec_3'
+[2025-01-23 01:17:23,923] torch.distributed.elastic.multiprocessing.api: [ERROR] failed (exitcode: 1) local_rank: 0 (pid: 596202) of binary: /home/sph/anaconda3/envs/anything/bin/python3
+Traceback (most recent call last):
+  File "/home/sph/anaconda3/envs/anything/lib/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/sph/anaconda3/envs/anything/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/distributed/launch.py", line 198, in <module>
+    main()
+  File "/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/distributed/launch.py", line 194, in main
+    launch(args)
+  File "/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/distributed/launch.py", line 179, in launch
+    run(args)
+  File "/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/distributed/run.py", line 803, in run
+    elastic_launch(
+  File "/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/distributed/launcher/api.py", line 135, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/distributed/launcher/api.py", line 268, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+train.py FAILED
+------------------------------------------------------------
+Failures:
+[1]:
+  time      : 2025-01-23_01:17:23
+  host      : cannon
+  rank      : 1 (local_rank: 1)
+  exitcode  : 1 (pid: 596203)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2025-01-23_01:17:23
+  host      : cannon
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 596202)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

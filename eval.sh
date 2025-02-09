@@ -1,10 +1,10 @@
 python evaluation.py \
-    --predictions_dataset /home/sph/event/da2-prompt-tuning/results/test/epde_nl_mvsec_2_decoder_mvsec_day1_18/npy \
+    --predictions_dataset /home/sph/event/da2-prompt-tuning/results/test/epde_metric_sigloss_mvsec_day1_11/npy \
     --target_dataset /data_nvme/sph/mvsec_processed/outdoor_day1/depths \
     --clip_distance 80.0 \
     --dataset mvsec \
     --nan_mask \
-    # --metric \
+    --metric \
     # --inv
 
 # python evaluation.py \
