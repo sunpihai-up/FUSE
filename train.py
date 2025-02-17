@@ -20,7 +20,10 @@ from dataset.mvsec import MVSEC
 from dataset.eventscape import EventScape
 
 # from model.epde_modal import EPDE
-from model.epde_modal_metric import EPDE
+# from model.epde_modal_metric import EPDE
+# from model.epde_decouple import EPDE
+from model.epde_dual import EPDE
+
 from model.epde.utils import clean_pretrained_weight
 from util.dist_helper import setup_distributed
 from util.loss import SiLogLoss, MixedLoss, SiLoss, L1_Loss
@@ -51,6 +54,7 @@ parser.add_argument("--epochs", default=40, type=int)
 parser.add_argument("--bs", default=2, type=int)
 parser.add_argument("--lr", default=0.000005, type=float)
 parser.add_argument("--depth-anything-pretrained", type=str)
+parser.add_argument("--prompt-encoder-pretrained", type=str)
 parser.add_argument("--pretrained-from", type=str)
 parser.add_argument("--save-path", type=str, required=True)
 parser.add_argument("--local-rank", default=0, type=int)
@@ -61,7 +65,7 @@ parser.add_argument("--inv", action="store_true")
 parser.add_argument("--return-feature", action="store_true")
 parser.add_argument(
     "--finetune-mode",
-    choices=["prompt_fuse", "decoder", "overall", "freeze"],
+    choices=["feature_fusion", "decoder", "overall", "freeze", "lora"],
     type=str,
 )
 
@@ -183,11 +187,21 @@ def main():
     local_rank = int(os.environ["LOCAL_RANK"])
 
     # Instantiate Model
+    # model = EPDE(
+    #     model_name=args.encoder,
+    #     max_depth=args.max_depth,
+    #     event_voxel_chans=args.event_voxel_chans,
+    #     return_feature=args.return_feature,
+    #     # inv=args.inv,
+    # )
+    
     model = EPDE(
         model_name=args.encoder,
         max_depth=args.max_depth,
         event_voxel_chans=args.event_voxel_chans,
         return_feature=args.return_feature,
+        depth_anything_pretrained=args.depth_anything_pretrained,
+        prompt_encoder_pretrained=args.prompt_encoder_pretrained,
         # inv=args.inv,
     )
 
@@ -209,20 +223,31 @@ def main():
         find_unused_parameters=True,
     )
 
-    # criterion = SiLogLoss().cuda(local_rank)
+    criterion = SiLogLoss(do_sqrt=True).cuda(local_rank)
     # criterion = SiLoss().cuda(local_rank)
     # criterion = L1_Loss().cuda(local_rank)
-    criterion = MixedLoss(do_sqrt=True).cuda(local_rank)
+    # criterion = MixedLoss(do_sqrt=True).cuda(local_rank)
 
     # Handling frozen parameters
     if args.finetune_mode == "decoder":
         for name, param in model.named_parameters():
             if "depth_head" not in name:
                 param.requires_grad = False
-    elif args.finetune_mode == "prompt_fuse":
+    elif args.finetune_mode == "feature_fusion":
         for name, param in model.named_parameters():
-            if "depth_head" not in name and "prompt_fuse" not in name:
+            if "depth_head" not in name and "feature_fusion" not in name:
                 param.requires_grad = False
+    elif args.finetune_mode == "lora":
+        for name, param in model.named_parameters():
+            if "encoder" in name:
+                if "blocks" not in name:
+                    param.requires_grad = True
+                elif "lora" in name:
+                    param.requires_grad = True
+                else:
+                    param.requires_grad = False
+            else:
+                param.requires_grad = True
     elif args.finetune_mode == "overall":
         for name, param in model.named_parameters():
             param.requires_grad = True
@@ -239,7 +264,7 @@ def main():
                 "params": [
                     param
                     for name, param in model.named_parameters()
-                    if "depth_head" not in name and param.requires_grad
+                    if "encoder.blocks" in name and param.requires_grad
                 ],
                 "lr": args.lr,
             },
@@ -247,10 +272,18 @@ def main():
                 "params": [
                     param
                     for name, param in model.named_parameters()
-                    if "depth_head" in name and param.requires_grad
+                    if "encoder.blocks" not in name and param.requires_grad
                 ],
                 "lr": args.lr * 10.0,
             },
+            # {
+            #     "params": [
+            #         param
+            #         for name, param in model.named_parameters()
+            #         if "lora" in name and param.requires_grad
+            #     ],
+            #     "lr": args.lr * 10.0,
+            # },
         ],
         lr=args.lr,
         betas=(0.9, 0.999),
@@ -273,9 +306,9 @@ def main():
 
     if rank == 0:
         # Log module names and trainable parameter counts
-        # for name, param in model.named_parameters():
-        #     if param.requires_grad:
-        #         logger.info(f"Module: {name}, Trainable Parameters: {param.numel()}")
+        for name, param in model.named_parameters():
+            if param.requires_grad:
+                logger.info(f"Module: {name}, Trainable Parameters: {param.numel()}")
 
         # Optional: Total trainable parameters
         total_trainable_params = sum(
@@ -329,17 +362,17 @@ def main():
 
             pred = model(img)
             # print(pred.min(), pred.max(), depth[torch.isfinite(depth)].min(), depth[torch.isfinite(depth)].max())
-            loss, si_loss, grad_loss = criterion(
-                pred,
-                depth,
-                valid_mask,
-            )
-            loss = si_loss
-            # loss = criterion(
+            # loss, si_loss, grad_loss = criterion(
             #     pred,
             #     depth,
             #     valid_mask,
             # )
+            # loss = si_loss
+            loss = criterion(
+                pred,
+                depth,
+                valid_mask,
+            )
 
             loss.backward()
             optimizer.step()
@@ -353,8 +386,8 @@ def main():
 
             if rank == 0:
                 writer.add_scalar("train/loss", loss.item(), iters)
-                writer.add_scalar("train/si_loss", si_loss.item(), iters)
-                writer.add_scalar("train/grad_loss", grad_loss.item(), iters)
+                writer.add_scalar("train/si_loss", loss.item(), iters)
+                writer.add_scalar("train/grad_loss", loss.item(), iters)
 
             if rank == 0 and i % 50 == 0:
                 logger.info(
@@ -363,8 +396,8 @@ def main():
                         len(trainloader),
                         optimizer.param_groups[0]["lr"],
                         loss.item(),
-                        si_loss.item(),
-                        grad_loss.item(),
+                        loss.item(),
+                        loss.item(),
                     )
                 )
 

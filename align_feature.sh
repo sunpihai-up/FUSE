@@ -1,7 +1,7 @@
 #!/bin/bash
 now=$(date +"%Y%m%d_%H%M%S")
 
-epoch=5
+epoch=10
 bs=24
 gpus=2
 lr=0.000005
@@ -10,7 +10,7 @@ dataset=eventscape_align
 img_size=266
 event_voxel_chans=3
 load_from=/data_nvme/sph/da2_checkpoints/depth_anything_v2_vitl.pth
-save_path=/data/coding/code/da2-prompt-tuning/exp/align_logl1_fea_${dataset}_${now}
+save_path=/home/sph/event/da2-prompt-tuning/exp/align_fealoss_${dataset}_${now}
 
 mkdir -p $save_path
 

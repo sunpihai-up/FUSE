@@ -25,7 +25,7 @@ from model.depth_anything_v2.dpt_align_lora import DepthAnythingV2_lora
 
 from util.dist_helper import setup_distributed
 from util.loss import SiLogLoss, FeatureCosLoss, MixedLoss, L1_Loss
-from util.metric import eval_depth, eval_depth_ori, eval_disparity
+from util.metric import eval_depth, eval_disparity
 from util.utils import init_log
 
 import loralib as lora
@@ -218,8 +218,8 @@ def main():
     teacher_model.eval()
 
     # Train student by LoRA
-    lora.mark_only_lora_as_trainable(student_model, bias="all")
-    # lora.mark_only_lora_as_trainable(student_model)
+    # lora.mark_only_lora_as_trainable(student_model, bias="all")
+    lora.mark_only_lora_as_trainable(student_model)
     for name, param in student_model.named_parameters():
         # Add cls_token, patch_embed, pos_embed for train
         if "pretrained" in name and "blocks" not in name:
@@ -228,9 +228,9 @@ def main():
             param.requires_grad = False
 
     # criterion = SiLogLoss().cuda(local_rank)
-    criterion = MixedLoss(log_normalize=True).cuda(local_rank)
+    criterion = MixedLoss(do_sqrt=True).cuda(local_rank)
     feature_loss = FeatureCosLoss(beta=0.2).cuda(local_rank)
-    l1_loss = L1_Loss(log_normalized=True).cuda(local_rank)
+    l1_loss = L1_Loss(log_normalized=False).cuda(local_rank)
 
     # Configure optimizer to include only trainable parameters
     optimizer = AdamW(
@@ -360,13 +360,15 @@ def main():
             # exit()
 
             valid_mask = torch.ones_like(student_pred, dtype=torch.bool)
-            loss, si_loss, grad_loss = criterion(student_pred, teacher_pred, valid_mask)
+            # loss, si_loss, grad_loss = criterion(student_pred, teacher_pred, valid_mask)
             fea_loss = feature_loss(student_features, teacher_features)
 
             l1 = l1_loss(student_pred, teacher_pred, valid_mask)
             # total_loss = loss + fea_loss
             # total_loss = loss
-            total_loss = l1 + fea_loss
+            # total_loss = l1 + fea_loss
+            # total_loss = l1
+            total_loss = fea_loss
             total_loss.backward()
             optimizer.step()
 
@@ -379,9 +381,9 @@ def main():
             optimizer.param_groups[2]["lr"] = lr * 10.0
 
             if rank == 0:
-                writer.add_scalar("train/loss", loss.item(), iters)
-                writer.add_scalar("train/si_loss", si_loss.item(), iters)
-                writer.add_scalar("train/grad_loss", grad_loss.item(), iters)
+                writer.add_scalar("train/loss", l1.item(), iters)
+                writer.add_scalar("train/si_loss", l1.item(), iters)
+                writer.add_scalar("train/grad_loss", l1.item(), iters)
                 writer.add_scalar("train/feature_loss", fea_loss.item(), iters)
                 writer.add_scalar("train/feature_loss", total_loss.item(), iters)
 
@@ -392,8 +394,8 @@ def main():
                         len(trainloader),
                         optimizer.param_groups[0]["lr"],
                         total_loss.item(),
-                        si_loss.item(),
-                        grad_loss.item(),
+                        l1.item(),
+                        l1.item(),
                         fea_loss.item(),
                     )
                 )

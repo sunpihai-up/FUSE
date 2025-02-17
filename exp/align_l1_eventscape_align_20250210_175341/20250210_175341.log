@@ -1,0 +1,563 @@
+/home/sph/anaconda3/envs/anything/lib/python3.9/site-packages/torch/distributed/launch.py:183: FutureWarning: The module torch.distributed.launch is deprecated
+and will be removed in future. Use torchrun.
+Note that --use-env is set by default in torchrun.
+If your script expects `--local-rank` argument to be set, please
+change it to read from `os.environ['LOCAL_RANK']` instead. See 
+https://pytorch.org/docs/stable/distributed.html#launch-utility for 
+further instructions
+
+  warnings.warn(
+[2025-02-10 17:53:44,196] torch.distributed.run: [WARNING] 
+[2025-02-10 17:53:44,196] torch.distributed.run: [WARNING] *****************************************
+[2025-02-10 17:53:44,196] torch.distributed.run: [WARNING] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+[2025-02-10 17:53:44,196] torch.distributed.run: [WARNING] *****************************************
+[2025-02-10 17:53:48,154][    INFO] {'bs': 24,
+ 'dataset': 'eventscape_align',
+ 'encoder': 'vitl',
+ 'epochs': 10,
+ 'event_voxel_chans': 3,
+ 'img_size': 266,
+ 'load_from': '/data_nvme/sph/da2_checkpoints/depth_anything_v2_vitl.pth',
+ 'local_rank': 0,
+ 'lr': 5e-06,
+ 'ngpus': 2,
+ 'port': 20596,
+ 'return_feature': True,
+ 'save_path': '/home/sph/event/da2-prompt-tuning/exp/align_l1_eventscape_align_20250210_175341'}
+
+INFO:dinov2:using MLP layer as FFN
+INFO:dinov2:using MLP layer as FFN
+INFO:dinov2:using MLP layer as FFN
+INFO:dinov2:using MLP layer as FFN
+Model weights load from /data_nvme/sph/da2_checkpoints/depth_anything_v2_vitl.pth successfully!
+Model weights load from /data_nvme/sph/da2_checkpoints/depth_anything_v2_vitl.pth successfully!
+[2025-02-10 17:54:06,946][    INFO] Module: module.pretrained.cls_token, Trainable Parameters: 1024
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.pos_embed, Trainable Parameters: 1402880
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.mask_token, Trainable Parameters: 1024
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.patch_embed.proj.weight, Trainable Parameters: 602112
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.patch_embed.proj.bias, Trainable Parameters: 1024
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.0.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.0.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.0.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.0.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.0.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.0.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.0.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.0.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.1.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.1.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.1.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.1.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.1.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.1.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.1.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.1.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.2.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.2.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.2.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.2.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.2.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.2.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.2.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.2.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.3.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.3.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.3.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.3.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.3.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.3.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.3.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.3.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.4.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.4.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.4.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,947][    INFO] Module: module.pretrained.blocks.4.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.4.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.4.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.4.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.4.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.5.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.5.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.5.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.5.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.5.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.5.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.5.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.5.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.6.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.6.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.6.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.6.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.6.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.6.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.6.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.6.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.7.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.7.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.7.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.7.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.7.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.7.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.7.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.7.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.8.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.8.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.8.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.8.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.8.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.8.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.8.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.8.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.9.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.9.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.9.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.9.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.9.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,948][    INFO] Module: module.pretrained.blocks.9.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.9.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.9.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.10.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.10.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.10.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.10.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.10.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.10.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.10.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.10.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.11.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.11.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.11.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.11.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.11.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.11.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.11.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.11.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.12.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.12.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.12.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.12.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.12.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.12.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.12.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.12.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.13.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.13.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.13.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.13.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.13.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.13.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.13.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.13.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.14.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.14.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.14.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.14.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.14.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.14.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-02-10 17:54:06,949][    INFO] Module: module.pretrained.blocks.14.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.14.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.15.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.15.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.15.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.15.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.15.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.15.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.15.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.15.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.16.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.16.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.16.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.16.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.16.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.16.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.16.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.16.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.17.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.17.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.17.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.17.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.17.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.17.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.17.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.17.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.18.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.18.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.18.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.18.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.18.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.18.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.18.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.18.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.19.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.19.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.19.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.19.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.19.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.19.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.19.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-02-10 17:54:06,950][    INFO] Module: module.pretrained.blocks.19.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.20.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.20.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.20.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.20.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.20.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.20.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.20.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.20.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.21.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.21.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.21.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.21.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.21.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.21.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.21.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.21.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.22.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.22.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.22.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.22.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.22.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.22.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.22.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.22.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.23.attn.qkv.lora_A, Trainable Parameters: 24576
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.23.attn.qkv.lora_B, Trainable Parameters: 24576
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.23.attn.proj.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.23.attn.proj.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.23.mlp.fc1.lora_A, Trainable Parameters: 8192
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.23.mlp.fc1.lora_B, Trainable Parameters: 32768
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.23.mlp.fc2.lora_A, Trainable Parameters: 32768
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.blocks.23.mlp.fc2.lora_B, Trainable Parameters: 8192
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.norm.weight, Trainable Parameters: 1024
+[2025-02-10 17:54:06,951][    INFO] Module: module.pretrained.norm.bias, Trainable Parameters: 1024
+[2025-02-10 17:54:06,952][    INFO] Total Trainable Parameters: 5549056
+[2025-02-10 17:54:06,952][    INFO] ===========> Epoch: 0/10, d1: 0.000, d2: 0.000, d3: 0.000
+[2025-02-10 17:54:06,953][    INFO] ===========> Epoch: 0/10, abs_rel: 100.000, sq_rel: 100.000, rmse: 100.000, rmse_log: 100.000, log10: 100.000, silog: 100.000
+[2025-02-10 17:54:14,089][    INFO] Iter: 0/2548, LR: 0.0000050, Loss: 95.399, si_loss: 95.399, grad_loss: 95.399, fea_loss: 0.395
+[2025-02-10 17:57:21,060][    INFO] Iter: 100/2548, LR: 0.0000050, Loss: 16.322, si_loss: 16.322, grad_loss: 16.322, fea_loss: 0.322
+[2025-02-10 18:00:29,293][    INFO] Iter: 200/2548, LR: 0.0000050, Loss: 15.273, si_loss: 15.273, grad_loss: 15.273, fea_loss: 0.323
+[2025-02-10 18:03:37,694][    INFO] Iter: 300/2548, LR: 0.0000049, Loss: 12.372, si_loss: 12.372, grad_loss: 12.372, fea_loss: 0.310
+[2025-02-10 18:06:46,188][    INFO] Iter: 400/2548, LR: 0.0000049, Loss: 16.387, si_loss: 16.387, grad_loss: 16.387, fea_loss: 0.311
+[2025-02-10 18:09:54,681][    INFO] Iter: 500/2548, LR: 0.0000049, Loss: 13.860, si_loss: 13.860, grad_loss: 13.860, fea_loss: 0.313
+[2025-02-10 18:13:03,295][    INFO] Iter: 600/2548, LR: 0.0000049, Loss: 13.031, si_loss: 13.031, grad_loss: 13.031, fea_loss: 0.309
+[2025-02-10 18:16:11,906][    INFO] Iter: 700/2548, LR: 0.0000049, Loss: 15.569, si_loss: 15.569, grad_loss: 15.569, fea_loss: 0.315
+[2025-02-10 18:19:20,398][    INFO] Iter: 800/2548, LR: 0.0000049, Loss: 13.441, si_loss: 13.441, grad_loss: 13.441, fea_loss: 0.307
+[2025-02-10 18:22:28,894][    INFO] Iter: 900/2548, LR: 0.0000048, Loss: 12.956, si_loss: 12.956, grad_loss: 12.956, fea_loss: 0.306
+[2025-02-10 18:25:37,323][    INFO] Iter: 1000/2548, LR: 0.0000048, Loss: 12.431, si_loss: 12.431, grad_loss: 12.431, fea_loss: 0.306
+[2025-02-10 18:28:45,840][    INFO] Iter: 1100/2548, LR: 0.0000048, Loss: 12.208, si_loss: 12.208, grad_loss: 12.208, fea_loss: 0.310
+[2025-02-10 18:31:54,178][    INFO] Iter: 1200/2548, LR: 0.0000048, Loss: 10.551, si_loss: 10.551, grad_loss: 10.551, fea_loss: 0.304
+[2025-02-10 18:35:02,393][    INFO] Iter: 1300/2548, LR: 0.0000048, Loss: 11.495, si_loss: 11.495, grad_loss: 11.495, fea_loss: 0.302
+[2025-02-10 18:38:10,601][    INFO] Iter: 1400/2548, LR: 0.0000048, Loss: 11.928, si_loss: 11.928, grad_loss: 11.928, fea_loss: 0.307
+[2025-02-10 18:41:18,845][    INFO] Iter: 1500/2548, LR: 0.0000047, Loss: 10.037, si_loss: 10.037, grad_loss: 10.037, fea_loss: 0.299
+[2025-02-10 18:44:27,060][    INFO] Iter: 1600/2548, LR: 0.0000047, Loss: 9.517, si_loss: 9.517, grad_loss: 9.517, fea_loss: 0.297
+[2025-02-10 18:47:35,124][    INFO] Iter: 1700/2548, LR: 0.0000047, Loss: 12.688, si_loss: 12.688, grad_loss: 12.688, fea_loss: 0.306
+[2025-02-10 18:50:43,235][    INFO] Iter: 1800/2548, LR: 0.0000047, Loss: 13.780, si_loss: 13.780, grad_loss: 13.780, fea_loss: 0.306
+[2025-02-10 18:53:51,429][    INFO] Iter: 1900/2548, LR: 0.0000047, Loss: 12.793, si_loss: 12.793, grad_loss: 12.793, fea_loss: 0.304
+[2025-02-10 18:56:59,608][    INFO] Iter: 2000/2548, LR: 0.0000046, Loss: 11.292, si_loss: 11.292, grad_loss: 11.292, fea_loss: 0.302
+[2025-02-10 19:00:09,261][    INFO] Iter: 2100/2548, LR: 0.0000046, Loss: 11.310, si_loss: 11.310, grad_loss: 11.310, fea_loss: 0.299
+[2025-02-10 19:03:17,448][    INFO] Iter: 2200/2548, LR: 0.0000046, Loss: 9.722, si_loss: 9.722, grad_loss: 9.722, fea_loss: 0.295
+[2025-02-10 19:06:25,659][    INFO] Iter: 2300/2548, LR: 0.0000046, Loss: 11.468, si_loss: 11.468, grad_loss: 11.468, fea_loss: 0.296
+[2025-02-10 19:09:33,912][    INFO] Iter: 2400/2548, LR: 0.0000046, Loss: 12.914, si_loss: 12.914, grad_loss: 12.914, fea_loss: 0.304
+[2025-02-10 19:12:42,217][    INFO] Iter: 2500/2548, LR: 0.0000046, Loss: 9.719, si_loss: 9.719, grad_loss: 9.719, fea_loss: 0.294
+[2025-02-10 19:15:08,212][    INFO] ==========================================================================================
+[2025-02-10 19:15:08,212][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-02-10 19:15:08,213][    INFO]    0.878,    0.943,    0.963, 9314.707, 93145640.000, 1309.807,    1.688,    0.151,    1.680
+[2025-02-10 19:15:08,213][    INFO] ==========================================================================================
+
+[2025-02-10 19:15:11,752][    INFO] ===========> Epoch: 1/10, d1: 0.878, d2: 0.943, d3: 0.963
+[2025-02-10 19:15:11,752][    INFO] ===========> Epoch: 1/10, abs_rel: 100.000, sq_rel: 100.000, rmse: 100.000, rmse_log: 1.688, log10: 0.151, silog: 1.680
+[2025-02-10 19:15:14,393][    INFO] Iter: 0/2548, LR: 0.0000045, Loss: 9.483, si_loss: 9.483, grad_loss: 9.483, fea_loss: 0.297
+[2025-02-10 19:18:22,547][    INFO] Iter: 100/2548, LR: 0.0000045, Loss: 9.723, si_loss: 9.723, grad_loss: 9.723, fea_loss: 0.299
+[2025-02-10 19:21:30,871][    INFO] Iter: 200/2548, LR: 0.0000045, Loss: 10.892, si_loss: 10.892, grad_loss: 10.892, fea_loss: 0.305
+[2025-02-10 19:24:39,179][    INFO] Iter: 300/2548, LR: 0.0000045, Loss: 9.649, si_loss: 9.649, grad_loss: 9.649, fea_loss: 0.295
+[2025-02-10 19:27:47,513][    INFO] Iter: 400/2548, LR: 0.0000045, Loss: 8.624, si_loss: 8.624, grad_loss: 8.624, fea_loss: 0.292
+[2025-02-10 19:30:55,849][    INFO] Iter: 500/2548, LR: 0.0000045, Loss: 9.868, si_loss: 9.868, grad_loss: 9.868, fea_loss: 0.301
+[2025-02-10 19:34:04,120][    INFO] Iter: 600/2548, LR: 0.0000044, Loss: 9.916, si_loss: 9.916, grad_loss: 9.916, fea_loss: 0.306
+[2025-02-10 19:37:12,208][    INFO] Iter: 700/2548, LR: 0.0000044, Loss: 9.220, si_loss: 9.220, grad_loss: 9.220, fea_loss: 0.299
+[2025-02-10 19:40:20,433][    INFO] Iter: 800/2548, LR: 0.0000044, Loss: 9.067, si_loss: 9.067, grad_loss: 9.067, fea_loss: 0.303
+[2025-02-10 19:43:28,604][    INFO] Iter: 900/2548, LR: 0.0000044, Loss: 10.054, si_loss: 10.054, grad_loss: 10.054, fea_loss: 0.306
+[2025-02-10 19:46:36,866][    INFO] Iter: 1000/2548, LR: 0.0000044, Loss: 9.608, si_loss: 9.608, grad_loss: 9.608, fea_loss: 0.295
+[2025-02-10 19:49:45,086][    INFO] Iter: 1100/2548, LR: 0.0000044, Loss: 10.342, si_loss: 10.342, grad_loss: 10.342, fea_loss: 0.303
+[2025-02-10 19:52:53,277][    INFO] Iter: 1200/2548, LR: 0.0000043, Loss: 10.046, si_loss: 10.046, grad_loss: 10.046, fea_loss: 0.300
+[2025-02-10 19:56:01,523][    INFO] Iter: 1300/2548, LR: 0.0000043, Loss: 8.843, si_loss: 8.843, grad_loss: 8.843, fea_loss: 0.299
+[2025-02-10 19:59:09,848][    INFO] Iter: 1400/2548, LR: 0.0000043, Loss: 9.158, si_loss: 9.158, grad_loss: 9.158, fea_loss: 0.304
+[2025-02-10 20:02:20,055][    INFO] Iter: 1500/2548, LR: 0.0000043, Loss: 9.240, si_loss: 9.240, grad_loss: 9.240, fea_loss: 0.297
+[2025-02-10 20:05:28,278][    INFO] Iter: 1600/2548, LR: 0.0000043, Loss: 11.447, si_loss: 11.447, grad_loss: 11.447, fea_loss: 0.301
+[2025-02-10 20:08:36,605][    INFO] Iter: 1700/2548, LR: 0.0000042, Loss: 8.245, si_loss: 8.245, grad_loss: 8.245, fea_loss: 0.294
+[2025-02-10 20:11:44,834][    INFO] Iter: 1800/2548, LR: 0.0000042, Loss: 9.278, si_loss: 9.278, grad_loss: 9.278, fea_loss: 0.288
+[2025-02-10 20:14:53,102][    INFO] Iter: 1900/2548, LR: 0.0000042, Loss: 9.877, si_loss: 9.877, grad_loss: 9.877, fea_loss: 0.302
+[2025-02-10 20:18:01,319][    INFO] Iter: 2000/2548, LR: 0.0000042, Loss: 9.971, si_loss: 9.971, grad_loss: 9.971, fea_loss: 0.298
+[2025-02-10 20:21:09,613][    INFO] Iter: 2100/2548, LR: 0.0000042, Loss: 9.338, si_loss: 9.338, grad_loss: 9.338, fea_loss: 0.304
+[2025-02-10 20:24:17,878][    INFO] Iter: 2200/2548, LR: 0.0000042, Loss: 9.131, si_loss: 9.131, grad_loss: 9.131, fea_loss: 0.293
+[2025-02-10 20:27:26,071][    INFO] Iter: 2300/2548, LR: 0.0000041, Loss: 8.424, si_loss: 8.424, grad_loss: 8.424, fea_loss: 0.302
+[2025-02-10 20:30:34,256][    INFO] Iter: 2400/2548, LR: 0.0000041, Loss: 7.696, si_loss: 7.696, grad_loss: 7.696, fea_loss: 0.294
+[2025-02-10 20:33:42,419][    INFO] Iter: 2500/2548, LR: 0.0000041, Loss: 9.575, si_loss: 9.575, grad_loss: 9.575, fea_loss: 0.302
+[2025-02-10 20:36:08,303][    INFO] ==========================================================================================
+[2025-02-10 20:36:08,303][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-02-10 20:36:08,304][    INFO]    0.879,    0.944,    0.964, 8817.593, 88174624.000, 1278.739,    1.649,    0.145,    1.642
+[2025-02-10 20:36:08,304][    INFO] ==========================================================================================
+
+[2025-02-10 20:36:11,694][    INFO] ===========> Epoch: 2/10, d1: 0.879, d2: 0.944, d3: 0.964
+[2025-02-10 20:36:11,694][    INFO] ===========> Epoch: 2/10, abs_rel: 100.000, sq_rel: 100.000, rmse: 100.000, rmse_log: 1.649, log10: 0.145, silog: 1.642
+[2025-02-10 20:36:14,412][    INFO] Iter: 0/2548, LR: 0.0000041, Loss: 9.337, si_loss: 9.337, grad_loss: 9.337, fea_loss: 0.297
+[2025-02-10 20:39:22,570][    INFO] Iter: 100/2548, LR: 0.0000041, Loss: 9.368, si_loss: 9.368, grad_loss: 9.368, fea_loss: 0.303
+[2025-02-10 20:42:30,773][    INFO] Iter: 200/2548, LR: 0.0000041, Loss: 7.201, si_loss: 7.201, grad_loss: 7.201, fea_loss: 0.284
+[2025-02-10 20:45:38,996][    INFO] Iter: 300/2548, LR: 0.0000040, Loss: 9.106, si_loss: 9.106, grad_loss: 9.106, fea_loss: 0.292
+[2025-02-10 20:48:47,130][    INFO] Iter: 400/2548, LR: 0.0000040, Loss: 7.473, si_loss: 7.473, grad_loss: 7.473, fea_loss: 0.286
+[2025-02-10 20:51:55,313][    INFO] Iter: 500/2548, LR: 0.0000040, Loss: 8.003, si_loss: 8.003, grad_loss: 8.003, fea_loss: 0.285
+[2025-02-10 20:55:03,510][    INFO] Iter: 600/2548, LR: 0.0000040, Loss: 7.753, si_loss: 7.753, grad_loss: 7.753, fea_loss: 0.285
+[2025-02-10 20:58:11,708][    INFO] Iter: 700/2548, LR: 0.0000040, Loss: 8.965, si_loss: 8.965, grad_loss: 8.965, fea_loss: 0.302
+[2025-02-10 21:01:19,939][    INFO] Iter: 800/2548, LR: 0.0000039, Loss: 8.236, si_loss: 8.236, grad_loss: 8.236, fea_loss: 0.296
+[2025-02-10 21:04:28,146][    INFO] Iter: 900/2548, LR: 0.0000039, Loss: 7.936, si_loss: 7.936, grad_loss: 7.936, fea_loss: 0.294
+[2025-02-10 21:07:38,443][    INFO] Iter: 1000/2548, LR: 0.0000039, Loss: 8.436, si_loss: 8.436, grad_loss: 8.436, fea_loss: 0.302
+[2025-02-10 21:10:46,600][    INFO] Iter: 1100/2548, LR: 0.0000039, Loss: 8.358, si_loss: 8.358, grad_loss: 8.358, fea_loss: 0.294
+[2025-02-10 21:13:54,777][    INFO] Iter: 1200/2548, LR: 0.0000039, Loss: 9.652, si_loss: 9.652, grad_loss: 9.652, fea_loss: 0.292
+[2025-02-10 21:17:02,926][    INFO] Iter: 1300/2548, LR: 0.0000039, Loss: 10.122, si_loss: 10.122, grad_loss: 10.122, fea_loss: 0.301
+[2025-02-10 21:20:11,081][    INFO] Iter: 1400/2548, LR: 0.0000038, Loss: 8.392, si_loss: 8.392, grad_loss: 8.392, fea_loss: 0.296
+[2025-02-10 21:23:19,251][    INFO] Iter: 1500/2548, LR: 0.0000038, Loss: 7.833, si_loss: 7.833, grad_loss: 7.833, fea_loss: 0.293
+[2025-02-10 21:26:27,213][    INFO] Iter: 1600/2548, LR: 0.0000038, Loss: 9.028, si_loss: 9.028, grad_loss: 9.028, fea_loss: 0.302
+[2025-02-10 21:29:35,290][    INFO] Iter: 1700/2548, LR: 0.0000038, Loss: 8.575, si_loss: 8.575, grad_loss: 8.575, fea_loss: 0.290
+[2025-02-10 21:32:43,403][    INFO] Iter: 1800/2548, LR: 0.0000038, Loss: 9.528, si_loss: 9.528, grad_loss: 9.528, fea_loss: 0.300
+[2025-02-10 21:35:51,460][    INFO] Iter: 1900/2548, LR: 0.0000037, Loss: 8.431, si_loss: 8.431, grad_loss: 8.431, fea_loss: 0.292
+[2025-02-10 21:38:59,608][    INFO] Iter: 2000/2548, LR: 0.0000037, Loss: 8.150, si_loss: 8.150, grad_loss: 8.150, fea_loss: 0.292
+[2025-02-10 21:42:07,705][    INFO] Iter: 2100/2548, LR: 0.0000037, Loss: 7.612, si_loss: 7.612, grad_loss: 7.612, fea_loss: 0.291
+[2025-02-10 21:45:15,680][    INFO] Iter: 2200/2548, LR: 0.0000037, Loss: 9.761, si_loss: 9.761, grad_loss: 9.761, fea_loss: 0.293
+[2025-02-10 21:48:23,781][    INFO] Iter: 2300/2548, LR: 0.0000037, Loss: 8.137, si_loss: 8.137, grad_loss: 8.137, fea_loss: 0.292
+[2025-02-10 21:51:31,844][    INFO] Iter: 2400/2548, LR: 0.0000037, Loss: 9.362, si_loss: 9.362, grad_loss: 9.362, fea_loss: 0.296
+[2025-02-10 21:54:39,824][    INFO] Iter: 2500/2548, LR: 0.0000036, Loss: 7.809, si_loss: 7.809, grad_loss: 7.809, fea_loss: 0.279
+[2025-02-10 21:57:05,432][    INFO] ==========================================================================================
+[2025-02-10 21:57:05,433][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-02-10 21:57:05,433][    INFO]    0.882,    0.946,    0.966, 8359.852, 83597248.000, 1263.568,    1.629,    0.142,    1.622
+[2025-02-10 21:57:05,433][    INFO] ==========================================================================================
+
+[2025-02-10 21:57:08,911][    INFO] ===========> Epoch: 3/10, d1: 0.882, d2: 0.946, d3: 0.966
+[2025-02-10 21:57:08,911][    INFO] ===========> Epoch: 3/10, abs_rel: 100.000, sq_rel: 100.000, rmse: 100.000, rmse_log: 1.629, log10: 0.142, silog: 1.622
+[2025-02-10 21:57:12,255][    INFO] Iter: 0/2548, LR: 0.0000036, Loss: 9.254, si_loss: 9.254, grad_loss: 9.254, fea_loss: 0.294
+[2025-02-10 22:00:20,148][    INFO] Iter: 100/2548, LR: 0.0000036, Loss: 8.643, si_loss: 8.643, grad_loss: 8.643, fea_loss: 0.296
+[2025-02-10 22:03:28,226][    INFO] Iter: 200/2548, LR: 0.0000036, Loss: 7.477, si_loss: 7.477, grad_loss: 7.477, fea_loss: 0.295
+[2025-02-10 22:06:36,318][    INFO] Iter: 300/2548, LR: 0.0000036, Loss: 9.832, si_loss: 9.832, grad_loss: 9.832, fea_loss: 0.297
+[2025-02-10 22:09:46,469][    INFO] Iter: 400/2548, LR: 0.0000036, Loss: 9.707, si_loss: 9.707, grad_loss: 9.707, fea_loss: 0.301
+[2025-02-10 22:12:54,541][    INFO] Iter: 500/2548, LR: 0.0000035, Loss: 8.864, si_loss: 8.864, grad_loss: 8.864, fea_loss: 0.295
+[2025-02-10 22:16:02,510][    INFO] Iter: 600/2548, LR: 0.0000035, Loss: 8.145, si_loss: 8.145, grad_loss: 8.145, fea_loss: 0.288
+[2025-02-10 22:19:10,465][    INFO] Iter: 700/2548, LR: 0.0000035, Loss: 8.553, si_loss: 8.553, grad_loss: 8.553, fea_loss: 0.297
+[2025-02-10 22:22:18,443][    INFO] Iter: 800/2548, LR: 0.0000035, Loss: 10.009, si_loss: 10.009, grad_loss: 10.009, fea_loss: 0.294
+[2025-02-10 22:25:26,067][    INFO] Iter: 900/2548, LR: 0.0000035, Loss: 8.140, si_loss: 8.140, grad_loss: 8.140, fea_loss: 0.293
+[2025-02-10 22:28:34,040][    INFO] Iter: 1000/2548, LR: 0.0000034, Loss: 8.000, si_loss: 8.000, grad_loss: 8.000, fea_loss: 0.299
+[2025-02-10 22:31:41,982][    INFO] Iter: 1100/2548, LR: 0.0000034, Loss: 8.219, si_loss: 8.219, grad_loss: 8.219, fea_loss: 0.292
+[2025-02-10 22:34:49,956][    INFO] Iter: 1200/2548, LR: 0.0000034, Loss: 8.450, si_loss: 8.450, grad_loss: 8.450, fea_loss: 0.289
+[2025-02-10 22:37:57,849][    INFO] Iter: 1300/2548, LR: 0.0000034, Loss: 7.808, si_loss: 7.808, grad_loss: 7.808, fea_loss: 0.296
+[2025-02-10 22:41:05,861][    INFO] Iter: 1400/2548, LR: 0.0000034, Loss: 8.226, si_loss: 8.226, grad_loss: 8.226, fea_loss: 0.295
+[2025-02-10 22:44:13,885][    INFO] Iter: 1500/2548, LR: 0.0000034, Loss: 9.464, si_loss: 9.464, grad_loss: 9.464, fea_loss: 0.299
+[2025-02-10 22:47:21,902][    INFO] Iter: 1600/2548, LR: 0.0000033, Loss: 7.302, si_loss: 7.302, grad_loss: 7.302, fea_loss: 0.285
+[2025-02-10 22:50:29,861][    INFO] Iter: 1700/2548, LR: 0.0000033, Loss: 8.908, si_loss: 8.908, grad_loss: 8.908, fea_loss: 0.305
+[2025-02-10 22:53:37,921][    INFO] Iter: 1800/2548, LR: 0.0000033, Loss: 8.512, si_loss: 8.512, grad_loss: 8.512, fea_loss: 0.297
+[2025-02-10 22:56:45,924][    INFO] Iter: 1900/2548, LR: 0.0000033, Loss: 7.981, si_loss: 7.981, grad_loss: 7.981, fea_loss: 0.293
+[2025-02-10 22:59:53,910][    INFO] Iter: 2000/2548, LR: 0.0000033, Loss: 7.515, si_loss: 7.515, grad_loss: 7.515, fea_loss: 0.289
+[2025-02-10 23:03:01,896][    INFO] Iter: 2100/2548, LR: 0.0000032, Loss: 7.465, si_loss: 7.465, grad_loss: 7.465, fea_loss: 0.292
+[2025-02-10 23:06:09,900][    INFO] Iter: 2200/2548, LR: 0.0000032, Loss: 8.084, si_loss: 8.084, grad_loss: 8.084, fea_loss: 0.293
+[2025-02-10 23:09:17,904][    INFO] Iter: 2300/2548, LR: 0.0000032, Loss: 8.246, si_loss: 8.246, grad_loss: 8.246, fea_loss: 0.291
+[2025-02-10 23:12:27,658][    INFO] Iter: 2400/2548, LR: 0.0000032, Loss: 7.829, si_loss: 7.829, grad_loss: 7.829, fea_loss: 0.291
+[2025-02-10 23:15:35,597][    INFO] Iter: 2500/2548, LR: 0.0000032, Loss: 8.332, si_loss: 8.332, grad_loss: 8.332, fea_loss: 0.296
+[2025-02-10 23:18:00,909][    INFO] ==========================================================================================
+[2025-02-10 23:18:00,909][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-02-10 23:18:00,909][    INFO]    0.885,    0.947,    0.966, 8205.468, 82053440.000, 1254.249,    1.616,    0.139,    1.609
+[2025-02-10 23:18:00,909][    INFO] ==========================================================================================
+
+[2025-02-10 23:18:04,483][    INFO] ===========> Epoch: 4/10, d1: 0.885, d2: 0.947, d3: 0.966
+[2025-02-10 23:18:04,484][    INFO] ===========> Epoch: 4/10, abs_rel: 100.000, sq_rel: 100.000, rmse: 100.000, rmse_log: 1.616, log10: 0.139, silog: 1.609
+[2025-02-10 23:18:07,237][    INFO] Iter: 0/2548, LR: 0.0000032, Loss: 8.028, si_loss: 8.028, grad_loss: 8.028, fea_loss: 0.299
+[2025-02-10 23:21:15,072][    INFO] Iter: 100/2548, LR: 0.0000031, Loss: 9.009, si_loss: 9.009, grad_loss: 9.009, fea_loss: 0.299
+[2025-02-10 23:24:22,997][    INFO] Iter: 200/2548, LR: 0.0000031, Loss: 7.653, si_loss: 7.653, grad_loss: 7.653, fea_loss: 0.294
+[2025-02-10 23:27:30,837][    INFO] Iter: 300/2548, LR: 0.0000031, Loss: 8.367, si_loss: 8.367, grad_loss: 8.367, fea_loss: 0.296
+[2025-02-10 23:30:38,777][    INFO] Iter: 400/2548, LR: 0.0000031, Loss: 8.461, si_loss: 8.461, grad_loss: 8.461, fea_loss: 0.295
+[2025-02-10 23:33:46,811][    INFO] Iter: 500/2548, LR: 0.0000031, Loss: 9.968, si_loss: 9.968, grad_loss: 9.968, fea_loss: 0.303
+[2025-02-10 23:36:54,735][    INFO] Iter: 600/2548, LR: 0.0000030, Loss: 8.206, si_loss: 8.206, grad_loss: 8.206, fea_loss: 0.291
+[2025-02-10 23:40:02,775][    INFO] Iter: 700/2548, LR: 0.0000030, Loss: 8.824, si_loss: 8.824, grad_loss: 8.824, fea_loss: 0.297
+[2025-02-10 23:43:10,749][    INFO] Iter: 800/2548, LR: 0.0000030, Loss: 8.892, si_loss: 8.892, grad_loss: 8.892, fea_loss: 0.288
+[2025-02-10 23:46:18,678][    INFO] Iter: 900/2548, LR: 0.0000030, Loss: 9.348, si_loss: 9.348, grad_loss: 9.348, fea_loss: 0.301
+[2025-02-10 23:49:26,631][    INFO] Iter: 1000/2548, LR: 0.0000030, Loss: 9.551, si_loss: 9.551, grad_loss: 9.551, fea_loss: 0.296
+[2025-02-10 23:52:34,524][    INFO] Iter: 1100/2548, LR: 0.0000030, Loss: 9.206, si_loss: 9.206, grad_loss: 9.206, fea_loss: 0.295
+[2025-02-10 23:55:42,408][    INFO] Iter: 1200/2548, LR: 0.0000029, Loss: 7.824, si_loss: 7.824, grad_loss: 7.824, fea_loss: 0.295
+[2025-02-10 23:58:50,345][    INFO] Iter: 1300/2548, LR: 0.0000029, Loss: 7.603, si_loss: 7.603, grad_loss: 7.603, fea_loss: 0.297
+[2025-02-11 00:01:58,336][    INFO] Iter: 1400/2548, LR: 0.0000029, Loss: 7.477, si_loss: 7.477, grad_loss: 7.477, fea_loss: 0.294
+[2025-02-11 00:05:06,313][    INFO] Iter: 1500/2548, LR: 0.0000029, Loss: 8.756, si_loss: 8.756, grad_loss: 8.756, fea_loss: 0.302
+[2025-02-11 00:08:14,406][    INFO] Iter: 1600/2548, LR: 0.0000029, Loss: 8.016, si_loss: 8.016, grad_loss: 8.016, fea_loss: 0.293
+[2025-02-11 00:11:22,308][    INFO] Iter: 1700/2548, LR: 0.0000028, Loss: 7.519, si_loss: 7.519, grad_loss: 7.519, fea_loss: 0.292
+[2025-02-11 00:14:30,169][    INFO] Iter: 1800/2548, LR: 0.0000028, Loss: 6.140, si_loss: 6.140, grad_loss: 6.140, fea_loss: 0.286
+[2025-02-11 00:17:39,990][    INFO] Iter: 1900/2548, LR: 0.0000028, Loss: 6.547, si_loss: 6.547, grad_loss: 6.547, fea_loss: 0.293
+[2025-02-11 00:20:47,914][    INFO] Iter: 2000/2548, LR: 0.0000028, Loss: 8.692, si_loss: 8.692, grad_loss: 8.692, fea_loss: 0.293
+[2025-02-11 00:23:55,893][    INFO] Iter: 2100/2548, LR: 0.0000028, Loss: 7.924, si_loss: 7.924, grad_loss: 7.924, fea_loss: 0.296
+[2025-02-11 00:27:03,816][    INFO] Iter: 2200/2548, LR: 0.0000027, Loss: 8.291, si_loss: 8.291, grad_loss: 8.291, fea_loss: 0.296
+[2025-02-11 00:30:11,778][    INFO] Iter: 2300/2548, LR: 0.0000027, Loss: 8.310, si_loss: 8.310, grad_loss: 8.310, fea_loss: 0.297
+[2025-02-11 00:33:19,738][    INFO] Iter: 2400/2548, LR: 0.0000027, Loss: 8.082, si_loss: 8.082, grad_loss: 8.082, fea_loss: 0.306
+[2025-02-11 00:36:27,811][    INFO] Iter: 2500/2548, LR: 0.0000027, Loss: 8.120, si_loss: 8.120, grad_loss: 8.120, fea_loss: 0.293
+[2025-02-11 00:38:53,086][    INFO] ==========================================================================================
+[2025-02-11 00:38:53,086][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-02-11 00:38:53,087][    INFO]    0.887,    0.948,    0.967, 7839.972, 78398488.000, 1246.894,    1.605,    0.137,    1.598
+[2025-02-11 00:38:53,087][    INFO] ==========================================================================================
+
+[2025-02-11 00:38:56,656][    INFO] ===========> Epoch: 5/10, d1: 0.887, d2: 0.948, d3: 0.967
+[2025-02-11 00:38:56,657][    INFO] ===========> Epoch: 5/10, abs_rel: 100.000, sq_rel: 100.000, rmse: 100.000, rmse_log: 1.605, log10: 0.137, silog: 1.598
+[2025-02-11 00:38:59,364][    INFO] Iter: 0/2548, LR: 0.0000027, Loss: 7.863, si_loss: 7.863, grad_loss: 7.863, fea_loss: 0.288
+[2025-02-11 00:42:07,147][    INFO] Iter: 100/2548, LR: 0.0000027, Loss: 7.515, si_loss: 7.515, grad_loss: 7.515, fea_loss: 0.292
+[2025-02-11 00:45:15,214][    INFO] Iter: 200/2548, LR: 0.0000026, Loss: 9.065, si_loss: 9.065, grad_loss: 9.065, fea_loss: 0.303
+[2025-02-11 00:48:23,186][    INFO] Iter: 300/2548, LR: 0.0000026, Loss: 7.745, si_loss: 7.745, grad_loss: 7.745, fea_loss: 0.292
+[2025-02-11 00:51:31,084][    INFO] Iter: 400/2548, LR: 0.0000026, Loss: 7.898, si_loss: 7.898, grad_loss: 7.898, fea_loss: 0.294
+[2025-02-11 00:54:38,971][    INFO] Iter: 500/2548, LR: 0.0000026, Loss: 11.172, si_loss: 11.172, grad_loss: 11.172, fea_loss: 0.302
+[2025-02-11 00:57:46,934][    INFO] Iter: 600/2548, LR: 0.0000026, Loss: 9.007, si_loss: 9.007, grad_loss: 9.007, fea_loss: 0.300
+[2025-02-11 01:00:54,941][    INFO] Iter: 700/2548, LR: 0.0000025, Loss: 7.403, si_loss: 7.403, grad_loss: 7.403, fea_loss: 0.293
+[2025-02-11 01:04:03,012][    INFO] Iter: 800/2548, LR: 0.0000025, Loss: 8.660, si_loss: 8.660, grad_loss: 8.660, fea_loss: 0.299
+[2025-02-11 01:07:11,153][    INFO] Iter: 900/2548, LR: 0.0000025, Loss: 8.001, si_loss: 8.001, grad_loss: 8.001, fea_loss: 0.302
+[2025-02-11 01:10:19,236][    INFO] Iter: 1000/2548, LR: 0.0000025, Loss: 7.449, si_loss: 7.449, grad_loss: 7.449, fea_loss: 0.299
+[2025-02-11 01:13:27,181][    INFO] Iter: 1100/2548, LR: 0.0000025, Loss: 7.388, si_loss: 7.388, grad_loss: 7.388, fea_loss: 0.296
+[2025-02-11 01:16:35,117][    INFO] Iter: 1200/2548, LR: 0.0000025, Loss: 8.215, si_loss: 8.215, grad_loss: 8.215, fea_loss: 0.300
+[2025-02-11 01:19:44,558][    INFO] Iter: 1300/2548, LR: 0.0000024, Loss: 7.962, si_loss: 7.962, grad_loss: 7.962, fea_loss: 0.302
+[2025-02-11 01:22:52,399][    INFO] Iter: 1400/2548, LR: 0.0000024, Loss: 7.583, si_loss: 7.583, grad_loss: 7.583, fea_loss: 0.299
+[2025-02-11 01:26:00,398][    INFO] Iter: 1500/2548, LR: 0.0000024, Loss: 8.710, si_loss: 8.710, grad_loss: 8.710, fea_loss: 0.302
+[2025-02-11 01:29:08,388][    INFO] Iter: 1600/2548, LR: 0.0000024, Loss: 8.981, si_loss: 8.981, grad_loss: 8.981, fea_loss: 0.305
+[2025-02-11 01:32:16,368][    INFO] Iter: 1700/2548, LR: 0.0000024, Loss: 7.106, si_loss: 7.106, grad_loss: 7.106, fea_loss: 0.303
+[2025-02-11 01:35:24,394][    INFO] Iter: 1800/2548, LR: 0.0000023, Loss: 8.044, si_loss: 8.044, grad_loss: 8.044, fea_loss: 0.298
+[2025-02-11 01:38:32,406][    INFO] Iter: 1900/2548, LR: 0.0000023, Loss: 6.787, si_loss: 6.787, grad_loss: 6.787, fea_loss: 0.301
+[2025-02-11 01:41:40,372][    INFO] Iter: 2000/2548, LR: 0.0000023, Loss: 7.492, si_loss: 7.492, grad_loss: 7.492, fea_loss: 0.304
+[2025-02-11 01:44:48,295][    INFO] Iter: 2100/2548, LR: 0.0000023, Loss: 7.450, si_loss: 7.450, grad_loss: 7.450, fea_loss: 0.293
+[2025-02-11 01:47:56,214][    INFO] Iter: 2200/2548, LR: 0.0000023, Loss: 8.078, si_loss: 8.078, grad_loss: 8.078, fea_loss: 0.303
+[2025-02-11 01:51:04,170][    INFO] Iter: 2300/2548, LR: 0.0000022, Loss: 7.522, si_loss: 7.522, grad_loss: 7.522, fea_loss: 0.297
+[2025-02-11 01:54:11,920][    INFO] Iter: 2400/2548, LR: 0.0000022, Loss: 8.048, si_loss: 8.048, grad_loss: 8.048, fea_loss: 0.297
+[2025-02-11 01:57:19,844][    INFO] Iter: 2500/2548, LR: 0.0000022, Loss: 7.755, si_loss: 7.755, grad_loss: 7.755, fea_loss: 0.305
+[2025-02-11 01:59:45,115][    INFO] ==========================================================================================
+[2025-02-11 01:59:45,115][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-02-11 01:59:45,116][    INFO]    0.887,    0.949,    0.967, 7794.090, 77939672.000, 1244.531,    1.602,    0.137,    1.595
+[2025-02-11 01:59:45,116][    INFO] ==========================================================================================
+
+[2025-02-11 01:59:47,099][    INFO] ===========> Epoch: 6/10, d1: 0.887, d2: 0.949, d3: 0.967
+[2025-02-11 01:59:47,099][    INFO] ===========> Epoch: 6/10, abs_rel: 100.000, sq_rel: 100.000, rmse: 100.000, rmse_log: 1.602, log10: 0.137, silog: 1.595
+[2025-02-11 01:59:49,773][    INFO] Iter: 0/2548, LR: 0.0000022, Loss: 9.716, si_loss: 9.716, grad_loss: 9.716, fea_loss: 0.307
+[2025-02-11 02:02:57,677][    INFO] Iter: 100/2548, LR: 0.0000022, Loss: 8.433, si_loss: 8.433, grad_loss: 8.433, fea_loss: 0.305
+[2025-02-11 02:06:05,588][    INFO] Iter: 200/2548, LR: 0.0000022, Loss: 7.689, si_loss: 7.689, grad_loss: 7.689, fea_loss: 0.306
+[2025-02-11 02:09:13,306][    INFO] Iter: 300/2548, LR: 0.0000021, Loss: 8.173, si_loss: 8.173, grad_loss: 8.173, fea_loss: 0.303
+[2025-02-11 02:12:21,160][    INFO] Iter: 400/2548, LR: 0.0000021, Loss: 6.554, si_loss: 6.554, grad_loss: 6.554, fea_loss: 0.299
+[2025-02-11 02:15:29,029][    INFO] Iter: 500/2548, LR: 0.0000021, Loss: 6.572, si_loss: 6.572, grad_loss: 6.572, fea_loss: 0.299
+[2025-02-11 02:18:36,893][    INFO] Iter: 600/2548, LR: 0.0000021, Loss: 7.816, si_loss: 7.816, grad_loss: 7.816, fea_loss: 0.303
+[2025-02-11 02:21:44,516][    INFO] Iter: 700/2548, LR: 0.0000021, Loss: 8.085, si_loss: 8.085, grad_loss: 8.085, fea_loss: 0.308
+[2025-02-11 02:24:54,178][    INFO] Iter: 800/2548, LR: 0.0000020, Loss: 9.154, si_loss: 9.154, grad_loss: 9.154, fea_loss: 0.301
+[2025-02-11 02:28:01,963][    INFO] Iter: 900/2548, LR: 0.0000020, Loss: 7.944, si_loss: 7.944, grad_loss: 7.944, fea_loss: 0.304
+[2025-02-11 02:31:09,817][    INFO] Iter: 1000/2548, LR: 0.0000020, Loss: 7.686, si_loss: 7.686, grad_loss: 7.686, fea_loss: 0.308
+[2025-02-11 02:34:17,362][    INFO] Iter: 1100/2548, LR: 0.0000020, Loss: 8.231, si_loss: 8.231, grad_loss: 8.231, fea_loss: 0.304
+[2025-02-11 02:37:25,147][    INFO] Iter: 1200/2548, LR: 0.0000020, Loss: 5.679, si_loss: 5.679, grad_loss: 5.679, fea_loss: 0.299
+[2025-02-11 02:40:32,836][    INFO] Iter: 1300/2548, LR: 0.0000019, Loss: 9.259, si_loss: 9.259, grad_loss: 9.259, fea_loss: 0.308
+[2025-02-11 02:43:40,226][    INFO] Iter: 1400/2548, LR: 0.0000019, Loss: 7.834, si_loss: 7.834, grad_loss: 7.834, fea_loss: 0.305
+[2025-02-11 02:46:47,758][    INFO] Iter: 1500/2548, LR: 0.0000019, Loss: 7.641, si_loss: 7.641, grad_loss: 7.641, fea_loss: 0.304
+[2025-02-11 02:49:55,502][    INFO] Iter: 1600/2548, LR: 0.0000019, Loss: 6.951, si_loss: 6.951, grad_loss: 6.951, fea_loss: 0.302
+[2025-02-11 02:53:03,088][    INFO] Iter: 1700/2548, LR: 0.0000019, Loss: 8.358, si_loss: 8.358, grad_loss: 8.358, fea_loss: 0.304
+[2025-02-11 02:56:10,846][    INFO] Iter: 1800/2548, LR: 0.0000018, Loss: 7.059, si_loss: 7.059, grad_loss: 7.059, fea_loss: 0.303
+[2025-02-11 02:59:18,604][    INFO] Iter: 1900/2548, LR: 0.0000018, Loss: 8.062, si_loss: 8.062, grad_loss: 8.062, fea_loss: 0.305
+[2025-02-11 03:02:26,356][    INFO] Iter: 2000/2548, LR: 0.0000018, Loss: 9.392, si_loss: 9.392, grad_loss: 9.392, fea_loss: 0.314
+[2025-02-11 03:05:33,961][    INFO] Iter: 2100/2548, LR: 0.0000018, Loss: 6.943, si_loss: 6.943, grad_loss: 6.943, fea_loss: 0.307
+[2025-02-11 03:08:41,641][    INFO] Iter: 2200/2548, LR: 0.0000018, Loss: 7.356, si_loss: 7.356, grad_loss: 7.356, fea_loss: 0.300
+[2025-02-11 03:11:49,413][    INFO] Iter: 2300/2548, LR: 0.0000017, Loss: 7.753, si_loss: 7.753, grad_loss: 7.753, fea_loss: 0.305
+[2025-02-11 03:14:57,149][    INFO] Iter: 2400/2548, LR: 0.0000017, Loss: 7.457, si_loss: 7.457, grad_loss: 7.457, fea_loss: 0.302
+[2025-02-11 03:18:05,012][    INFO] Iter: 2500/2548, LR: 0.0000017, Loss: 8.574, si_loss: 8.574, grad_loss: 8.574, fea_loss: 0.310
+[2025-02-11 03:20:30,153][    INFO] ==========================================================================================
+[2025-02-11 03:20:30,153][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-02-11 03:20:30,154][    INFO]    0.887,    0.949,    0.968, 7515.953, 75158304.000, 1244.189,    1.602,    0.136,    1.595
+[2025-02-11 03:20:30,154][    INFO] ==========================================================================================
+
+[2025-02-11 03:20:32,181][    INFO] ===========> Epoch: 7/10, d1: 0.887, d2: 0.949, d3: 0.968
+[2025-02-11 03:20:32,182][    INFO] ===========> Epoch: 7/10, abs_rel: 100.000, sq_rel: 100.000, rmse: 100.000, rmse_log: 1.602, log10: 0.136, silog: 1.595
+[2025-02-11 03:20:34,855][    INFO] Iter: 0/2548, LR: 0.0000017, Loss: 7.793, si_loss: 7.793, grad_loss: 7.793, fea_loss: 0.308
+[2025-02-11 03:23:42,347][    INFO] Iter: 100/2548, LR: 0.0000017, Loss: 8.253, si_loss: 8.253, grad_loss: 8.253, fea_loss: 0.308
+[2025-02-11 03:26:52,088][    INFO] Iter: 200/2548, LR: 0.0000017, Loss: 9.745, si_loss: 9.745, grad_loss: 9.745, fea_loss: 0.315
+[2025-02-11 03:29:59,728][    INFO] Iter: 300/2548, LR: 0.0000016, Loss: 8.355, si_loss: 8.355, grad_loss: 8.355, fea_loss: 0.314
+[2025-02-11 03:33:07,407][    INFO] Iter: 400/2548, LR: 0.0000016, Loss: 9.026, si_loss: 9.026, grad_loss: 9.026, fea_loss: 0.308
+[2025-02-11 03:36:15,054][    INFO] Iter: 500/2548, LR: 0.0000016, Loss: 10.009, si_loss: 10.009, grad_loss: 10.009, fea_loss: 0.307
+[2025-02-11 03:39:22,783][    INFO] Iter: 600/2548, LR: 0.0000016, Loss: 8.230, si_loss: 8.230, grad_loss: 8.230, fea_loss: 0.311
+[2025-02-11 03:42:30,476][    INFO] Iter: 700/2548, LR: 0.0000016, Loss: 7.395, si_loss: 7.395, grad_loss: 7.395, fea_loss: 0.309
+[2025-02-11 03:45:38,149][    INFO] Iter: 800/2548, LR: 0.0000015, Loss: 9.170, si_loss: 9.170, grad_loss: 9.170, fea_loss: 0.310
+[2025-02-11 03:48:45,894][    INFO] Iter: 900/2548, LR: 0.0000015, Loss: 6.411, si_loss: 6.411, grad_loss: 6.411, fea_loss: 0.303
+[2025-02-11 03:51:53,629][    INFO] Iter: 1000/2548, LR: 0.0000015, Loss: 7.550, si_loss: 7.550, grad_loss: 7.550, fea_loss: 0.307
+[2025-02-11 03:55:01,387][    INFO] Iter: 1100/2548, LR: 0.0000015, Loss: 7.541, si_loss: 7.541, grad_loss: 7.541, fea_loss: 0.306
+[2025-02-11 03:58:09,164][    INFO] Iter: 1200/2548, LR: 0.0000015, Loss: 7.267, si_loss: 7.267, grad_loss: 7.267, fea_loss: 0.312
+[2025-02-11 04:01:16,960][    INFO] Iter: 1300/2548, LR: 0.0000014, Loss: 9.712, si_loss: 9.712, grad_loss: 9.712, fea_loss: 0.312
+[2025-02-11 04:04:24,732][    INFO] Iter: 1400/2548, LR: 0.0000014, Loss: 10.051, si_loss: 10.051, grad_loss: 10.051, fea_loss: 0.307
+[2025-02-11 04:07:32,502][    INFO] Iter: 1500/2548, LR: 0.0000014, Loss: 7.427, si_loss: 7.427, grad_loss: 7.427, fea_loss: 0.309
+[2025-02-11 04:10:40,218][    INFO] Iter: 1600/2548, LR: 0.0000014, Loss: 7.597, si_loss: 7.597, grad_loss: 7.597, fea_loss: 0.301
+[2025-02-11 04:13:47,880][    INFO] Iter: 1700/2548, LR: 0.0000013, Loss: 8.422, si_loss: 8.422, grad_loss: 8.422, fea_loss: 0.314
+[2025-02-11 04:16:55,532][    INFO] Iter: 1800/2548, LR: 0.0000013, Loss: 7.147, si_loss: 7.147, grad_loss: 7.147, fea_loss: 0.303
+[2025-02-11 04:20:03,204][    INFO] Iter: 1900/2548, LR: 0.0000013, Loss: 6.390, si_loss: 6.390, grad_loss: 6.390, fea_loss: 0.304
+[2025-02-11 04:23:10,962][    INFO] Iter: 2000/2548, LR: 0.0000013, Loss: 8.210, si_loss: 8.210, grad_loss: 8.210, fea_loss: 0.306
+[2025-02-11 04:26:18,779][    INFO] Iter: 2100/2548, LR: 0.0000013, Loss: 7.666, si_loss: 7.666, grad_loss: 7.666, fea_loss: 0.313
+[2025-02-11 04:29:28,924][    INFO] Iter: 2200/2548, LR: 0.0000012, Loss: 7.505, si_loss: 7.505, grad_loss: 7.505, fea_loss: 0.306
+[2025-02-11 04:32:37,068][    INFO] Iter: 2300/2548, LR: 0.0000012, Loss: 7.987, si_loss: 7.987, grad_loss: 7.987, fea_loss: 0.305
+[2025-02-11 04:35:45,166][    INFO] Iter: 2400/2548, LR: 0.0000012, Loss: 8.865, si_loss: 8.865, grad_loss: 8.865, fea_loss: 0.308
+[2025-02-11 04:38:53,182][    INFO] Iter: 2500/2548, LR: 0.0000012, Loss: 7.649, si_loss: 7.649, grad_loss: 7.649, fea_loss: 0.310
+[2025-02-11 04:41:18,500][    INFO] ==========================================================================================
+[2025-02-11 04:41:18,501][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-02-11 04:41:18,501][    INFO]    0.887,    0.949,    0.968, 7570.016, 75698880.000, 1239.537,    1.596,    0.136,    1.589
+[2025-02-11 04:41:18,501][    INFO] ==========================================================================================
+
+[2025-02-11 04:41:20,680][    INFO] ===========> Epoch: 8/10, d1: 0.887, d2: 0.949, d3: 0.968
+[2025-02-11 04:41:20,681][    INFO] ===========> Epoch: 8/10, abs_rel: 100.000, sq_rel: 100.000, rmse: 100.000, rmse_log: 1.596, log10: 0.136, silog: 1.589
+[2025-02-11 04:41:23,427][    INFO] Iter: 0/2548, LR: 0.0000012, Loss: 9.543, si_loss: 9.543, grad_loss: 9.543, fea_loss: 0.312
+[2025-02-11 04:44:31,344][    INFO] Iter: 100/2548, LR: 0.0000012, Loss: 7.290, si_loss: 7.290, grad_loss: 7.290, fea_loss: 0.305
+[2025-02-11 04:47:39,512][    INFO] Iter: 200/2548, LR: 0.0000011, Loss: 8.643, si_loss: 8.643, grad_loss: 8.643, fea_loss: 0.307
+[2025-02-11 04:50:47,775][    INFO] Iter: 300/2548, LR: 0.0000011, Loss: 10.824, si_loss: 10.824, grad_loss: 10.824, fea_loss: 0.310
+[2025-02-11 04:53:55,962][    INFO] Iter: 400/2548, LR: 0.0000011, Loss: 7.604, si_loss: 7.604, grad_loss: 7.604, fea_loss: 0.300
+[2025-02-11 04:57:04,003][    INFO] Iter: 500/2548, LR: 0.0000011, Loss: 7.499, si_loss: 7.499, grad_loss: 7.499, fea_loss: 0.304
+[2025-02-11 05:00:12,036][    INFO] Iter: 600/2548, LR: 0.0000010, Loss: 7.392, si_loss: 7.392, grad_loss: 7.392, fea_loss: 0.305
+[2025-02-11 05:03:19,991][    INFO] Iter: 700/2548, LR: 0.0000010, Loss: 7.668, si_loss: 7.668, grad_loss: 7.668, fea_loss: 0.308
+[2025-02-11 05:06:27,928][    INFO] Iter: 800/2548, LR: 0.0000010, Loss: 7.143, si_loss: 7.143, grad_loss: 7.143, fea_loss: 0.301
+[2025-02-11 05:09:35,535][    INFO] Iter: 900/2548, LR: 0.0000010, Loss: 7.751, si_loss: 7.751, grad_loss: 7.751, fea_loss: 0.307
+[2025-02-11 05:12:42,977][    INFO] Iter: 1000/2548, LR: 0.0000010, Loss: 7.003, si_loss: 7.003, grad_loss: 7.003, fea_loss: 0.305
+[2025-02-11 05:15:50,492][    INFO] Iter: 1100/2548, LR: 0.0000009, Loss: 7.654, si_loss: 7.654, grad_loss: 7.654, fea_loss: 0.313
+[2025-02-11 05:18:58,100][    INFO] Iter: 1200/2548, LR: 0.0000009, Loss: 7.975, si_loss: 7.975, grad_loss: 7.975, fea_loss: 0.311
+[2025-02-11 05:22:05,552][    INFO] Iter: 1300/2548, LR: 0.0000009, Loss: 8.881, si_loss: 8.881, grad_loss: 8.881, fea_loss: 0.308
+[2025-02-11 05:25:13,095][    INFO] Iter: 1400/2548, LR: 0.0000009, Loss: 6.898, si_loss: 6.898, grad_loss: 6.898, fea_loss: 0.305
+[2025-02-11 05:28:20,604][    INFO] Iter: 1500/2548, LR: 0.0000009, Loss: 7.926, si_loss: 7.926, grad_loss: 7.926, fea_loss: 0.310
+[2025-02-11 05:31:28,196][    INFO] Iter: 1600/2548, LR: 0.0000008, Loss: 8.044, si_loss: 8.044, grad_loss: 8.044, fea_loss: 0.311
+[2025-02-11 05:34:37,541][    INFO] Iter: 1700/2548, LR: 0.0000008, Loss: 6.535, si_loss: 6.535, grad_loss: 6.535, fea_loss: 0.301
+[2025-02-11 05:37:45,008][    INFO] Iter: 1800/2548, LR: 0.0000008, Loss: 7.536, si_loss: 7.536, grad_loss: 7.536, fea_loss: 0.307
+[2025-02-11 05:40:52,533][    INFO] Iter: 1900/2548, LR: 0.0000008, Loss: 5.824, si_loss: 5.824, grad_loss: 5.824, fea_loss: 0.297
+[2025-02-11 05:44:00,015][    INFO] Iter: 2000/2548, LR: 0.0000008, Loss: 6.301, si_loss: 6.301, grad_loss: 6.301, fea_loss: 0.306
+[2025-02-11 05:47:07,485][    INFO] Iter: 2100/2548, LR: 0.0000007, Loss: 7.977, si_loss: 7.977, grad_loss: 7.977, fea_loss: 0.308
+[2025-02-11 05:50:14,996][    INFO] Iter: 2200/2548, LR: 0.0000007, Loss: 8.296, si_loss: 8.296, grad_loss: 8.296, fea_loss: 0.309
+[2025-02-11 05:53:22,541][    INFO] Iter: 2300/2548, LR: 0.0000007, Loss: 6.890, si_loss: 6.890, grad_loss: 6.890, fea_loss: 0.301
+[2025-02-11 05:56:30,056][    INFO] Iter: 2400/2548, LR: 0.0000007, Loss: 7.021, si_loss: 7.021, grad_loss: 7.021, fea_loss: 0.304
+[2025-02-11 05:59:37,429][    INFO] Iter: 2500/2548, LR: 0.0000006, Loss: 7.678, si_loss: 7.678, grad_loss: 7.678, fea_loss: 0.301
+[2025-02-11 06:02:02,662][    INFO] ==========================================================================================
+[2025-02-11 06:02:02,662][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-02-11 06:02:02,663][    INFO]    0.887,    0.949,    0.968, 7310.289, 73101688.000, 1234.005,    1.588,    0.134,    1.582
+[2025-02-11 06:02:02,663][    INFO] ==========================================================================================
+
+[2025-02-11 06:02:04,849][    INFO] ===========> Epoch: 9/10, d1: 0.887, d2: 0.949, d3: 0.968
+[2025-02-11 06:02:04,849][    INFO] ===========> Epoch: 9/10, abs_rel: 100.000, sq_rel: 100.000, rmse: 100.000, rmse_log: 1.588, log10: 0.134, silog: 1.582
+[2025-02-11 06:02:07,550][    INFO] Iter: 0/2548, LR: 0.0000006, Loss: 7.381, si_loss: 7.381, grad_loss: 7.381, fea_loss: 0.310
+[2025-02-11 06:05:14,854][    INFO] Iter: 100/2548, LR: 0.0000006, Loss: 8.089, si_loss: 8.089, grad_loss: 8.089, fea_loss: 0.300
+[2025-02-11 06:08:22,067][    INFO] Iter: 200/2548, LR: 0.0000006, Loss: 7.209, si_loss: 7.209, grad_loss: 7.209, fea_loss: 0.307
+[2025-02-11 06:11:29,626][    INFO] Iter: 300/2548, LR: 0.0000006, Loss: 7.827, si_loss: 7.827, grad_loss: 7.827, fea_loss: 0.307
+[2025-02-11 06:14:37,167][    INFO] Iter: 400/2548, LR: 0.0000005, Loss: 6.449, si_loss: 6.449, grad_loss: 6.449, fea_loss: 0.304
+[2025-02-11 06:17:44,611][    INFO] Iter: 500/2548, LR: 0.0000005, Loss: 8.207, si_loss: 8.207, grad_loss: 8.207, fea_loss: 0.309
+[2025-02-11 06:20:52,071][    INFO] Iter: 600/2548, LR: 0.0000005, Loss: 7.628, si_loss: 7.628, grad_loss: 7.628, fea_loss: 0.303
+[2025-02-11 06:23:59,610][    INFO] Iter: 700/2548, LR: 0.0000005, Loss: 7.705, si_loss: 7.705, grad_loss: 7.705, fea_loss: 0.310
+[2025-02-11 06:27:07,109][    INFO] Iter: 800/2548, LR: 0.0000004, Loss: 7.996, si_loss: 7.996, grad_loss: 7.996, fea_loss: 0.303
+[2025-02-11 06:30:14,754][    INFO] Iter: 900/2548, LR: 0.0000004, Loss: 7.528, si_loss: 7.528, grad_loss: 7.528, fea_loss: 0.298
+[2025-02-11 06:33:22,337][    INFO] Iter: 1000/2548, LR: 0.0000004, Loss: 7.799, si_loss: 7.799, grad_loss: 7.799, fea_loss: 0.306
+[2025-02-11 06:36:31,757][    INFO] Iter: 1100/2548, LR: 0.0000004, Loss: 8.049, si_loss: 8.049, grad_loss: 8.049, fea_loss: 0.309
+[2025-02-11 06:39:39,209][    INFO] Iter: 1200/2548, LR: 0.0000004, Loss: 7.117, si_loss: 7.117, grad_loss: 7.117, fea_loss: 0.307
+[2025-02-11 06:42:46,679][    INFO] Iter: 1300/2548, LR: 0.0000003, Loss: 8.478, si_loss: 8.478, grad_loss: 8.478, fea_loss: 0.303
+[2025-02-11 06:45:54,198][    INFO] Iter: 1400/2548, LR: 0.0000003, Loss: 7.547, si_loss: 7.547, grad_loss: 7.547, fea_loss: 0.302
+[2025-02-11 06:49:01,676][    INFO] Iter: 1500/2548, LR: 0.0000003, Loss: 6.635, si_loss: 6.635, grad_loss: 6.635, fea_loss: 0.303
+[2025-02-11 06:52:09,185][    INFO] Iter: 1600/2548, LR: 0.0000003, Loss: 6.328, si_loss: 6.328, grad_loss: 6.328, fea_loss: 0.301
+[2025-02-11 06:55:16,686][    INFO] Iter: 1700/2548, LR: 0.0000002, Loss: 6.960, si_loss: 6.960, grad_loss: 6.960, fea_loss: 0.299
+[2025-02-11 06:58:24,327][    INFO] Iter: 1800/2548, LR: 0.0000002, Loss: 8.569, si_loss: 8.569, grad_loss: 8.569, fea_loss: 0.310
+[2025-02-11 07:01:32,098][    INFO] Iter: 1900/2548, LR: 0.0000002, Loss: 7.249, si_loss: 7.249, grad_loss: 7.249, fea_loss: 0.301
+[2025-02-11 07:04:39,728][    INFO] Iter: 2000/2548, LR: 0.0000002, Loss: 7.689, si_loss: 7.689, grad_loss: 7.689, fea_loss: 0.308
+[2025-02-11 07:07:47,375][    INFO] Iter: 2100/2548, LR: 0.0000001, Loss: 7.247, si_loss: 7.247, grad_loss: 7.247, fea_loss: 0.303
+[2025-02-11 07:10:54,984][    INFO] Iter: 2200/2548, LR: 0.0000001, Loss: 7.018, si_loss: 7.018, grad_loss: 7.018, fea_loss: 0.303
+[2025-02-11 07:14:02,512][    INFO] Iter: 2300/2548, LR: 0.0000001, Loss: 8.279, si_loss: 8.279, grad_loss: 8.279, fea_loss: 0.309
+[2025-02-11 07:17:10,187][    INFO] Iter: 2400/2548, LR: 0.0000000, Loss: 7.432, si_loss: 7.432, grad_loss: 7.432, fea_loss: 0.307
+[2025-02-11 07:20:17,883][    INFO] Iter: 2500/2548, LR: 0.0000000, Loss: 8.055, si_loss: 8.055, grad_loss: 8.055, fea_loss: 0.302
+[2025-02-11 07:22:43,357][    INFO] ==========================================================================================
+[2025-02-11 07:22:43,357][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2025-02-11 07:22:43,358][    INFO]    0.888,    0.949,    0.968, 7427.979, 74278616.000, 1233.172,    1.587,    0.134,    1.581
+[2025-02-11 07:22:43,358][    INFO] ==========================================================================================
+
