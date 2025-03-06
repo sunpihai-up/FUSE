@@ -1,0 +1,10 @@
+checkpoints/
+eval_results/
+__pycache__/
+.history
+*.pth
+results
+*.gz
+*.png
+splits
+vis_feature_maps
