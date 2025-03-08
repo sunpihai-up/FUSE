@@ -32,29 +32,56 @@ This repo is a PyTorch implementation of ***FUSE*** proposed in our paper: FUSE:
 
 #### Weights 
 
-The metrics are the evaluation results under MVSEC outdoor_night1
+To facilitate community communication, we provide our model weights. We provide our foundation model and its metric version on target datasets (MVSEC and DENSE) respectively. As described in our paper, when applied to the target dataset, we only train the deep decoding head, the frozen image-event joint encoder (consisting of the image encoder, event encoder, and FreDFuse). So the three versions of the model only have different weights in the deep decoding head. For each version, we provide three types: small, base and large. 
 
-|             |  a1   |  a2   |  a3   | Abs.Rel | RMSE  | RMSElog | Weights |
-| :---------: | :---: | :---: | :---: | :-----: | :---: | :-----: | :-----: |
-| Ours (vits) | 0.613 | 0.814 | 0.922 |  0.267  | 6.785 |  0.352  |         |
-| Ours (vitb) | 0.632 | 0.827 | 0.925 |  0.270  | 6.445 |  0.348  |         |
-| Ours (vitl) | 0.629 | 0.824 | 0.923 |  0.261  | 6.587 |  0.351  |         |
+**Foundation Model**
+
+Below is the weight of the image event joint estimation foundation model obtained by performing knowledge transfer through the ***FUSE*** framework we proposed, using *Depth Anything V*2 as the foundation model for image depth estimation. The depth decoding head weights below are from *Depth Anything V2*, which outputs inverse depth instead of depth.
+
+| Methods |                           Weights                            |
+| :-----: | :----------------------------------------------------------: |
+|  SMALL  | [Baidu](https://pan.baidu.com/s/1vcvozql6f4RmeBWYg7Y9jg?pwd=53wz) |
+|  BASE   | [Baidu](https://pan.baidu.com/s/1UIJF08eBJhc4hpQC_cmptA?pwd=qqau) |
+|  LARGE  | [Baidu](https://pan.baidu.com/s/1KE9e2SUPq8w_WK86j4hHqQ?pwd=bnw8) |
+
+**MVSEC**
+
+Freeze the image event joint encoder weights of our foundation model and the metric depth estimator weights obtained by training the deep decoding head on the MVSEC dataset. The metrics are the evaluation results under MVSEC outdoor_night1. 
+
+| Methods |    a1     |    a2     |    a3     |  Abs.Rel  |   RMSE    |  RMSElog  |                           Weights                            |
+| :-----: | :-------: | :-------: | :-------: | :-------: | :-------: | :-------: | :----------------------------------------------------------: |
+|  SMALL  |   0.613   |   0.814   |   0.922   |   0.267   |   6.785   |   0.352   | [Baidu](https://pan.baidu.com/s/17KmcgpTxyLzbLVaOQbAqEA?pwd=hy5x) |
+|  BASE   | **0.632** | **0.827** | **0.925** |   0.270   | **6.445** | **0.348** |   [Baidu](https://pan.baidu.com/s/1VIeN19KhZV7SSmzsiOzudA)   |
+|  LARGE  |   0.629   |   0.824   |   0.923   | **0.261** |   6.587   |   0.351   | [Baidu](https://pan.baidu.com/s/1w61Ga9ukIgZ_dlNkjczpIA?pwd=w4ja) |
+
+**DENSE**
+
+Freeze the image event joint encoder weights of our foundation model and the metric depth estimator weights obtained by training the deep decoding head on the DENSE dataset.
+
+| Methods |  Abs.Rel  |  RMSELog  |    10m    |    20m    |    30m    |                           Weights                            |
+| :-----: | :-------: | :-------: | :-------: | :-------: | :-------: | :----------------------------------------------------------: |
+|  SMALL  |   0.401   |   0.491   |   1.231   |   4.262   |   7.052   | [Baidu](https://pan.baidu.com/s/12fLgqn07nUTBRBGz3uIGdg?pwd=a696) |
+|  BASE   | **0.348** |   0.467   | **1.199** | **3.732** | **5.976** | [Baidu](https://pan.baidu.com/s/10hwzMFNl-zFswJahwDHL7A?pwd=t45u) |
+|  LARGE  |   0.385   | **0.457** |   1.286   |   3.998   |   6.639   | [Baidu](https://pan.baidu.com/s/1ZwVIsh8GpLexlJXG-OgFRA?pwd=eq6m) |
 
 ### Installation
 
 ```
+conda create -n fuse python=3.9
 pip install -r requirements.txt
 ```
 
 ### Data preparation
 
-#### Data Download
+We use following datasets:
 
 * **MVSEC**: [Multi Vehicle Stereo Event Camera Dataset](https://daniilidis-group.github.io/mvsec/)
 * **DENSE**: [Learning Monocular Dense Depth from Events](https://rpg.ifi.uzh.ch/E2DEPTH.html)
 * **EventScape**: [Combining Events and Frames using Recurrent Asynchronous Multimodal Networks for Monocular Depth Prediction](https://rpg.ifi.uzh.ch/RAMNet.html)
 
-Since the image, event, and depth labels in MVSEC are asynchronous, it is necessary to manually construct image-event-depth pairs, which can be achieved by running the script `scripts/process_mvsec_hdf5.py`
+Since the image, event, and depth labels in MVSEC are asynchronous, it is necessary to manually construct image-event-depth pairs, which can be achieved by running the script `scripts/process_mvsec_hdf5.py`.
+
+In the event voxel grid representation, we choose 3 as the number of time bins. DENSE and EventScape initially provide a voxel grid bin of 5, which you can modify using the scripts under `scripts` directory.
 
 ### Training
 

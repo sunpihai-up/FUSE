@@ -55,11 +55,6 @@ parser.add_argument("--port", default=None, type=int)
 parser.add_argument("--event_voxel_chans", default=5, type=int)
 parser.add_argument("--normalized_depth", action="store_true")
 parser.add_argument("--return-feature", action="store_true")
-parser.add_argument(
-    "--finetune-mode",
-    choices=["feature_fusion", "decoder", "overall", "freeze", "lora", "fuse"],
-    type=str,
-)
 
 
 def get_dataloader(args):
@@ -190,39 +185,8 @@ def main():
     criterion = SiLogLoss(do_sqrt=True).cuda(local_rank)
 
     # Handling frozen parameters
-    if args.finetune_mode == "decoder":
-        for name, param in model.named_parameters():
-            if "depth_head" not in name:
-                param.requires_grad = False
-    elif args.finetune_mode == "feature_fusion":
-        for name, param in model.named_parameters():
-            if "depth_head" not in name and "feature_fusion" not in name:
-                param.requires_grad = False
-    elif args.finetune_mode == "lora":
-        for name, param in model.named_parameters():
-            if "encoder" in name:
-                if "blocks" not in name:
-                    param.requires_grad = True
-                elif "lora" in name:
-                    param.requires_grad = True
-                else:
-                    param.requires_grad = False
-            else:
-                param.requires_grad = True
-    elif args.finetune_mode == "fuse":
-        for name, param in model.named_parameters():
-            if "encoder" in name:
-                param.requires_grad = False
-            else:
-                param.requires_grad = True
-    elif args.finetune_mode == "overall":
-        for name, param in model.named_parameters():
-            param.requires_grad = True
-    elif args.finetune_mode == "freeze":
-        for name, param in model.named_parameters():
-            param.requires_grad = False
-
-    print(f"The freezing mode of weights is: {args.finetune_mode}")
+    for name, param in model.named_parameters():
+        param.requires_grad = "depth_head" in name
 
     # Configure optimizer to include only trainable parameters
     optimizer = AdamW(
@@ -243,14 +207,6 @@ def main():
                 ],
                 "lr": args.lr * 10.0,
             },
-            # {
-            #     "params": [
-            #         param
-            #         for name, param in model.named_parameters()
-            #         if "lora" in name and param.requires_grad
-            #     ],
-            #     "lr": args.lr * 10.0,
-            # },
         ],
         lr=args.lr,
         betas=(0.9, 0.999),
@@ -439,7 +395,5 @@ def main():
                 "previous_best": previous_best,
             }
             torch.save(checkpoint, os.path.join(args.save_path, "latest.pth"))
-
-
 if __name__ == "__main__":
     main()

@@ -4,12 +4,8 @@ import numpy as np
 dataset2params = {
     "dense": {"clip_distance": 1000.0, "reg_factor": 5.7},
     "mvsec": {"clip_distance": 80.0, "reg_factor": 3.70378},
-    "mvsec_2": {"clip_distance": 80.0, "reg_factor": 3.70378},
-    "mvsec_3": {"clip_distance": 80.0, "reg_factor": 3.70378},
     "eventscape": {"clip_distance": 1000.0, "reg_factor": 5.7},
 }
-    # "dense": {"clip_distance": 80.0, "reg_factor": 3.70378},
-
 
 def convert_nl2abs_depth(depth, clip_distance, reg_factor):
     depth = np.exp(reg_factor * (depth - 1.0))

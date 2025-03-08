@@ -49,8 +49,8 @@ class Dense(Dataset):
         return depth
 
     def __getitem__(self, item):
-        # reg_factor, d_max = 6.2044, 1000
-        reg_factor, d_min, d_max = 3.70378, 1.97041, 80
+        reg_factor, d_max = 5.7, 1000
+        # reg_factor, d_min, d_max = 3.70378, 1.97041, 80
 
         img_path = self.filelist[item].split(" ")[0]
         depth_path = self.filelist[item].split(" ")[1]
