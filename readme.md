@@ -1,10 +1,17 @@
-# FUSE: Label-Free Image-Event Joint Monocular Depth Estimation via Frequency-Decoupled Alignment and Degradation-Robust Fusion
 
-This repo is a PyTorch implementation of ***FUSE*** proposed in our paper: FUSE: Label-Free Image-Event Joint Monocular Depth Estimation via Frequency-Decoupled Alignment and Degradation-Robust Fusion
+This repository provides the official PyTorch implementation for our paper:
 
-### Results and Weights
+[**FUSE: Label-Free Image-Event Joint Monocular Depth Estimation via Frequency-Decoupled Alignment and Degradation-Robust Fusion**](https://arxiv.org/abs/2503.19739)
 
-#### MVSEC outdoor_day11
+
+## 🌐 Model Weights on Hugging Face
+
+To facilitate access for international researchers, we have uploaded our code and model weights to Hugging Face: [HuggingFace](https://huggingface.co/pihaisun/FUSE)
+
+
+## 📊 Benchmark Results
+
+### MVSEC outdoor_day1
 
 |  Methods  | Input |    a1     |    a2     |    a3     |  Abs.Rel  |   RMSE    |  RMSElog  |
 | :-------: | :---: | :-------: | :-------: | :-------: | :-------: | :-------: | :-------: |
@@ -17,7 +24,7 @@ This repo is a PyTorch implementation of ***FUSE*** proposed in our paper: FUSE:
 |  PCDepth  |  I+E  |   0.712   |   0.867   |   0.941   |   0.228   |   6.526   |   0.301   |
 |   Ours    |  I+E  | **0.745** | **0.892** | **0.957** | **0.196** | **6.004** | **0.270** |
 
-#### MVSEC outdoor_night1
+### MVSEC outdoor_night1
 
 |  Methods  | Input |    a1     |    a2     |    a3     |  Abs.Rel  |   RMSE    |  RMSElog  |
 | :-------: | :---: | :-------: | :-------: | :-------: | :-------: | :-------: | :-------: |
@@ -30,11 +37,11 @@ This repo is a PyTorch implementation of ***FUSE*** proposed in our paper: FUSE:
 |  PCDepth  |  I+E  | **0.632** |   0.822   |   0.922   |   0.271   |   6.715   |   0.354   |
 |   Ours    |  I+E  |   0.629   | **0.824** | **0.923** | **0.261** | **6.587** | **0.351** |
 
-#### Weights 
+## 💾 Downloadable Weights
 
-To facilitate community communication, we provide our model weights. We provide our foundation model and its metric version on target datasets (MVSEC and DENSE) respectively. As described in our paper, when applied to the target dataset, we only train the deep decoding head, the frozen image-event joint encoder (consisting of the image encoder, event encoder, and FreDFuse). So the three versions of the model only have different weights in the deep decoding head. For each version, we provide three types: small, base and large. 
+We provide model weights for our foundation model and its fine-tuned variants on MVSEC and DENSE. Each has three versions: **Small**, **Base**, and **Large**, which differ only in the depth decoding head (encoder is fixed across all).
 
-**Foundation Model**
+### 🧱 Foundation Model
 
 Below is the weight of the image event joint estimation foundation model obtained by performing knowledge transfer through the ***FUSE*** framework we proposed, using *Depth Anything V*2 as the foundation model for image depth estimation. The depth decoding head weights below are from *Depth Anything V2*, which outputs inverse depth instead of depth.
 
@@ -44,7 +51,7 @@ Below is the weight of the image event joint estimation foundation model obtaine
 |  BASE   | [Baidu](https://pan.baidu.com/s/1UIJF08eBJhc4hpQC_cmptA?pwd=qqau) |
 |  LARGE  | [Baidu](https://pan.baidu.com/s/1KE9e2SUPq8w_WK86j4hHqQ?pwd=bnw8) |
 
-**MVSEC**
+### **MVSEC**
 
 Freeze the image event joint encoder weights of our foundation model and the metric depth estimator weights obtained by training the deep decoding head on the MVSEC dataset. The metrics are the evaluation results under MVSEC outdoor_night1. 
 
@@ -54,7 +61,7 @@ Freeze the image event joint encoder weights of our foundation model and the met
 |  BASE   | **0.632** | **0.827** | **0.925** |   0.270   | **6.445** | **0.348** |   [Baidu](https://pan.baidu.com/s/1VIeN19KhZV7SSmzsiOzudA)   |
 |  LARGE  |   0.629   |   0.824   |   0.923   | **0.261** |   6.587   |   0.351   | [Baidu](https://pan.baidu.com/s/1w61Ga9ukIgZ_dlNkjczpIA?pwd=w4ja) |
 
-**DENSE**
+### **DENSE**
 
 Freeze the image event joint encoder weights of our foundation model and the metric depth estimator weights obtained by training the deep decoding head on the DENSE dataset.
 
@@ -64,14 +71,14 @@ Freeze the image event joint encoder weights of our foundation model and the met
 |  BASE   | **0.348** |   0.467   | **1.199** | **3.732** | **5.976** | [Baidu](https://pan.baidu.com/s/10hwzMFNl-zFswJahwDHL7A?pwd=t45u) |
 |  LARGE  |   0.385   | **0.457** |   1.286   |   3.998   |   6.639   | [Baidu](https://pan.baidu.com/s/1ZwVIsh8GpLexlJXG-OgFRA?pwd=eq6m) |
 
-### Installation
+## ⚙️ Installation
 
-```
+```bash
 conda create -n fuse python=3.9
 pip install -r requirements.txt
 ```
 
-### Data preparation
+## 📂 Data preparation
 
 We use following datasets:
 
@@ -79,11 +86,11 @@ We use following datasets:
 * **DENSE**: [Learning Monocular Dense Depth from Events](https://rpg.ifi.uzh.ch/E2DEPTH.html)
 * **EventScape**: [Combining Events and Frames using Recurrent Asynchronous Multimodal Networks for Monocular Depth Prediction](https://rpg.ifi.uzh.ch/RAMNet.html)
 
-Since the image, event, and depth labels in MVSEC are asynchronous, it is necessary to manually construct image-event-depth pairs, which can be achieved by running the script `scripts/process_mvsec_hdf5.py`.
+For MVSEC, run `scripts/process_mvsec_hdf5.py` to generate synchronized image-event-depth pairs.
 
-In the event voxel grid representation, we choose 3 as the number of time bins. DENSE and EventScape initially provide a voxel grid bin of 5, which you can modify using the scripts under `scripts` directory.
+We use a voxel grid of 3 bins. For DENSE and EventScape (default 5 bins), use the `scripts` directory to adjust.
 
-### Training
+## 🏋️‍♀️ Training Procedure
 
 The training process is divided into three stages: *Feature Alignment*, *Feature Fusion*, and *Adaptation to the Target Dataset*. 
 
@@ -105,19 +112,21 @@ The variable `prompt_encoder_pretrained` in this script should be the event enco
 
 Run the script `train.sh`. 
 
-### Inference
+## 🔍 Inference
 
 Run the script `run.sh`. 
 
 `load_from` indicates the path of the pre-trained weights to be loaded. 
 
-### Evaluation
+## 📏 Evaluation
 
 Run the script `eval.sh`. 
 
-`predictions_dataset` and `target_dataset` represent the directory paths where prediction results and depth data are stored respectively. `clip_distance`indicates the maximum depth to be evaluated, which is 80 for MVSEC and 1000 for DENSE
+- `predictions_dataset`: directory of predictions
+- `target_dataset`: directory of ground truth
+- `clip_distance`: max depth (80 for MVSEC, 1000 for DENSE)
 
-## Acknowledgements
+## 🙏 Acknowledgements
 This project includes code from the following repositories:
 
 - [Depth-Anything-V2](https://github.com/DepthAnything/Depth-Anything-V2) - We use Depth Anything V2 as the image depth foundation model
