@@ -1,7 +1,7 @@
 
 This repository provides the official PyTorch implementation for our paper:
 
-[**FUSE: Label-Free Image-Event Joint Monocular Depth Estimation via Frequency-Decoupled Alignment and Degradation-Robust Fusion**](https://arxiv.org/abs/2503.19739)
+[**FUSE: Label-Free Image-Event Joint Monocular Depth Estimation via Frequency-Decoupled Alignment and Degradation-Robust Fusion [IROS 2025]**](https://arxiv.org/abs/2503.19739)
 
 
 ## 🌐 Model Weights on Hugging Face
