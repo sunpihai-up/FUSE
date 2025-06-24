@@ -58,7 +58,7 @@ Freeze the image event joint encoder weights of our foundation model and the met
 | Methods |    a1     |    a2     |    a3     |  Abs.Rel  |   RMSE    |  RMSElog  |                           Weights                            |
 | :-----: | :-------: | :-------: | :-------: | :-------: | :-------: | :-------: | :----------------------------------------------------------: |
 |  SMALL  |   0.613   |   0.814   |   0.922   |   0.267   |   6.785   |   0.352   | [Baidu](https://pan.baidu.com/s/17KmcgpTxyLzbLVaOQbAqEA?pwd=hy5x) |
-|  BASE   | **0.632** | **0.827** | **0.925** |   0.270   | **6.445** | **0.348** |   [Baidu](https://pan.baidu.com/s/1VIeN19KhZV7SSmzsiOzudA)   |
+|  BASE   | **0.632** | **0.827** | **0.925** |   0.270   | **6.445** | **0.348** | [Baidu](https://pan.baidu.com/s/1VIeN19KhZV7SSmzsiOzudA?pwd=bgi7) |
 |  LARGE  |   0.629   |   0.824   |   0.923   | **0.261** |   6.587   |   0.351   | [Baidu](https://pan.baidu.com/s/1w61Ga9ukIgZ_dlNkjczpIA?pwd=w4ja) |
 
 ### **DENSE**
