@@ -265,3 +265,35 @@ class FreDFuse(nn.Module):
         fused = low_fused + high_fused
         out_proj = self.out_proj(self.norm1(fused))
         return self.norm2(out_proj)
+
+
+class AttentionFeatureFusion(nn.Module):
+    def __init__(self, embed_dim, num_heads, reduction=1, dropout=0.1):
+        super().__init__()
+        self.cross_att1 = CrossAttention(
+            embed_dim=embed_dim,
+            num_heads=num_heads,
+            reduction=reduction,
+            dropout=dropout,
+        )
+
+        self.cross_att1 = CrossAttention(
+            embed_dim=embed_dim,
+            num_heads=num_heads,
+            reduction=reduction,
+            dropout=dropout,
+        )
+
+        self.fusion = nn.Linear(2 * embed_dim, embed_dim)
+        self.norm1 = nn.LayerNorm(embed_dim)
+        self.norm2 = nn.LayerNorm(embed_dim)
+
+    def forward(self, x1, x2):
+        x1 = self.norm1(x1)
+        x2 = self.norm1(x2)
+
+        fused1 = self.cross_att1(x1, x2)
+        fused2 = self.cross_att1(x2, x1)
+
+        fused = self.fusion(torch.cat([fused1, fused2], dim=-1))
+        return fused
